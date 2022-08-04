@@ -15,6 +15,9 @@ module.exports = {
         maxPurple:"#2E205B",
         bgl1:"#131136",
         bgl2:"#181546",
+        left:"#1A1B69",
+        right:"#8A165E",
+        top:"#165A4F"
       }
     },
   },
