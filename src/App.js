@@ -2,116 +2,93 @@ import "./App.css";
 // borderColor : bg-gradient-to-b from-fuchsia-500 to-cyan-500
 function App() {
   return (
-    <div
-      className="App bg-gradient-to-tl from-bgl1 to-bgl2 flex"
-      style={{ height: "100vh" }}
-    >
+    <div className="App bg-gradient-to-tl from-bgl1 to-bgl2 flex h-screen">
       <div className="Left basis-3/4 bg-yellow-40 p-10 px-14 flex flex-col justify-around">
-        {/* Section-1 */}
-        <div className="welcomeCard bg-white rounded-2xl w-full h-1/4 bg-gradient-to-l to-purple-600 from-purple-900 flex">
-          <div className="cardLeft basis:1/2 w-full h-full p-10 flex flex-col justify-around">
-            <p className="sm:text-md md:text-xl text-white font-semibold">
-              Welcome Ram
-            </p>
-            <p className="sm:text-2xl md:text-5xl font-bold text-white">
-              Enhance your financial life with Maximum Protocol
-            </p>
-            <button className="bg-purple-500 text-white p-4 font-bold rounded-lg md:w-56 h-14 shadow-lg">
-              Watch Now
-            </button>
-          </div>
-          <div className="cardLeft basis:1/2 w-full h-full p-5 flex justify-center">
-            <img
-              alt="welcomeImg"
-              className="h-full"
-              src={require("./assets/welcomeImg.png")}
-            />
+        {/* Banner */}
+        <div className="flex w-full h-1/3">
+          <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-l to-purple-600 from-purple-900 flex 2xl:pl-10">
+            <div className="cardLeft basis:1/2 w-full h-full p-6 flex flex-col justify-around 3xl:py-20">
+              <p className="text-lg text-white font-medium 3xl:text-3xl ">
+                Welcome Ram
+              </p>
+              <p className="text-2xl 2xl:text-4xl 3xl:text-5xl font-bold text-white">
+                Enhance your financial life with Maximum Protocol
+              </p>
+              <button className="bg-purple-500 text-white p-4 font-bold rounded-lg md:w-40 h-14 shadow-lg">
+                Watch Now
+              </button>
+            </div>
+            <div className="cardLeft basis:1/2 w-full h-full flex justify-center">
+              <img
+                alt="welcomeImg"
+                className="h-full"
+                src={require("./assets/welcomeImg.png")}
+              />
+            </div>
           </div>
         </div>
-        {/* Section-2 */}
-        <div className="flex flex-col">
-          <div className="maxPicks flex flex-row justify-between mt-10">
+        {/* Coins */}
+        <div className="flex flex-col mt-4">
+          <div className="maxPicks flex flex-row justify-between">
             <p className="text-white text-xl">Max Picks</p>
             <button className="text-gray-400 text">view all</button>
           </div>
           <div className="coinSection flex flex-row flex-wrap justify-between">
-            {/* Gradient Border */}
-            {/* <div className="coinCard w-1/6 h-20 rounded-3xl  bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5">
-            <div className="bg-gradient-to-l from-purple-800  to-violet-900 flex h-full rounded-3xl">
-              </div>
-            </div> */}
-            {/* <div className="coinCard mt-8 h-24 mr-5 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5">
-            <div className="bg-bg rounded-3xl h-full flex flex-row items-center justify-between p-6">
-                  <div className="flex flex-row mr-10">
-                    <img
-                      alt="logo"
-                      className="w-8 h-14"
-                      src={require("../src/assets/icon.png")}
-                    />
-                    <div className="ml-5">
-                      <p className="text-white font-semibold text-2xl">ETH</p>
-                      <p className="text-white">Etherium</p>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold">$5342</p>
-                    <p className="text-red-600">22%</p>
-                  </div>
-                </div>
-            </div> */}
-            {Array.apply(null, Array(12)).map(() => (
-              <div className="coinCard mt-8 h-24 mr-5 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5">
-                <div className="bg-bg rounded-3xl h-full flex flex-row items-center justify-between p-6">
+            {/* xl-6 2xl-8 3xl-12(or)5 */}
+            {Array.apply(null, Array(6)).map(() => (
+              <div className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
+                <div className="bg-bg rounded-2xl h-full flex flex-row items-center justify-between p-4 px-6">
                   <div className="flex flex-row mr-16 items-center">
                     <img
                       alt="logo"
-                      className="w-8 h-12"
+                      className="w-5 h-8"
                       src={require("../src/assets/icon.png")}
                     />
                     <div className="ml-3">
-                      <p className="text-white font-bold text-2xl">ETH</p>
-                      <p className="text-gray-400">Etherium</p>
+                      <p className="text-white font-bold text-lg">ETH</p>
+                      <p className="text-gray-400 text-sm">Ethereum</p>
                     </div>
                   </div>
                   <div>
-                    <p className="text-white font-semibold">$5342</p>
-                    <p className="text-red-600">22%</p>
+                    <p className="text-white font-semibold text-md">$5342</p>
+                    <p className="text-red-600 text-sm">22%</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-        {/* Section-3 */}
-        <div className="flex flex-col">
-          <div className="maxPicks flex flex-row justify-between mt-10">
+        {/* Indexes */}
+        <div className="flex flex-col mt-4">
+          <div className="maxPicks flex flex-row justify-between">
             <p className="text-white text-xl">Indexes</p>
             <button className="text-gray-400 text">view all</button>
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
+            {/* xl-3 2xl-4 3xl-4(or)5 */}
             {Array.apply(null, Array(4)).map(() => (
-              <div className="w-80 h-80 mt-10 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5">
-                <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-3">
+              <div className="w-1/4 h-60 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-1/5 3xl:w-1/6 3xl:h-80">
+                <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                   <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mt-1">
                     <div className="flex py-2 space-x-1">
                       <img
-                        className="w-7"
+                        className="w-6"
                         alt="btc"
                         src={require("../src/assets/btc.png")}
                       />
                       <img
                         alt="eth"
-                        className="w-7"
+                        className="w-6"
                         src={require("../src/assets/eth.png")}
                       />
                       <img
                         alt="bnb"
-                        className="w-7  "
+                        className="w-6"
                         src={require("../src/assets/bnb.png")}
                       />
                     </div>
-                    <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-9 w-1/3 rounded-2xl p-0.5">
+                    <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-0.5">
                       <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center">
                         View
                       </button>
@@ -123,17 +100,17 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-20 justify-around flex flex-col">
+      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col">
         <div>
-          <p className="text-white text-xl text-center">
-            Ai Powered financial manager
+          <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
+            AI Powered financial manager
           </p>
-          <p className="text-white font-bold text-4xl text-center mt-5">
+          <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
             Personalised portfolio for Maximum returns
           </p>
         </div>
         <img alt="img" src={require("../src/assets/illustration.png")} />
-        <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-20 shadow-lg text-xl">
+        <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
           Start Now
         </button>
       </div>
