@@ -21,7 +21,13 @@ module.exports = {
         left:"#1A1B69",
         right:"#8A165E",
         top:"#165A4F"
-      }
+      },
+      fontFamily: {
+        mont: ['Montserrat']
+      },
+      backgroundImage: {
+        primaryButton: 'radial-gradient(86.8% 325.5% at 8% 0%, #D446F1 0%, #9A35EB 100%)'
+      },
     },
   },
   plugins: [

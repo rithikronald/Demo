@@ -1,0 +1,20 @@
+.priceBorder {
+    position: relative;
+  border: 2px solid black;
+  border: 1px solid;
+  border-image-source: linear-gradient(168.82deg, #fb37ff 1.7%, #1bb2de 99.52%);
+  border-image-slice: 10;
+  border-radius: 18px;
+}
+
+.priceBorder::after {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
+    background: linear-gradient(168.82deg, #fb37ff 1.7%, #1bb2de 99.52%);
+    content: '';
+    z-index: -1;
+    border-radius: 8px;
+}
