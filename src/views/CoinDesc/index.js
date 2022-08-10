@@ -3,7 +3,7 @@ import marketCapLogo from "../../assets/marketCapLogo.png";
 
 const CoinDesc = () => {
   return (
-    <div className="p-5 overflow-hidden w-screen h-screen bg-bgl1">
+    <div className="p-5 overflow-hidden w-screen h-screen bg-gradient-to-tl from-bgl1 to-bgl2">
       <div className="flex justify-end space-x-10">
         {["1W", "1M", "3M", "1Y", "ALL"].map((ele) => (
           <div
