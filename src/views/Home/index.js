@@ -1,7 +1,6 @@
-import { Suspense } from "react";
-import "./App.css";
-// borderColor : bg-gradient-to-b from-fuchsia-500 to-cyan-500
-function App() {
+import "./style.css";
+
+const Home = () => {
   return (
     <div className="App bg-gradient-to-tl from-bgl1 to-bgl2 flex h-screen">
       <div className="Left basis-3/4 bg-yellow-40 p-10 px-14 flex flex-col justify-around">
@@ -23,7 +22,7 @@ function App() {
               <img
                 alt="welcomeImg"
                 className="h-full"
-                src={require("./assets/welcomeImg.png")}
+                src={require("../../assets/welcomeImg.png")}
               />
             </div>
           </div>
@@ -43,7 +42,7 @@ function App() {
                     <img
                       alt="logo"
                       className="w-5 h-8"
-                      src={require("../src/assets/icon.png")}
+                      src={require("../../assets/icon.png")}
                     />
                     <div className="ml-3">
                       <p className="text-white font-bold text-lg">ETH</p>
@@ -76,17 +75,17 @@ function App() {
                       <img
                         className="w-6"
                         alt="btc"
-                        src={require("../src/assets/btc.png")}
+                        src={require("../../assets/btc.png")}
                       />
                       <img
                         alt="eth"
                         className="w-6"
-                        src={require("../src/assets/eth.png")}
+                        src={require("../../assets/eth.png")}
                       />
                       <img
                         alt="bnb"
                         className="w-6"
-                        src={require("../src/assets/bnb.png")}
+                        src={require("../../assets/bnb.png")}
                       />
                     </div>
                     <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-0.5">
@@ -110,7 +109,7 @@ function App() {
             Personalised portfolio for Maximum returns
           </p>
         </div>
-        <img alt="img" src={require("../src/assets/illustration.png")} />
+        <img alt="img" src={require("../../assets/illustration.png")} />
         <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
           Start Now
         </button>
@@ -119,11 +118,4 @@ function App() {
   );
 };
 
-function App() {
-  return <div className="App flex">
-<Sidebar />
-    {makeRoutes()}
-    </div>;
-}
-
-export default App;
+export default Home;
