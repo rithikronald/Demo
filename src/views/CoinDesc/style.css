@@ -1,9 +1,9 @@
 .priceBorder {
     position: relative;
-  border: 2px solid black;
-  border: 1px solid;
-  border-image-source: linear-gradient(168.82deg, #fb37ff 1.7%, #1bb2de 99.52%);
-  border-image-slice: 10;
+  background: linear-gradient(168.82deg, #fb37ff 1.7%, #1bb2de 99.52%);
+  border-radius: 18px;
+}
+.priceBorderOnly {
   border-radius: 18px;
 }
 

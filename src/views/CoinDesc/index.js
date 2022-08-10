@@ -3,7 +3,7 @@ import marketCapLogo from "../../assets/marketCapLogo.png";
 
 const CoinDesc = () => {
   return (
-    <div className="p-5 overflow-hidden w-screen h-screen bg-gradient-to-tl from-bgl1 to-bgl2">
+    <div className="p-5 overflow-hidden w-screen h-screen bg-bgl1">
       <div className="flex justify-end space-x-10">
         {["1W", "1M", "3M", "1Y", "ALL"].map((ele) => (
           <div
@@ -29,11 +29,13 @@ const CoinDesc = () => {
             </p>
           </div>
           <div className="flex-col">
-            <div className="bg-transparent font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorder">
+            <div className="priceBorder p-[1px]">
+            <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
               <p className="text-[9px]">Price</p>
               <p className="text-[15px]">$</p>
               <p className="text-[25px] font-bold">40123</p>
               <p className="text-[15px] font-bold">.79</p>
+            </div>
             </div>
             <div className="h-[50%] flex justify-center items-end">
               <button className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]">

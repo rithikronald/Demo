@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import "./App.css";
 import routes from "./routes";
 import { Routes, Route } from "react-router-dom";
-import Sidebar from "./Components/Sidebar";
+import Sidebar from "./components/Sidebar";
 
 const makeRoutes = () => {
   return (

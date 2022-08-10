@@ -2,7 +2,7 @@ import "./style.css";
 
 const Home = () => {
   return (
-    <div className="App bg-gradient-to-tl from-bgl1 to-bgl2 flex h-screen">
+    <div className="App bg-bgl1 flex h-screen">
       <div className="Left basis-3/4 bg-yellow-40 p-10 px-14 flex flex-col justify-around">
         {/* Banner */}
         <div className="flex w-full h-1/3">

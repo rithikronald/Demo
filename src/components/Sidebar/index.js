@@ -9,7 +9,7 @@ import MaxPicks from '../../assets/max picks.png'
 import Settings from '../../assets/settings.png'
 
 const Sidebar = () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const Menus = [
       { title: "Dashboard", src: Dashboard },
       { title: "Indexes", src: Indexes}, 
@@ -46,16 +46,11 @@ const Sidebar = () => {
         open ? "w-96" : "w-20"
       } bg-darkPurple h-screen p-5  pt-8 relative duration-300 sidebar`}
     >
-      <img
-        src={Control}
-        className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple
-       border-2 rounded-full  ${!open && "rotate-180"}`}
-        onClick={() => setOpen(!open)}
-      />
       <div className="flex gap-x-4 items-center">
         <img
           src={Logo}
           className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"}`}
+          onClick={() => setOpen(!open)}
         />
         <h1
           className={`text-white origin-left font-medium text-xl duration-200 ${
