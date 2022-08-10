@@ -21,7 +21,7 @@ const CoinDesc = () => {
             <p className="text-3xl font-mont text-white font-bold">
               Bitcoin BTC
             </p>
-            <p className="font-mont text-white text-sm pt-[15px]">
+            <p className="font-mont text-white text-sm pt-[15px] pr-[40px]">
               Bitcoin is a decentralized digital currency that can be
               transferred on the peer-to-peer bitcoin network. Bitcoin
               transactions are verified by network nodes through cryptography
@@ -31,8 +31,8 @@ const CoinDesc = () => {
           <div className="flex-col">
             <div className="priceBorder p-[1px]">
             <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-              <p className="text-[9px]">Price</p>
-              <p className="text-[15px]">$</p>
+              <p className="text-[12px]">Price</p>
+              <p className="text-[18px] ml-[5px]">$</p>
               <p className="text-[25px] font-bold">40123</p>
               <p className="text-[15px] font-bold">.79</p>
             </div>
@@ -44,7 +44,7 @@ const CoinDesc = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 grid-rows-2">
+        <div className="grid grid-cols-3 grid-rows-2" style={{transform: 'translateY(-15px)'}} >
           {[
             {
               title: "Market Cap",
@@ -79,7 +79,7 @@ const CoinDesc = () => {
           ].map((ele) => (
             <div className="flex items-center">
               <img src={ele.logo} />
-              <div className="ml-3 font-mont text-white">
+              <div className="ml-3 font-mont text-white" style={{transform: 'translateX(-28px)'}}>
                 <p className="text-[9px]">{ele.title}</p>
                 <p className="text-[25px] font-bold">{ele.value}</p>
               </div>
@@ -87,7 +87,7 @@ const CoinDesc = () => {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 mt-[50px]">
+      <div className="grid grid-cols-2 gap-5 mt-[20px]">
         <div>
           <div className={`text-[15px] text-white font-mont flex space-x-4 items-center`}>
             <p>Market Cap</p>
@@ -100,7 +100,7 @@ const CoinDesc = () => {
         </div>
         <div>
           <div className={`text-[15px] text-white font-mont flex space-x-4 items-center`}>
-            <p>Price Action</p>
+            <p style={{transform: 'translateX(20px)'}}>Price Action</p>
           </div>
           <div className="h-[130px] mt-[15px] border-2 border-blue-500 rounded-xl">
 
@@ -110,7 +110,7 @@ const CoinDesc = () => {
       <div className="grid grid-cols-4 gap-3 mt-[40px]">
         <div>
           <div className={`text-[15px] text-white font-mont flex space-x-4 items-center`}>
-            <p>Social Dominance</p>
+            <p style={{transform: 'translateX(20px)'}}>Social Dominance</p>
           </div>
           <div className="h-[130px] mt-[15px] border-2 border-blue-500 rounded-xl">
 
@@ -118,7 +118,7 @@ const CoinDesc = () => {
         </div>
         <div>
           <div className={`text-[15px] text-white font-mont flex space-x-4 items-center`}>
-            <p>Network Growth</p>
+            <p style={{transform: 'translateX(20px)'}} >Network Growth</p>
           </div>
           <div className="h-[130px] mt-[15px] border-2 border-blue-500 rounded-xl">
 
@@ -126,7 +126,7 @@ const CoinDesc = () => {
         </div>
         <div>
           <div className={`text-[15px] text-white font-mont flex space-x-4 items-center`}>
-            <p>Market Sentiment</p>
+            <p style={{transform: 'translateX(20px)'}} >Market Sentiment</p>
           </div>
           <div className="h-[130px] mt-[15px] border-2 border-blue-500 rounded-xl">
 
@@ -134,7 +134,7 @@ const CoinDesc = () => {
         </div>
         <div>
           <div className={`text-[15px] text-white font-mont flex space-x-4 items-center`}>
-            <p>Dev Activity</p>
+            <p style={{transform: 'translateX(20px)'}} >Dev Activity</p>
           </div>
           <div className="h-[130px] mt-[15px] border-2 border-blue-500 rounded-xl">
 
