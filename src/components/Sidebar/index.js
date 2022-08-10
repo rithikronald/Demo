@@ -43,8 +43,8 @@ const Sidebar = () => {
     // </aside>
     <div
       className={` ${
-        open ? "w-96" : "w-20 "
-      } bg-dark-purple h-screen p-5  pt-8 relative duration-300 sidebar`}
+        open ? "w-96" : "w-20"
+      } bg-darkPurple h-screen p-5  pt-8 relative duration-300 sidebar`}
     >
       <img
         src={Control}

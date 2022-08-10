@@ -4,7 +4,7 @@ module.exports = {
   'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'],
   theme: {
     screens:{
-      sm:'480px',
+      sm:'375px',
       md:'768px',
       lg:'1024px',
       xl:'1440px',
@@ -20,7 +20,8 @@ module.exports = {
         bgl2:"#181546",
         left:"#1A1B69",
         right:"#8A165E",
-        top:"#165A4F"
+        top:"#165A4F",
+        darkPurple:"#341E63"
       },
       fontFamily: {
         mont: ['Montserrat']

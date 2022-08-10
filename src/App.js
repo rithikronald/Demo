@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import "./App.css";
 import routes from "./routes";
 import { Routes, Route } from "react-router-dom";
-import Sidebar from './components/Sidebar'
+import Sidebar from "./Components/Sidebar";
 
 const makeRoutes = () => {
   return (
@@ -11,7 +11,9 @@ const makeRoutes = () => {
         <Route
           path={route.path}
           element={
-            <Suspense fallback={<div className="font-mono text-base" >Loading...</div>} >
+            <Suspense
+              fallback={<div className="font-mono text-base">Loading...</div>}
+            >
               <route.component />
             </Suspense>
           }
@@ -23,10 +25,12 @@ const makeRoutes = () => {
 };
 
 function App() {
-  return <div className="App flex">
-<Sidebar />
-    {makeRoutes()}
-    </div>;
+  return (
+    <div className="App flex">
+      <Sidebar />
+      {makeRoutes()}
+    </div>
+  );
 }
 
 export default App;
