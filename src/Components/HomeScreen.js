@@ -66,7 +66,7 @@ export const HomeScreen = () => {
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
             {/* xl-3 2xl-4 3xl-4(or)5 */}
-            {Array.apply(null, Array(4)).map(() => (
+            {Array.apply(null, Array(3)).map(() => (
               <div className="w-1/4 h-60 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-1/5 3xl:w-1/6 3xl:h-80">
                 <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                   <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>

@@ -20,7 +20,8 @@ module.exports = {
         bgl2:"#181546",
         left:"#1A1B69",
         right:"#8A165E",
-        top:"#165A4F"
+        top:"#165A4F",
+        darkPurple:"#341E63"
       },
       fontFamily: {
         mont: ['Montserrat']
