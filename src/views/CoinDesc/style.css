@@ -6,7 +6,23 @@
 .priceBorderOnly {
   border-radius: 18px;
 }
-
+.newGraphBorder {
+  background: linear-gradient(163.21deg, rgba(251, 55, 255, 0.5) 1.57%, rgba(176, 178, 239, 0.189) 24.95%, rgba(176, 178, 239, 0.189) 56.38%, rgba(27, 178, 222) 91.55%);
+  border-radius: 18px;
+  backdrop-filter: blur(100px);
+}
+.newGraphBorderInner {
+  border-radius: 19px;
+}
+.newGraphBorder2 {
+  background: linear-gradient(163.21deg, rgba(251, 55, 255, 0.5) 1.57%, rgba(176, 178, 239, 0.189) 24.95%, rgba(176, 178, 239, 0.189) 56.38%, rgba(27, 178, 222) 91.55%);
+  border-radius: 18px;
+  backdrop-filter: blur(100px);
+}
+.newGraphBorderInner2 {
+  border-radius: 19px;
+}
+/* 
 .priceBorder::after {
     position: absolute;
     top: -2px;
@@ -17,4 +33,7 @@
     content: '';
     z-index: -1;
     border-radius: 8px;
-}
+} */
+
+
+
