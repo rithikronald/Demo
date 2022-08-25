@@ -27,7 +27,7 @@ const makeRoutes = () => {
 function App() {
   return (
     <div className="App flex">
-      {/* <Sidebar /> */}
+      <Sidebar />
       {makeRoutes()}
     </div>
   );
