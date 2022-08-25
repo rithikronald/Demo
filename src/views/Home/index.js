@@ -1,6 +1,21 @@
+import { useEffect, useState } from "react";
+import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import "./style.css";
 
 const Home = () => {
+  const { height, width } = useWindowDimensions();
+  const [maxPicksList, setMaxPicksList] = useState(6);
+  const [indexesList, setIndexesList] = useState(3);
+  useEffect(() => {
+    console.log("DIMENSION",width,height);
+   if(width>2500){
+    setMaxPicksList(12)
+   }
+   else if(width>2000){
+    setMaxPicksList(8)
+   }
+  }, [width,height]);
+
   return (
     <div className="App bg-bgl1 flex h-screen">
       <div className="Left basis-3/4 bg-yellow-40 p-10 px-14 flex flex-col justify-around">
@@ -35,9 +50,9 @@ const Home = () => {
           </div>
           <div className="coinSection flex flex-row flex-wrap justify-between">
             {/* xl-6 2xl-8 3xl-12(or)5 */}
-            {Array.apply(null, Array(6)).map(() => (
+            {Array.apply(null, Array(maxPicksList)).map(() => (
               <div className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
-                <div className="bg-bg rounded-2xl h-full flex flex-row items-center justify-between p-4 px-6">
+                <div className="bg-bg rounded-2xl h-full flex flex-row items-center p-4 px-6">
                   <div className="flex flex-row mr-16 items-center">
                     <img
                       alt="logo"
