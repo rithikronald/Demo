@@ -1,3 +1,4 @@
+import { ThemeButton } from "../../components/themeButton";
 import "./style.css";
 
 const Home = () => {
@@ -110,9 +111,10 @@ const Home = () => {
           </p>
         </div>
         <img alt="img" src={require("../../assets/illustration.png")} />
-        <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
+        {/* <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
           Start Now
-        </button>
+        </button> */}
+        <ThemeButton text="Start Now" />
       </div>
     </div>
   );

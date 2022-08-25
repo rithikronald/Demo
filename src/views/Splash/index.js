@@ -7,7 +7,7 @@ const Splash = () => {
         <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
           AI Powered financial manager
         </p>
-        <p className="text-4xl text-center text-white font-medium 4xl:text-4xl w-1/2">
+        <p className="text-4xl text-center text-white font-semibold 4xl:text-4xl w-1/2">
           Personalised portfolio for Maximum returns
         </p>
       </div>
