@@ -1,10 +1,63 @@
-import { ThemeButton } from "../../components/themeButton";
 import "./style.css";
+import { useEffect, useState } from "react";
+import { Cell, Pie, PieChart } from "recharts";
+import { useWindowDimensions } from "../../hooks/useWindowDimension";
+
+const data02 = [
+  {
+    name: "Group A",
+    value: 2400,
+    color: "#165DFF",
+  },
+  {
+    name: "Group B",
+    value: 4567,
+    color: "#0FC6C2",
+  },
+  {
+    name: "Group C",
+    value: 1398,
+    color: "#722ED1",
+  },
+  {
+    name: "Group D",
+    value: 9800,
+    color: "#F7BA1E",
+  },
+  {
+    name: "Group E",
+    value: 3908,
+    color: "#722ED1",
+  },
+  {
+    name: "Group F",
+    value: 4800,
+    color: "#D91AD9",
+  },
+];
 
 const Home = () => {
+  const { height, width } = useWindowDimensions();
+  const [maxPicksList, setMaxPicksList] = useState(6);
+  const [indexesList, setIndexesList] = useState(4);
+  const [pageRightIndex, setPageRightIndex] = useState(0);
+  useEffect(() => {
+    console.log("DIMENSION", width, height);
+    if (width >= 2500) {
+      setMaxPicksList(12);
+      setIndexesList(4);
+    } else if (width >= 2000) {
+      setMaxPicksList(8);
+      setIndexesList(4);
+    } else if (width >= 1440) {
+      setMaxPicksList(6);
+      setIndexesList(3);
+    }
+  }, [width, height]);
+
   return (
     <div className="App bg-bgl1 flex h-screen">
-      <div className="Left basis-3/4 bg-yellow-40 p-10 px-14 flex flex-col justify-around">
+      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
         {/* Banner */}
         <div className="flex w-full h-1/3">
           <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-l to-purple-600 from-purple-900 flex 2xl:pl-10">
@@ -36,9 +89,9 @@ const Home = () => {
           </div>
           <div className="coinSection flex flex-row flex-wrap justify-between">
             {/* xl-6 2xl-8 3xl-12(or)5 */}
-            {Array.apply(null, Array(6)).map(() => (
+            {Array.apply(null, Array(maxPicksList)).map(() => (
               <div className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
-                <div className="bg-bg rounded-2xl h-full flex flex-row items-center justify-between p-4 px-6">
+                <div className="bg-bg rounded-2xl h-full flex flex-row items-center p-4 px-6">
                   <div className="flex flex-row mr-16 items-center">
                     <img
                       alt="logo"
@@ -67,7 +120,7 @@ const Home = () => {
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
             {/* xl-3 2xl-4 3xl-4(or)5 */}
-            {Array.apply(null, Array(4)).map(() => (
+            {Array.apply(null, Array(indexesList)).map(() => (
               <div className="w-1/4 h-60 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-1/5 3xl:w-1/6 3xl:h-80">
                 <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                   <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
@@ -111,10 +164,9 @@ const Home = () => {
           </p>
         </div>
         <img alt="img" src={require("../../assets/illustration.png")} />
-        {/* <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
+        <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
           Start Now
-        </button> */}
-        <ThemeButton text="Start Now" />
+        </button>
       </div>
     </div>
   );
