@@ -54,23 +54,20 @@ const Login = () => {
                     className="
                     rounded-2xl
                     bg-transparent
-        form-control
-        block
-        w-full
-        h-full
-        px-3
-        py-1.5
-        text-base
-        font-normal
-        text-white
-        
-        border border-solid border-gray-300
-        
-        transition
-        ease-in-out
-        m-0
-        focus:text-white focus:bg-transparent focus:border-none focus:outline-none
-      "
+                    form-control
+                    block
+                    w-full
+                    h-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-normal
+                    text-white
+                    border border-solid border-gray-300
+                    transition
+                    ease-in-out
+                    m-0
+                    focus:text-white focus:bg-transparent focus:border-none focus:outline-none"
                     id="numberInput"
                     placeholder="Number input"
                   />
