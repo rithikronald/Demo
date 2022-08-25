@@ -1,7 +1,7 @@
+import "./style.css";
 import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import "./style.css";
 
 const data02 = [
   {
@@ -154,149 +154,19 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col sm:hidden xl:flex">
-        {pageRightIndex == 0 && (
-          <>
-            {/* pageIndex-0 */}
-            <div>
-              <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
-                AI Powered financial manager
-              </p>
-              <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
-                Personalised portfolio for Maximum returns
-              </p>
-            </div>
-            <img alt="img" src={require("../../assets/illustration.png")} />
-            <button
-              onClick={() => setPageRightIndex(1)}
-              className="bg-primaryButton text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl"
-            >
-              Start Now
-            </button>
-          </>
-        )}
-        {pageRightIndex == 1 && (
-          <>
-            <div>
-              <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
-                How much would you like to Invest?
-              </p>
-              <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
-                $12500
-              </p>
-            </div>
-            <div>
-              <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
-                What is your investment Tenure?
-              </p>
-              <div className="flex flex-wrap flex-row justify-between items-center mt-6">
-                {Array.apply(null, Array(3)).map(() => (
-                  <div className="w-28 h-40 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5">
-                    <div className="optionsCard w-full h-full p-3 rounded-2xl flex flex-col justify-between bg-bg items-start">
-                      <img
-                        alt="img"
-                        className="w-5 h-5"
-                        src={require("../../assets/optionIcon.png")}
-                      />
-                      <p className="text-xl font-bold text-white">Short-Term</p>
-                      <p className="text-sm text-center text-white font-medium ">
-                        1-3 years
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
-                What is your investment Tenure?
-              </p>
-              <div className="flex flex-wrap flex-row justify-between items-center mt-6">
-                {Array.apply(null, Array(3)).map(() => (
-                  <div className="w-28 h-40 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5">
-                    <div className="optionsCard w-full h-full p-3 rounded-2xl flex flex-col justify-between bg-bg items-start">
-                      <img
-                        alt="img"
-                        className="w-5 h-5"
-                        src={require("../../assets/optionIcon.png")}
-                      />
-                      <p className="text-xl font-bold text-white">Short-Term</p>
-                      <p className="text-sm text-center text-white font-medium ">
-                        1-3 years
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <button
-              onClick={() => setPageRightIndex(2)}
-              className="bg-primaryButton text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl"
-            >
-              Smart Suggest
-            </button>
-          </>
-        )}
-        {pageRightIndex == 2 && (
-          <>
-            <div>
-              <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
-                Suggested portfolio for Maximum gain
-              </p>
-            </div>
-            <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-full h-1/2 rounded-2xl p-0.5">
-              <div className="bg-bg w-full h-full rounded-2xl">
-                <div className="flex justify-center items-center relative">
-                  <PieChart width={200} height={200}>
-                    <Pie
-                      data={data02}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                    >
-                      {data02.map((ele) => (
-                        <Cell fill={ele.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                  <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <p className="font-mont text-white font-[18px]">BTC</p>
-                    <p className="font-mont text-white font-bold text-[30px] mt-[-10px]">
-                      22%
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2 p-[20px_20px_40px_20px]">
-                  {[1, 2, 3, 4, 5, 6].map((ele) => (
-                    <div className="flex justify-center items-center mt-[20px]">
-                      <img
-                        alt="btc"
-                        className="h-[44px] w-[44px]"
-                        src={require("../../assets/btcLight.png")}
-                      />
-                      <div className="pl-[10px]">
-                        <p className="font-mont text-white text-[10px]">
-                          BITCOIN
-                        </p>
-                        <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                        <p className="font-mont text-white text-[19px]">BTC</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setPageRightIndex(1)}
-              className="bg-primaryButton text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl"
-            >
-              Invest Now
-            </button>
-          </>
-        )}
+      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col">
+        <div>
+          <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
+            AI Powered financial manager
+          </p>
+          <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
+            Personalised portfolio for Maximum returns
+          </p>
+        </div>
+        <img alt="img" src={require("../../assets/illustration.png")} />
+        <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
+          Start Now
+        </button>
       </div>
     </div>
   );
