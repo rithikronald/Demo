@@ -56,7 +56,7 @@ const Home = () => {
   }, [width, height]);
 
   return (
-    <div className="App bg-bgl1 flex h-screen">
+    <div className="App bg-bgl1 flex h-screen w-full">
       <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
         {/* Banner */}
         <div className="flex w-full h-1/3">
