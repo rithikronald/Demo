@@ -7,6 +7,7 @@ const OTPVerification = React.lazy(() => import("./views/OTP-Verification"));
 const Home = React.lazy(() => import("./views/Home"));
 const CoinDesc = React.lazy(() => import("./views/CoinDesc"));
 const Indexes = React.lazy(() => import("./views/Indexes"));
+const CoinList = React.lazy(() => import("./views/CoinList"));
 const TransactionSummary = React.lazy(() =>
   import("./views/TransactionSummary")
 );
@@ -25,6 +26,7 @@ const routes = [
   { path: "/dashboard", name: "Home", exact: true, component: Home },
   { path: "/coin-desc", name: "CoinDesc", exact: true, component: CoinDesc },
   { path: "/indexes", name: "Indexes", exact: true, component: Indexes },
+  { path: "/coinList", name: "CoinList", exact: true, component: CoinList },
   {
     path: "/transactionSummary",
     name: "transactionSummary",

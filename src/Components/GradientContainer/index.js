@@ -15,9 +15,7 @@ export const GradientContainer = ({
         }  rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500  p-0.5 ${className}`
       )}
     >
-      <div className="bg-bg rounded-2xl h-full flex flex-col  justify-between ">
-        {children}
-      </div>
+      <div className="bg-bg rounded-2xl h-full flex flex-col  ">{children}</div>
     </div>
   );
 };
