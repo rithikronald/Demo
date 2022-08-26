@@ -2,7 +2,7 @@ import "./style.css";
 import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-
+// 15-w-1536 14-w-1440 15-h-714 14-h-768
 const data02 = [
   {
     name: "Group A",
@@ -46,10 +46,10 @@ const Home = () => {
     if (width >= 2500) {
       setMaxPicksList(12);
       setIndexesList(4);
-    } else if (width >= 2000) {
+    } else if (width >= 1740) {
       setMaxPicksList(8);
       setIndexesList(4);
-    } else if (width >= 1440) {
+    } else if (width <= 1440) {
       setMaxPicksList(6);
       setIndexesList(3);
     }
@@ -62,13 +62,13 @@ const Home = () => {
         <div className="flex w-full h-1/3">
           <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-l to-purple-600 from-purple-900 flex 2xl:pl-10">
             <div className="cardLeft basis:1/2 w-full h-full p-6 flex flex-col justify-around 3xl:py-20">
-              <p className="text-lg text-white font-medium 3xl:text-3xl ">
-                Welcome Ram
+              <p className="text-md text-white font-medium 3xl:text-3xl ">
+                Welcome Ram!
               </p>
-              <p className="text-2xl 2xl:text-4xl 3xl:text-5xl font-bold text-white">
+              <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white">
                 Enhance your financial life with Maximum Protocol
               </p>
-              <button className="bg-purple-500 text-white p-4 font-bold rounded-lg md:w-40 h-14 shadow-lg">
+              <button className="bg-purple-500 text-white font-bold rounded-lg md:w-40 h-14 shadow-lg mt-3">
                 Watch Now
               </button>
             </div>
@@ -84,7 +84,7 @@ const Home = () => {
         {/* Coins */}
         <div className="flex flex-col mt-4">
           <div className="maxPicks flex flex-row justify-between">
-            <p className="text-white text-xl">Max Picks</p>
+            <p className="text-white text-lg">Max Picks</p>
             <button className="text-gray-400 text">view all</button>
           </div>
           <div className="coinSection flex flex-row flex-wrap justify-between">
@@ -115,13 +115,13 @@ const Home = () => {
         {/* Indexes */}
         <div className="flex flex-col mt-4">
           <div className="maxPicks flex flex-row justify-between">
-            <p className="text-white text-xl">Indexes</p>
+            <p className="text-white text-lg">Indexes</p>
             <button className="text-gray-400 text">view all</button>
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
             {/* xl-3 2xl-4 3xl-4(or)5 */}
             {Array.apply(null, Array(indexesList)).map(() => (
-              <div className="w-1/4 h-60 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-1/5 3xl:w-1/6 3xl:h-80">
+              <div className="w-1/4 h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-[20%] 3xl:w-1/6 3xl:h-80">
                 <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                   <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
                   <div className="flex justify-between items-center mt-1">
@@ -154,19 +154,149 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col">
-        <div>
-          <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
-            AI Powered financial manager
-          </p>
-          <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
-            Personalised portfolio for Maximum returns
-          </p>
-        </div>
-        <img alt="img" src={require("../../assets/illustration.png")} />
-        <button className="bg-purple-500 text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl">
-          Start Now
-        </button>
+      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col sm:hidden xl:flex">
+        {pageRightIndex == 0 && (
+          <>
+            {/* pageIndex-0 */}
+            <div>
+              <p className="text-md text-center text-white font-medium 3xl:text-3xl ">
+                AI Powered financial manager
+              </p>
+              <p className="text-white font-semibold text-center mt-6  text-2xl 2xl:text-2xl 3xl:text-5xl">
+                Personalised portfolio for Maximum returns
+              </p>
+            </div>
+            <img alt="img" src={require("../../assets/illustration.png")} />
+            <button
+              onClick={() => setPageRightIndex(1)}
+              className="bg-primaryButton text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl"
+            >
+              Start Now
+            </button>
+          </>
+        )}
+        {pageRightIndex == 1 && (
+          <>
+            <div>
+              <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
+                How much would you like to Invest?
+              </p>
+              <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
+                <span className="font-normal">$</span>12500
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
+                What is your investment Tenure?
+              </p>
+              <div className="flex flex-wrap flex-row justify-between items-center mt-3">
+                {Array.apply(null, Array(3)).map(() => (
+                  <div className="w-[30%] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
+                    <div className="optionsCard w-full h-full px-2 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start">
+                      <img
+                        alt="img"
+                        className="w-4 h-4 3xl:w-6 3xl:h-6"
+                        src={require("../../assets/optionIcon.png")}
+                      />
+                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">Long-Term</p>
+                      <p className="text-[10px] text-center text-white font-light 3xl:text-lg">
+                        1-3 years
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
+                What is your investment Tenure?
+              </p>
+              <div className="flex flex-wrap flex-row justify-between items-center mt-3">
+              {Array.apply(null, Array(3)).map(() => (
+                  <div className="w-[30%] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
+                    <div className="optionsCard w-full h-full px-2 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start">
+                      <img
+                        alt="img"
+                        className="w-4 h-4 3xl:w-6 3xl:h-6"
+                        src={require("../../assets/optionIcon.png")}
+                      />
+                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">Long-Term</p>
+                      <p className="text-[10px] text-center text-white font-light 3xl:text-lg">
+                        1-3 years
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button
+              onClick={() => setPageRightIndex(2)}
+              className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
+            >
+              Smart Suggest
+            </button>
+          </>
+        )}
+        {pageRightIndex == 2 && (
+          <>
+            <div>
+              <p className="text-white font-semibold text-center mt-6  text-2xl 2xl:text-2xl 3xl:text-5xl">
+                Suggested portfolio for maximum gain
+              </p>
+            </div>
+            <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-full h-[75%] rounded-2xl p-0.5 my-5 3xl:h-[60%]">
+              <div className="bg-bg w-full h-full rounded-2xl flex flex-col justify-around pt-4">
+                <div className="flex justify-center items-center relative">
+                  <PieChart width={200} height={200}>
+                    <Pie
+                      data={data02}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={width>1768?80:60}
+                      outerRadius={width>1768?100:80}
+                    >
+                      {data02.map((ele) => (
+                        <Cell fill={ele.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                  <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <p className="font-mont text-white font-[18px]">BTC</p>
+                    <p className="font-mont text-white font-bold text-[30px] mt-[-10px]">
+                      22%
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3 p-[20px_20px_40px_20px]">
+                  {[1, 2, 3, 4, 5, 6].map((ele) => (
+                    <div className="flex justify-center items-center mt-[20px]">
+                      <img
+                        alt="btc"
+                        className="h-10 w-10 3xl:h-14 3xl:w-14"
+                        src={require("../../assets/btcLight.png")}
+                      />
+                      <div className="pl-[6px]">
+                        <p className="font-mont text-white text-[10px] 3xl:text-xl">
+                          BITCOIN
+                        </p>
+                        <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
+                        <p className="font-medium text-white text-sm 3xl:text-xl">22%</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setPageRightIndex(1)}
+              className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl "
+            >
+              Invest Now
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
