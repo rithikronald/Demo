@@ -1,74 +1,103 @@
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { useEffect, useRef, useState } from "react";
 import classnames from "classnames";
 import sortIcon from "../../assets/sort.png";
 import tradeIcon from "../../assets/trade.png";
 import seeAllIcon from "../../assets/seeAll.png";
 import { GradientContainer } from "../../components/GradientContainer";
-import { ThemeButton } from "../../components/themeButton";
-
+import { Fragment, useState } from "react";
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
+} from "@material-tailwind/react";
 const CoinList = () => {
+  const { height, width } = useWindowDimensions();
   const tableSampleData = [
     {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
+      transactionId: "78SDFGUHSI89",
+      type: "Buy",
+      coin: "Gaming",
+      date: "Jun 22, 2022",
+      amount: "$15",
+      status: "pending",
     },
     {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
+      transactionId: "67h5M3RTY624",
+      type: "Sell",
+      coin: "Ethereum",
+      date: "Jun 20, 2022",
+      amount: "$1000",
+      status: "completed",
     },
     {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
+      transactionId: "67h5M3RTY624",
+      type: "Sell",
+      coin: "Ethereum",
+      date: "Jun 20, 2022",
+      amount: "$1000",
+      status: "completed",
     },
     {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
-    },
-  ];
-
-  const tabsData = [
-    {
-      label: "Buy",
-    },
-    {
-      label: "Sell",
+      transactionId: "67h5M3RTY624",
+      type: "Sell",
+      coin: "Ethereum",
+      date: "Jun 20, 2022",
+      amount: "$1000",
+      status: "completed",
     },
   ];
 
-  const innertabsData = [
+  const transactionsSampleData = [
     {
-      label: "Limit",
+      title: "Buy USDT",
+      desc: "-50 USDT",
+      amount: "+ 1024.53 USDT",
+      address: "Jun 22, 2022",
+      date: "Jun 21, 2022",
+      token: "USDT Tether",
+      network: "ERC20",
+      status: "pending",
     },
     {
-      label: "Market",
+      title: "Buy USDT",
+      desc: "-50 USDT",
+      amount: "+ 1024.53 USDT",
+      address: "Jun 22, 2022",
+      date: "Jun 21, 2022",
+      token: "USDT Tether",
+      network: "ERC20",
+      status: "pending",
+    },
+    {
+      title: "Buy USDT",
+      desc: "-50 USDT",
+      amount: "+ 1024.53 USDT",
+      address: "Jun 22, 2022",
+      date: "Jun 21, 2022",
+      token: "USDT Tether",
+      network: "ERC20",
+      status: "pending",
+    },
+    {
+      title: "Buy USDT",
+      desc: "-50 USDT",
+      amount: "+ 1024.53 USDT",
+      address: "Jun 22, 2022",
+      date: "Jun 21, 2022",
+      token: "USDT Tether",
+      network: "ERC20",
+      status: "pending",
     },
   ];
 
   const TableItem = ({
     index,
-    name,
-    change,
-    marketCap,
-    supply,
-    volume,
-    price,
+    transactionId,
+    type,
+    coin,
+    date,
+    amount,
+    status,
   }) => {
     return (
       <tr
@@ -82,14 +111,14 @@ const CoinList = () => {
           scope="row"
           className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          {name}
+          {transactionId}
         </th>
 
-        <td className="py-4 px-6 text-white">{change}</td>
-        <td className="py-4 px-6 text-white">{marketCap}</td>
-        <td className="py-4 px-6 text-white">{supply}</td>
-        <td className="py-4 px-6 text-white">{volume}</td>
-        <td className="py-4 px-6 text-white">{price}</td>
+        <td className="py-4 px-6 text-white">{type}</td>
+        <td className="py-4 px-6 text-white">{coin}</td>
+        <td className="py-4 px-6 text-white">{date}</td>
+        <td className="py-4 px-6 text-white">{amount}</td>
+        <td className="py-4 px-6 text-white">{status}</td>
       </tr>
     );
   };
@@ -128,105 +157,86 @@ const CoinList = () => {
   };
 
   const RightContainer = ({ option, icon }) => {
+    return <CollapsedCard data={transactionsSampleData} />;
+  };
+
+  const HistoryCard = ({ title, desc, amount }) => {
     return (
-      <div className="py-10 px-6 flex justify-center flex-col">
-        <Tabs data={innertabsData} />;
-        <div className="bg-transparent my-2 px-2">
-          <p className="text-white font-medium text-lg">Price</p>
-          <GradientContainer
-            height="h-16"
-            width="w-full"
-            children={
-              <input
-                type="text"
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
-            }
-          />
+      <div className="flex justify-between items-center px-2 w-full ">
+        <div className="h-16 w-1 bg-red-400 rounded-md" />
+        <div>
+          <p className="text-white font-medium text-base">{title}</p>
+          <p className="text-gray-500  font-normal text-sm">{desc}</p>
         </div>
-        <div className="bg-transparent my-2 px-2">
-          <p className="text-white font-medium text-lg">Amount</p>
-          <GradientContainer
-            height="h-16"
-            width="w-full"
-            children={
-              <input
-                type="text"
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
-            }
-          />
-        </div>
-        <div className="bg-transparent my-2 px-2">
-          <p className="text-white font-medium text-lg">Total</p>
-          <GradientContainer
-            height="h-16"
-            width="w-full"
-            children={
-              <p className="text-white font-medium text-lg text-center mt-4">
-                $6553.94
-              </p>
-            }
-          />
-        </div>
-        <ThemeButton text="Trade" className="w-full mt-4" />
+        <p className="text-gray-500  font-normal text-sm">{amount}</p>
       </div>
     );
   };
 
-  function Tabs({ data, innerTabs = false }) {
-    const [activeTabIndex, setActiveTabIndex] = useState(0);
-    const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
-    const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
+  const CollapsedCard = ({ data }) => {
+    const [open, setOpen] = useState(0);
 
-    const tabsRef = useRef([]);
+    const handleOpen = (value) => {
+      setOpen(open === value ? 0 : value);
+    };
 
-    useEffect(() => {
-      function setTabPosition() {
-        const currentTab = tabsRef.current[activeTabIndex];
-        console.log(currentTab?.offsetLeft, currentTab?.clientWidth);
-        setTabUnderlineLeft(currentTab?.offsetLeft ?? 0);
-        setTabUnderlineWidth(currentTab?.clientWidth ?? 0);
-      }
-
-      setTabPosition();
-      window.addEventListener("resize", setTabPosition);
-
-      return () => window.removeEventListener("resize", setTabPosition);
-    }, [activeTabIndex]);
-
-    return (
-      <>
-        <div className="relative">
-          <div className="flex space-x-3 text-white text-lg font-semibold  items-center justify-center">
-            {data.map((tab, idx) => {
-              return (
-                <button
-                  key={idx}
-                  ref={(el) => (tabsRef.current[idx] = el)}
-                  className="pt-2 pb-3"
-                  onClick={() => setActiveTabIndex(idx)}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-          <span
-            className="absolute bottom-0 block h-1 bg-primaryButton rounded-md transition-all duration-300"
-            style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
+    const Icon = ({ id, open }) => {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`${
+            id === open ? "rotate-180" : ""
+          } h-5 w-5 transition-transform`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="white"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
           />
-        </div>
-      </>
+        </svg>
+      );
+    };
+    return (
+      <Fragment>
+        {data.map((data, i) => {
+          let { title, desc, amount, address, date, token, network, status } =
+            data;
+          return (
+            <Accordion
+              className="bg-tansparent border-none "
+              open={open === i + 1}
+              icon={<Icon id={i + 1} open={open} />}
+              onClick={() => handleOpen(i + 1)}
+            >
+              <AccordionHeader className="border-none px-2 ">
+                <HistoryCard title={title} desc={desc} amount={amount} />
+              </AccordionHeader>
+              <AccordionBody className="bg-transparent text-white px-2 my-0">
+                <div className="text-white">
+                  <p>
+                    Address: {address} <p>Date: {date}</p>
+                    <p>Amount: {amount}</p> <p>Token: {token}</p>
+                    <p>Network: {network}</p> <p>Status: {status}</p>
+                  </p>
+                </div>
+              </AccordionBody>
+            </Accordion>
+          );
+        })}
+      </Fragment>
     );
-  }
+  };
 
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
       {/* Left */}
       <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
         <div className="Header flex justify-between ">
-          <p className="text-white text-2xl font-semibold">All Coins</p>
+          <p className="text-white text-2xl font-semibold">Transactions</p>
           <form>
             <div className="flex">
               <label
@@ -294,22 +304,22 @@ const CoinList = () => {
                 <thead className="text-xs text-gray-700 uppercase border-b-2 border-fuchsia-500 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="py-3 px-6">
-                      NAME
+                      TRANSACTION ID
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      CHANGE
+                      TYPE
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      MARKET CAP
+                      COIN/INDEX
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      SUPPLY
+                      DATE
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      VOLUME
+                      AMOUNT
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      PRICE
+                      STATUS
                     </th>
                   </tr>
                 </thead>
@@ -319,12 +329,12 @@ const CoinList = () => {
                     return (
                       <TableItem
                         index={i}
-                        name={data.name}
-                        change={data.change}
-                        marketCap={data.marketCap}
-                        supply={data.supply}
-                        volume={data.volume}
-                        price={data.price}
+                        transactionId={data.transactionId}
+                        type={data.type}
+                        coin={data.coin}
+                        date={data.date}
+                        amount={data.amount}
+                        status={data.status}
                       />
                     );
                   })}
@@ -345,7 +355,9 @@ const CoinList = () => {
 
       {/* Right */}
       <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col">
-        <Tabs data={tabsData} />
+        <p className="text-white text-center font-semibold text-2xl">
+          Deposit & Withdraw
+        </p>
         <GradientContainer
           height="h-4/5"
           width="3/4"
