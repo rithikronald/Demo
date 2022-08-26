@@ -1,4 +1,6 @@
-import React from "react";
+import React from 'react'
+
+const IndexesParticular = React.lazy(() => import('./views/IndexParticulars'))
 const Splash = React.lazy(() => import("./views/Splash"));
 const Login = React.lazy(() => import("./views/Login"));
 const OTPVerification = React.lazy(() => import("./views/OTP-Verification"));
@@ -36,6 +38,7 @@ const routes = [
     component: WalletOverview,
   },
   { path: "/settings", name: "settings", exact: true, component: Settings },
+  {path: '/indexes/:indexId', name: 'IndexesParticular', exact: true, component: IndexesParticular}
 ];
 
 export default routes;
