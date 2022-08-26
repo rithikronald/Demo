@@ -1,6 +1,14 @@
 import "./style.css";
 import marketCapLogo from "../../assets/marketCapLogo.png";
-import { AreaChart, XAxis, YAxis, Area, CartesianGrid, LineChart, Line } from "recharts";
+import {
+  AreaChart,
+  XAxis,
+  YAxis,
+  Area,
+  CartesianGrid,
+  LineChart,
+  Line,
+} from "recharts";
 
 const data = [
   {
@@ -80,61 +88,76 @@ const CustomAreaCharts = (props) => {
   );
 };
 
-
 const data03 = [
   {
-    "name": "Page A",
-    "uv": 4000,
-    "pv": 2400,
-    "amt": 2400
+    name: "Page A",
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
   },
   {
-    "name": "Page B",
-    "uv": 3000,
-    "pv": 1398,
-    "amt": 2210
+    name: "Page B",
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
   },
   {
-    "name": "Page C",
-    "uv": 2000,
-    "pv": 9800,
-    "amt": 2290
+    name: "Page C",
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
   },
   {
-    "name": "Page D",
-    "uv": 2780,
-    "pv": 3908,
-    "amt": 2000
+    name: "Page D",
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
   },
   {
-    "name": "Page E",
-    "uv": 1890,
-    "pv": 4800,
-    "amt": 2181
+    name: "Page E",
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
   },
   {
-    "name": "Page F",
-    "uv": 2390,
-    "pv": 3800,
-    "amt": 2500
+    name: "Page F",
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
   },
   {
-    "name": "Page G",
-    "uv": 3490,
-    "pv": 4300,
-    "amt": 2100
-  }
-]
+    name: "Page G",
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
 
 const CustomLineChart = (props) => {
   return (
-    <LineChart width={props.width} height={props.height} data={data03}
-  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-  <Line type="monotone" dataKey="pv" dot={false} strokeWidth={3} stroke="#E323FF" />
-  <Line type="monotone" dataKey="uv" dot={false} strokeWidth={3} stroke="#4DFFDF" />
-</LineChart>
-  )
-}
+    <LineChart
+      width={props.width}
+      height={props.height}
+      data={data03}
+      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+    >
+      <Line
+        type="monotone"
+        dataKey="pv"
+        dot={false}
+        strokeWidth={3}
+        stroke="#E323FF"
+      />
+      <Line
+        type="monotone"
+        dataKey="uv"
+        dot={false}
+        strokeWidth={3}
+        stroke="#4DFFDF"
+      />
+    </LineChart>
+  );
+};
 
 const CoinDesc = () => {
   return (
@@ -239,7 +262,7 @@ const CoinDesc = () => {
           </div>
           <div className="flex newGraphBorder2 items-center h-[180px] p-[1px] mt-[15px]">
             <div className="newGraphBorderInner2 flex items-center bg-bgl1 h-[178px] w-full">
-            <CustomAreaCharts width={670} height={150} />
+              <CustomAreaCharts width={670} height={150} />
             </div>
           </div>
         </div>
@@ -251,7 +274,7 @@ const CoinDesc = () => {
           </div>
           <div className="flex newGraphBorder2 items-center h-[180px] p-[1px] mt-[15px]">
             <div className="newGraphBorderInner2 flex items-center bg-bgl1 h-[178px] w-full">
-            <CustomAreaCharts width={670} height={150} />
+              <CustomAreaCharts width={670} height={150} />
             </div>
           </div>
         </div>
@@ -264,7 +287,7 @@ const CoinDesc = () => {
             <p style={{ transform: "translateX(20px)" }}>Social Dominance</p>
           </div>
           <div className="h-[130px] mt-[15px] p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1" >
+            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
               <CustomAreaCharts width={340} height={100} />
             </div>
           </div>
@@ -276,7 +299,7 @@ const CoinDesc = () => {
             <p style={{ transform: "translateX(20px)" }}>Network Growth</p>
           </div>
           <div className="h-[130px] mt-[15px] p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1" >
+            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
               <CustomAreaCharts width={340} height={100} />
             </div>
           </div>
@@ -288,7 +311,7 @@ const CoinDesc = () => {
             <p style={{ transform: "translateX(20px)" }}>Market Sentiment</p>
           </div>
           <div className="h-[130px] mt-[15px] p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1" >
+            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
               <CustomLineChart width={340} height={100} />
             </div>
           </div>
@@ -300,7 +323,7 @@ const CoinDesc = () => {
             <p style={{ transform: "translateX(20px)" }}>Dev Activity</p>
           </div>
           <div className="h-[130px] mt-[15px] p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1" >
+            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
               <CustomLineChart width={340} height={100} />
             </div>
           </div>
