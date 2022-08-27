@@ -2,6 +2,7 @@ import "./style.css";
 import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import {useNavigate} from 'react-router-dom'
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 const data02 = [
   {
@@ -41,6 +42,7 @@ const Home = () => {
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
   const [pageRightIndex, setPageRightIndex] = useState(0);
+  const navigate = useNavigate();
   useEffect(() => {
     console.log("DIMENSION", width, height);
     if (width >= 2500) {
@@ -90,7 +92,7 @@ const Home = () => {
           <div className="coinSection flex flex-row flex-wrap justify-between">
             {/* xl-6 2xl-8 3xl-12(or)5 */}
             {Array.apply(null, Array(maxPicksList)).map(() => (
-              <div className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
+              <button onClick={()=>navigate('/coinList')} className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
                 <div className="bg-bg rounded-2xl h-full flex flex-row items-center p-4 px-6">
                   <div className="flex flex-row mr-16 items-center">
                     <img
@@ -108,7 +110,7 @@ const Home = () => {
                     <p className="text-red-600 text-sm">22%</p>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -121,7 +123,7 @@ const Home = () => {
           <div className="basketCard flex flex-row flex-wrap justify-between">
             {/* xl-3 2xl-4 3xl-4(or)5 */}
             {Array.apply(null, Array(indexesList)).map(() => (
-              <div className="w-1/4 h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-[20%] 3xl:w-1/6 3xl:h-80">
+              <button onClick={()=>navigate('/indexes')} className="w-1/4 h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-[20%] 3xl:w-1/6 3xl:h-80">
                 <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                   <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
                   <div className="flex justify-between items-center mt-1">
@@ -149,7 +151,7 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -290,7 +292,7 @@ const Home = () => {
               </div>
             </div>
             <button
-              onClick={() => setPageRightIndex(1)}
+              onClick={() => navigate("/transactionSummary")}
               className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl "
             >
               Invest Now

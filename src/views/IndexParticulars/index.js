@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import marketCapLogo from "../../assets/marketCapLogo.png";
-
+import {useNavigate} from 'react-router-dom'
 const data02 = [
   {
     name: "Group A",
@@ -206,6 +206,7 @@ const CustomLineChart = (props) => {
 };
 
 const Indexes = () => {
+  const navigate = useNavigate();
   return (
     <div className="grid grid-cols-[65%_35%] overflow-hidden w-screen h-screen bg-bgl2">
       <div className="p-10 pt-[4%] overflow-hidden bg-bgl1">
@@ -357,7 +358,7 @@ const Indexes = () => {
             </div>
           </div>
         </div>
-        <button className="bg-primaryButton text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px] mx-[20px] investButtonWidth mt-[20px]">
+        <button onClick={()=>navigate('/transactionSummary')} className="bg-primaryButton text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px] mx-[20px] investButtonWidth mt-[20px]">
           Invest Now
         </button>
       </div>

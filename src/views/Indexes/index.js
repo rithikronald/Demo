@@ -1,7 +1,7 @@
 import "./style.css";
 import cardBackground from "../../assets/bg.png";
 import { CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, Tooltip, XAxis, YAxis } from "recharts";
-
+import {useNavigate} from 'react-router-dom'
 const data02 = [
   {
     name: "Group A",
@@ -91,6 +91,7 @@ const IndexChart = () => {
 }
 
 const Indexes = () => {
+  const navigate = useNavigate()
   return (
     <div className="grid grid-cols-[65%_35%] overflow-hidden w-screen h-screen bg-bgl2">
       <div className="p-10 pt-[7%] overflow-hidden bg-bgl1">
@@ -129,7 +130,7 @@ const Indexes = () => {
                     />
                   </div>
                   <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 rounded-3xl p-0.5">
-                    <button className="flex bg-bg  rounded-3xl text-white w-full justify-center items-center font-mont text-[12px] p-[10px]">
+                    <button onClick={()=>navigate('/indexes/indexId')} className="flex bg-bg  rounded-3xl text-white w-full justify-center items-center font-mont text-[12px] p-[10px]">
                       VIEW INDEX
                     </button>
                   </div>
@@ -186,7 +187,7 @@ const Indexes = () => {
             </div>
           </div>
         </div>
-        <button className="bg-primaryButton text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px] mx-[20px] investButtonWidth mt-[20px]">
+        <button onClick={()=>navigate('/transactionSummary')} className="bg-primaryButton text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px] mx-[20px] investButtonWidth mt-[20px]">
           Invest Now
         </button>
       </div>

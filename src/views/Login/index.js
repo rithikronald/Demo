@@ -1,7 +1,10 @@
 import { ThemeButton } from "../../components/themeButton";
 import "./style.css";
+import { useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
+  const navigate = useNavigate();
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
       {/* Left Banner */}
@@ -96,7 +99,7 @@ const Login = () => {
               <input type="checkbox" class="checked:bg-bg" />
             </div>
           </div>
-          <ThemeButton text="Next" />
+          <ThemeButton text="Next" onClick={()=>navigate('/otpVerification')} />
         </div>
       </div>
     </div>

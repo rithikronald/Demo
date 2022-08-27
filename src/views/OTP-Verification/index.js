@@ -1,7 +1,9 @@
 import { GradientContainer } from "../../components/GradientContainer";
 import { ThemeButton } from "../../components/themeButton";
+import {useNavigate} from'react-router-dom'
 
 const OTPVerification = () => {
+  const navigate = useNavigate();
   const OTPinput = ({ id }) => {
     return (
       <input
@@ -46,8 +48,7 @@ const OTPVerification = () => {
             <p className="text-base text-center text-white font-normal 4xl:text-2xl mb-4">
               Didn’t get the code?
             </p>
-            <ThemeButton text="Resend" />
-            p-0.5
+            <ThemeButton text="Verify" onClick={()=>navigate('/dashboard')} />
           </div>
         </div>
       </div>

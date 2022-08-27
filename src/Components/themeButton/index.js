@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-export const ThemeButton = ({ text, width = "", className }) => {
+export const ThemeButton = ({ text, width = "", className,onClick }) => {
   return (
     <button
       className={classnames(
@@ -8,6 +8,7 @@ export const ThemeButton = ({ text, width = "", className }) => {
           width !== "" ? `w-${width}` : "w-full"
         } text-white p-4 font-bold rounded-lg  h-16 shadow-lg text-xl ${className}`
       )}
+      onClick={onClick}
     >
       {text}
     </button>
