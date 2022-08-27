@@ -1,24 +1,25 @@
 import "./style.css";
-import {useState} from 'react'
-import Control from '../../assets/control.png'
-import Logo from '../../assets/logo.png'
-import Briefcase from '../../assets/briefcase.png'
-import Dashboard from '../../assets/dashboard.png'
-import Indexes from '../../assets/indexes.png'
-import MaxPicks from '../../assets/max picks.png'
-import Settings from '../../assets/settings.png'
+import { useState } from "react";
+import Logo from "../../assets/logo.png";
+import Briefcase from "../../assets/briefcase.png";
+import Dashboard from "../../assets/dashboard.png";
+import Indexes from "../../assets/indexes.png";
+import MaxPicks from "../../assets/max picks.png";
+import Settings from "../../assets/settings.png";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-    const [open, setOpen] = useState(false);
-    const Menus = [
-      { title: "Dashboard", src: Dashboard },
-      { title: "Indexes", src: Indexes}, 
-      { title: 'My Wallet', src: Briefcase},
-      { title: 'Trending', src: MaxPicks},
-      { title: 'Settings', src: Settings}
-    ];
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const Menus = [
+    { title: "Dashboard", src: Dashboard, onClick: "/dashboard" },
+    { title: "Indexes", src: Indexes, onClick: "/indexes" },
+    { title: "My Wallet", src: Briefcase, onClick: "/walletOverview" },
+    { title: "Trending", src: MaxPicks, onClick: "/transactions" },
+    { title: "Settings", src: Settings, onClick: "/settings" },
+  ];
   return (
-    
     // <aside className="w-20 sidebar" aria-label="Sidebar ">
     //   <div className="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800 sidebar">
     //     <ul className="space-y-2">
@@ -62,16 +63,17 @@ const Sidebar = () => {
       </div>
       <ul className="pt-6">
         {Menus.map((Menu, index) => (
-          <li
+          <button
+            onClick={() => navigate(Menu.onClick)}
             key={index}
             className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
           ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"} `}
           >
-            <img src={Menu.src} className="icons" />
+            <img src={Menu.src} className="" />
             <span className={`${!open && "hidden"} origin-left duration-200`}>
               {Menu.title}
             </span>
-          </li>
+          </button>
         ))}
       </ul>
     </div>

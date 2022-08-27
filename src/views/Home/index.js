@@ -2,7 +2,7 @@ import "./style.css";
 import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 const data02 = [
   {
@@ -87,12 +87,20 @@ const Home = () => {
         <div className="flex flex-col mt-4">
           <div className="maxPicks flex flex-row justify-between">
             <p className="text-white text-lg">Max Picks</p>
-            <button className="text-gray-400 text">view all</button>
+            <button
+              onClick={() => navigate("/coinList")}
+              className="text-gray-400 text"
+            >
+              view all
+            </button>
           </div>
           <div className="coinSection flex flex-row flex-wrap justify-between">
             {/* xl-6 2xl-8 3xl-12(or)5 */}
             {Array.apply(null, Array(maxPicksList)).map(() => (
-              <button onClick={()=>navigate('/coinList')} className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
+              <button
+                onClick={() => navigate("/coin-desc")}
+                className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20"
+              >
                 <div className="bg-bg rounded-2xl h-full flex flex-row items-center p-4 px-6">
                   <div className="flex flex-row mr-16 items-center">
                     <img
@@ -118,12 +126,20 @@ const Home = () => {
         <div className="flex flex-col mt-4">
           <div className="maxPicks flex flex-row justify-between">
             <p className="text-white text-lg">Indexes</p>
-            <button className="text-gray-400 text">view all</button>
+            <button
+              onClick={() => navigate("/indexes/")}
+              className="text-gray-400 text"
+            >
+              view all
+            </button>
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
             {/* xl-3 2xl-4 3xl-4(or)5 */}
             {Array.apply(null, Array(indexesList)).map(() => (
-              <button onClick={()=>navigate('/indexes')} className="w-1/4 h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-[20%] 3xl:w-1/6 3xl:h-80">
+              <button
+                onClick={() => navigate("/indexes/indexId")}
+                className="w-1/4 h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-[20%] 3xl:w-1/6 3xl:h-80"
+              >
                 <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                   <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
                   <div className="flex justify-between items-center mt-1">
@@ -200,7 +216,9 @@ const Home = () => {
                         className="w-4 h-4 3xl:w-6 3xl:h-6"
                         src={require("../../assets/optionIcon.png")}
                       />
-                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">Long-Term</p>
+                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">
+                        Long-Term
+                      </p>
                       <p className="text-[10px] text-center text-white font-light 3xl:text-lg">
                         1-3 years
                       </p>
@@ -214,7 +232,7 @@ const Home = () => {
                 What is your investment Tenure?
               </p>
               <div className="flex flex-wrap flex-row justify-between items-center mt-3">
-              {Array.apply(null, Array(3)).map(() => (
+                {Array.apply(null, Array(3)).map(() => (
                   <div className="w-[30%] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
                     <div className="optionsCard w-full h-full px-2 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start">
                       <img
@@ -222,7 +240,9 @@ const Home = () => {
                         className="w-4 h-4 3xl:w-6 3xl:h-6"
                         src={require("../../assets/optionIcon.png")}
                       />
-                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">Long-Term</p>
+                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">
+                        Long-Term
+                      </p>
                       <p className="text-[10px] text-center text-white font-light 3xl:text-lg">
                         1-3 years
                       </p>
@@ -256,8 +276,8 @@ const Home = () => {
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      innerRadius={width>1768?80:60}
-                      outerRadius={width>1768?100:80}
+                      innerRadius={width > 1768 ? 80 : 60}
+                      outerRadius={width > 1768 ? 100 : 80}
                     >
                       {data02.map((ele) => (
                         <Cell fill={ele.color} />
@@ -284,7 +304,9 @@ const Home = () => {
                           BITCOIN
                         </p>
                         <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                        <p className="font-medium text-white text-sm 3xl:text-xl">22%</p>
+                        <p className="font-medium text-white text-sm 3xl:text-xl">
+                          22%
+                        </p>
                       </div>
                     </div>
                   ))}
