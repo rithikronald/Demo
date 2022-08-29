@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   LineChart,
   Line,
+  Tooltip
 } from "recharts";
 
 const data = [
@@ -61,7 +62,12 @@ const CustomAreaCharts = (props) => {
       width={props.width}
       height={props.height}
       data={data}
-      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+      margin={{
+        top: 10,
+        right: 30,
+        left: 0,
+        bottom: 0
+      }}
     >
       <defs>
         <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -73,17 +79,9 @@ const CustomAreaCharts = (props) => {
           <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
         </linearGradient>
       </defs>
-      <XAxis dataKey="name" />
-      <YAxis tickCount={4} />
-      <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-      <Area
-        type="monotone"
-        dataKey="uv"
-        stroke="#805DE3"
-        strokeWidth={3}
-        fillOpacity={1}
-        fill="url(#colorUv)"
-      />
+      <YAxis axisLine={false} />
+      <Tooltip />
+      <Area type="monotone" stroke="#805DE3" axisLine={false} dataKey="uv" fill="#8884d8" />
     </AreaChart>
   );
 };
