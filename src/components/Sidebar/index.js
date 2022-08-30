@@ -42,12 +42,13 @@ const Sidebar = () => {
     //     </ul>
     //   </div>
     // </aside>
+    <div className="bg-bgl1" >
     <div
       className={` ${
-        open ? "w-96" : "w-20"
-      } bg-darkPurple h-screen p-5  pt-8 relative duration-300 sidebar`}
+        open ? "w-96" : "w-[58px]"
+      } background h-screen p-1  pt-8 relative duration-300 sidebar`}
     >
-      <div className="flex gap-x-4 items-center">
+      <div className="flex gap-x-4 items-center translate-x-1">
         <img
           src={Logo}
           className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"}`}
@@ -66,7 +67,7 @@ const Sidebar = () => {
           <button
             onClick={() => navigate(Menu.onClick)}
             key={index}
-            className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
+            className={`flex  rounded-md p-2 cursor-pointer ${!open ? "mx-auto" : ""} hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
           ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"} `}
           >
             <img src={Menu.src} className="" />
@@ -76,6 +77,7 @@ const Sidebar = () => {
           </button>
         ))}
       </ul>
+    </div>
     </div>
   );
 };
