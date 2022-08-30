@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 const data02 = [
   {
@@ -37,25 +38,75 @@ const data02 = [
   },
 ];
 
+const tenure = [
+  {
+    title: "Short-Term",
+    desc: "1-3 years",
+  },
+  {
+    title: "Mid-Term",
+    desc: "3-5 years",
+  },
+  {
+    title: "Long-Term",
+    desc: "5+ years",
+  },
+];
+
+const risk = [
+  {
+    title: "Bold",
+    desc: "High Returns Great Volatility",
+  },
+  {
+    title: "Balance",
+    desc: "Moderate Returns Fair Volatility",
+  },
+  {
+    title: "Basic",
+    desc: "Modest Returns Low Volatility",
+  },
+];
+
 const Home = () => {
   const { height, width } = useWindowDimensions();
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
   const [pageRightIndex, setPageRightIndex] = useState(0);
+  const [coinMetaData, setcoinMetaData] = useState();
+  const [coinBasket, setCoinBasket] = useState();
+  const [tenureIndex, setTenureIndex] = useState(0);
+  const [riskIndex, setRiskIndex] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
     console.log("DIMENSION", width, height);
     if (width >= 2500) {
       setMaxPicksList(12);
-      setIndexesList(4);
-    } else if (width >= 1740) {
+      setIndexesList(6);
+    } else if (width >= 1600) {
       setMaxPicksList(8);
       setIndexesList(4);
-    } else if (width <= 1440) {
+    } else if (width >= 1440) {
       setMaxPicksList(6);
       setIndexesList(3);
     }
   }, [width, height]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getDashboard`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        console.log("RESPONSE", response?.data?.coins);
+        setcoinMetaData(response?.data?.coins);
+        setCoinBasket(response?.data?.coinBaskets);
+      })
+      .catch((err) => console.log("error", err));
+  }, []);
 
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
@@ -94,32 +145,39 @@ const Home = () => {
               view all
             </button>
           </div>
-          <div className="coinSection flex flex-row flex-wrap justify-between">
+          <div className="coinSection flex flex-row flex-wrap justify-between space-x-1">
             {/* xl-6 2xl-8 3xl-12(or)5 */}
-            {Array.apply(null, Array(maxPicksList)).map(() => (
-              <button
-                onClick={() => navigate("/coin-desc")}
-                className="coinCard mt-4 h-16 mr-5 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20"
-              >
-                <div className="bg-bg rounded-2xl h-full flex flex-row items-center p-4 px-6">
-                  <div className="flex flex-row mr-16 items-center">
-                    <img
-                      alt="logo"
-                      className="w-5 h-8"
-                      src={require("../../assets/icon.png")}
-                    />
-                    <div className="ml-3">
-                      <p className="text-white font-bold text-lg">ETH</p>
-                      <p className="text-gray-400 text-sm">Ethereum</p>
+            {coinMetaData &&
+              coinMetaData.map((item, index) =>
+                index < maxPicksList ? (
+                  <button
+                    onClick={() => navigate("/coin-desc")}
+                    className="coinCard w-[250px] mt-4 h-16 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-20"
+                  >
+                    <div className="bg-bg rounded-2xl w-full h-full flex flex-row justify-between items-center p-4 px-4">
+                      <div className="flex flex-row items-center">
+                        <img
+                          alt="logo"
+                          className="w-6 h-6 bg-white rounded-full"
+                          src={item?.logoUrl}
+                        />
+                        <div className="ml-3 flex flex-col items-start">
+                          <p className="text-white font-medium">
+                            {item?.ticker}
+                          </p>
+                          <p className="text-gray-400 text-sm">{item?.slug}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <p className="text-white font-semibold text-md">
+                          ${item?.price?.value.toFixed(2)}
+                        </p>
+                        <p className="text-red-600 text-sm">22%</p>
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold text-md">$5342</p>
-                    <p className="text-red-600 text-sm">22%</p>
-                  </div>
-                </div>
-              </button>
-            ))}
+                  </button>
+                ) : null
+              )}
           </div>
         </div>
         {/* Indexes */}
@@ -135,44 +193,55 @@ const Home = () => {
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
             {/* xl-3 2xl-4 3xl-4(or)5 */}
-            {Array.apply(null, Array(indexesList)).map(() => (
-              <button
-                onClick={() => navigate("/indexes/indexId")}
-                className="w-1/4 h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 2xl:w-[20%] 3xl:w-1/6 3xl:h-80"
-              >
-                <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
-                  <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
-                  <div className="flex justify-between items-center mt-1">
-                    <div className="flex py-2 space-x-1">
-                      <img
-                        className="w-6"
-                        alt="btc"
-                        src={require("../../assets/btc.png")}
-                      />
-                      <img
-                        alt="eth"
-                        className="w-6"
-                        src={require("../../assets/eth.png")}
-                      />
-                      <img
-                        alt="bnb"
-                        className="w-6"
-                        src={require("../../assets/bnb.png")}
-                      />
+            {coinBasket?.map(
+              (item, index) =>
+                index < indexesList && (
+                  <button
+                    onClick={() => navigate("/indexes/indexId")}
+                    className="w-[250px] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
+                  >
+                    <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
+                      <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
+                      <div className="flex justify-between items-center mt-1">
+                        <div className="flex py-2 space-x-1">
+                          {item?.coins?.map((item, index) => {
+                            return (
+                              index < 3 && (
+                                <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                                  <div className="flex w-full h-full justify-center items-center">
+                                    <img
+                                      className="w-6 rounded-full"
+                                      alt="btc"
+                                      src={item?.logoUrl}
+                                    />
+                                  </div>
+                                </div>
+                              )
+                            );
+                          })}
+                          <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                            <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-row flex-wrap">
+                              <p className="text-white text-[8px] font-semibold">
+                                + {item?.coins.length - 3}
+                              </p>
+                              <p className="text-white font-bold text-[6px]">more</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-[1px]">
+                          <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center text-xs">
+                            VIEW
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-0.5">
-                      <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center">
-                        View
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </button>
-            ))}
+                  </button>
+                )
+            )}
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col sm:hidden xl:flex">
+      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-8 justify-around flex flex-col sm:hidden xl:flex">
         {pageRightIndex == 0 && (
           <>
             {/* pageIndex-0 */}
@@ -208,46 +277,52 @@ const Home = () => {
                 What is your investment Tenure?
               </p>
               <div className="flex flex-wrap flex-row justify-between items-center mt-3">
-                {Array.apply(null, Array(3)).map(() => (
-                  <div className="w-[30%] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
-                    <div className="optionsCard w-full h-full px-2 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start">
+                {tenure.map((item, index) => (
+                  <button
+                    onClick={() => setTenureIndex(index)}
+                    className="tenure w-[30%] h-[150px] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-[250px]"
+                  >
+                    <div className="optionsCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start">
                       <img
                         alt="img"
                         className="w-4 h-4 3xl:w-6 3xl:h-6"
                         src={require("../../assets/optionIcon.png")}
                       />
-                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">
-                        Long-Term
+                      <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg text-start mr-3">
+                        {item.title}
                       </p>
                       <p className="text-[10px] text-center text-white font-light 3xl:text-lg">
-                        1-3 years
+                        {item.desc}
                       </p>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
             <div>
               <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
-                What is your investment Tenure?
+                What is your preferred Profile?
               </p>
               <div className="flex flex-wrap flex-row justify-between items-center mt-3">
-                {Array.apply(null, Array(3)).map(() => (
-                  <div className="w-[30%] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
-                    <div className="optionsCard w-full h-full px-2 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start">
+                {risk.map((item, index) => (
+                  <button
+                    onClick={() => console.log("Index", index)}
+                    className="risk w-[30%] h-[150px] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-[250px]"
+                  >
+                    <div className="optionsCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start">
                       <img
                         alt="img"
                         className="w-4 h-4 3xl:w-6 3xl:h-6"
                         src={require("../../assets/optionIcon.png")}
                       />
                       <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">
-                        Long-Term
+                        {item.title}
                       </p>
-                      <p className="text-[10px] text-center text-white font-light 3xl:text-lg">
-                        1-3 years
+                      <p className="text-[8px] text-white font-light 3xl:text-lg text-start">
+                        {item.desc}
                       </p>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
