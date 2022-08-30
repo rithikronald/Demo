@@ -6,7 +6,7 @@ export const ThemeButton = ({ text, width = "", className,onClick }) => {
       className={classnames(
         `bg-primaryButton ${
           width !== "" ? `w-${width}` : "w-full"
-        } text-white p-4 font-bold rounded-lg  h-16 shadow-lg text-xl ${className}`
+        } text-white p-4 font-semibold rounded-lg  h-16 shadow-lg text-xl ${className}`
       )}
       onClick={onClick}
     >
