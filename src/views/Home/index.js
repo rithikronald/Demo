@@ -201,7 +201,9 @@ const Home = () => {
                     className="w-[250px] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
                   >
                     <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
-                      <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl"></div>
+                      <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl p-4">
+                        <p className="text-white text-lg font-semibold">{item?.basketName}</p>
+                      </div>
                       <div className="flex justify-between items-center mt-1">
                         <div className="flex py-2 space-x-1">
                           {item?.coins?.map((item, index) => {
@@ -220,11 +222,11 @@ const Home = () => {
                             );
                           })}
                           <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
-                            <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-row flex-wrap">
-                              <p className="text-white text-[8px] font-semibold">
+                            <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-col">
+                              <p className="text-white text-[7px] font-bold">
                                 + {item?.coins.length - 3}
                               </p>
-                              <p className="text-white font-bold text-[6px]">more</p>
+                              <p className="text-white text-[5px]">more</p>
                             </div>
                           </div>
                         </div>
