@@ -1,92 +1,15 @@
 import React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
-const data = [
-  {
-    name: "Jan",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Feb",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Mar",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Apr",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Jun",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "July",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Aug",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
-
-const CustomAreaCharts = (props) => {
-  return (
-    <AreaChart
-      width={props.width}
-      height={props.height}
-      data={data}
-      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-    >
-      <defs>
-        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-        </linearGradient>
-        <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <XAxis dataKey="name" />
-      <YAxis tickCount={4} />
-      <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-      <Area
-        type="monotone"
-        dataKey="uv"
-        stroke="#805DE3"
-        strokeWidth={3}
-        fillOpacity={1}
-        fill="url(#colorUv)"
-      />
-    </AreaChart>
-  );
-};
+import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 
 const WalletOverView = () => {
   return (
     <div className="WalletOverview bg-bgl1 flex h-screen w-full">
       <div className="Left bg-yellow-40  p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
-        <p className="text-2xl 2xl:text-4xl 3xl:text-5xl font-bold text-white">
-          Wallet OverView
+        <p className="text-lg 2xl:text-3xl 3xl:text-4xl font-semibold font-mont text-white">
+          Wallet Overview
         </p>
-        <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-full h-1/3 rounded-2xl p-0.5">
+        <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-full h-[50%] rounded-2xl p-0.5">
           <div className="bg-bg w-full h-full rounded-2xl flex justify-between p-10">
             <div className="flex h-full w-1/3 flex-col justify-between">
               <div>
@@ -107,7 +30,7 @@ const WalletOverView = () => {
               </div>
             </div>
             <div className="flex w-2/3 h-full justify-center items-center">
-              <CustomAreaCharts width={650} height={240} />
+              <CustomAreaChart width={"100%"} height={"100%"} />
             </div>
           </div>
         </div>
