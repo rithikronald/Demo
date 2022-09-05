@@ -38,6 +38,26 @@ const data02 = [
   },
 ];
 
+const categoryList = [
+  {
+    title: "Gaming",
+  },
+  {
+    title: "NFT",
+  },
+  {
+    title: "Smart Contract",
+  },
+  {
+    title: "Metaverse",
+  },
+  {
+    title: "Defi",
+  },
+  {
+    title: "Storage",
+  },
+];
 const tenure = [
   {
     title: "Short-Term",
@@ -52,7 +72,6 @@ const tenure = [
     desc: "5+ years",
   },
 ];
-
 const risk = [
   {
     title: "Bold",
@@ -202,7 +221,9 @@ const Home = () => {
                   >
                     <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                       <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl p-4">
-                        <p className="text-white text-lg font-semibold">{item?.basketName}</p>
+                        <p className="text-white text-lg font-semibold">
+                          {item?.basketName}
+                        </p>
                       </div>
                       <div className="flex justify-between items-center mt-1">
                         <div className="flex py-2 space-x-1">
@@ -267,7 +288,73 @@ const Home = () => {
         {pageRightIndex == 1 && (
           <>
             <div>
-              <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
+              <p className="text-white font-bold text-center mt-5 font-mont  text-2xl 2xl:text-4xl 3xl:text-5xl">
+                Choose Your Interests
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-center text-white font-mont font-bold 3xl:text-3xl ">
+                Select an Option
+              </p>
+              <div className="flex flex-wrap flex-row justify-between items-center mt-3">
+                {categoryList.map((item, index) => (
+                  <button
+                    onClick={() => navigate("/indexes")}
+                    className="tenure w-[30%] h-[120px] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-[250px] mt-5"
+                  >
+                    <div className="optionsCard h-full w-full px-1 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start cursor-pointer hover:bg-white hover:bg-opacity-80">
+                      <img
+                        alt="img"
+                        className="hover:w-[100px] hover:h-[100px] hover:absolute hover:mt-3"
+                        src={require("../../assets/gaming.png")}
+                      />
+                      <div className="bg-white rounded-full px-1 self-end">
+                        <p className="font-black font-mont text-[6px]">
+                          {item?.title}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-white font-mont font-extralight text-center text-sm">
+                Try out our Smart Suggest to get personalised recommendations
+              </p>
+              <button
+                onClick={() => setPageRightIndex(2)}
+                className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl mt-5"
+              >
+                Smart Suggest
+              </button>
+            </div>
+          </>
+        )}
+        {pageRightIndex == 2 && (
+          <>
+            <div>
+              <button
+                type="button"
+                class="text-white bg-primaryButton font-medium rounded-lg text-sm py-1 px-3 text-center items-center"
+                onClick={() => setPageRightIndex(1)}
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
+                  ></path>
+                </svg>
+              </button>
+              <p className="text-sm text-center text-white font-medium 3xl:text-3xl mt-3">
                 How much would you like to Invest?
               </p>
               <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
@@ -329,17 +416,37 @@ const Home = () => {
               </div>
             </div>
             <button
-              onClick={() => setPageRightIndex(2)}
+              onClick={() => setPageRightIndex(3)}
               className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
             >
               Smart Suggest
             </button>
           </>
         )}
-        {pageRightIndex == 2 && (
+        {pageRightIndex == 3 && (
           <>
             <div>
-              <p className="text-white font-semibold text-center mt-6  text-2xl 2xl:text-2xl 3xl:text-5xl">
+              {/* <button
+                type="button"
+                class="text-white bg-primaryButton font-medium rounded-lg text-sm py-1 px-3 text-center items-center"
+                onClick={() => setPageRightIndex(2)}
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
+                  ></path>
+                </svg>
+              </button> */}
+              <p className="text-white font-semibold text-center mt-2  text-2xl 2xl:text-2xl 3xl:text-5xl">
                 Suggested portfolio for maximum gain
               </p>
             </div>
@@ -390,12 +497,20 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => navigate("/transactionSummary")}
-              className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl "
-            >
-              Invest Now
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setPageRightIndex(2)}
+                className="bg-gradient-to-r from-purple-300 bg-purple-400 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center"
+              >
+                Go Back
+              </button>
+              <button
+                onClick={() => navigate("/transactionSummary")}
+                className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center"
+              >
+                Invest Now
+              </button>
+            </div>
           </>
         )}
       </div>
