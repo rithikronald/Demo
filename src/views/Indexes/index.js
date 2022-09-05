@@ -1,19 +1,10 @@
-import "./style.css";
-import cardBackground from "../../assets/bg.png";
-import {
-  CartesianGrid,
-  Cell,
-  Legend,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Cell, Pie, PieChart } from "recharts";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import "./style.css";
 const data02 = [
   {
     name: "Group A",
@@ -92,84 +83,92 @@ const data03 = [
   },
 ];
 
-const IndexChart = () => {
-  return (
-    <LineChart
-      width={280}
-      height={150}
-      data={data03}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-    >
-      <Line
-        type="monotone"
-        dataKey="pv"
-        dot={false}
-        strokeWidth={3}
-        stroke="#fff"
-      />
-      <Line
-        type="monotone"
-        dataKey="uv"
-        dot={false}
-        strokeWidth={3}
-        stroke="#AF52DE"
-      />
-    </LineChart>
-  );
-};
-
 const Indexes = () => {
   const navigate = useNavigate();
   const { height, width } = useWindowDimensions();
+  const [basketData, setBasketData] = useState();
+  const [coinList, setCoinList] = useState();
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getAllIndexes`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        setCoinList(response?.data?.coins);
+        setBasketData(response?.data);
+      })
+      .catch((err) => console.log("error", err));
+  }, []);
+
+  useEffect(() => {
+    // const list = coinList?.map((item) => {
+    //   return getCoinMeta(item);
+    // });
+    // console.log("List", list);
+    console.log("CoinList", coinList);
+  }, [coinList]);
+
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
-      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
-        <p className="text-white font-bold font-mont text-[29px] ">Indexes</p>
-        <p className="text-white opacity-30 font-bold font-mont text-[14px] rightTextAlign">
-          Sort By
-        </p>
-        <div className="grid grid-cols-3 gap-3">
-          {[1, 2, 3, 4, 5, 6].map(() => (
-            // <div className="priceBorder p-[1px]">
-            //   <div className="bg-bgl1 priceBorderOnly">
-            //     <p className="text-[15px] font-bold">.79</p>
-            //   </div>
-            // </div>
-            <div className="h-[280px] mt-4 rounded-[14px] priceBorder priceBorderOnly p-[1px]">
-              <div className="bg-bg rounded-[18px] h-full flex flex-col justify-between p-2">
-                <div className="flex items-end bg-gradient-to-tl from-right via-left to-top h-[200px] w-full rounded-2xl">
-                  <IndexChart />
-                </div>
-                <div className="flex justify-between items-center mt-[20px]">
-                  <div className="flex py-2 space-x-1">
-                    <img
-                      className="w-6"
-                      alt="btc"
-                      src={require("../../assets/btc.png")}
-                    />
-                    <img
-                      alt="eth"
-                      className="w-6"
-                      src={require("../../assets/eth.png")}
-                    />
-                    <img
-                      alt="bnb"
-                      className="w-6"
-                      src={require("../../assets/bnb.png")}
-                    />
+      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-scroll">
+        <div className="flex w-full justify-between">
+          <p className="text-white font-bold font-mont text-[29px] ">Indexes</p>
+          <p className="text-white opacity-30 font-bold font-mont text-[14px]">
+            Sort By
+          </p>
+        </div>
+        <div className="grid grid-cols-3 gap-3 overflow-scroll">
+          {basketData &&
+            basketData?.map((item, index) => (
+              <button
+                onClick={() => navigate("/indexes/indexId")}
+                className="w-[250px] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
+              >
+                <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
+                  <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl p-4">
+                    <p className="text-white text-lg font-semibold">
+                      {item?.basketName}
+                    </p>
                   </div>
-                  <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 rounded-3xl p-0.5">
-                    <button
-                      onClick={() => navigate("/indexes/indexId")}
-                      className="flex bg-bg  rounded-3xl text-white w-full justify-center items-center font-mont text-[12px] p-[10px]"
-                    >
-                      VIEW INDEX
-                    </button>
+                  <div className="flex justify-between items-center mt-1">
+                    {/* <div className="flex py-2 space-x-1">
+                    {item?.coins?.map((item, index) => {
+                      return (
+                        index < 3 && (
+                          <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                            <div className="flex w-full h-full justify-center items-center">
+                              <img
+                                className="w-6 rounded-full"
+                                alt="btc"
+                                src={item?.logoUrl}
+                              />
+                            </div>
+                          </div>
+                        )
+                      );
+                    })}
+                    <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                      <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-col">
+                        <p className="text-white text-[7px] font-bold">
+                          + {item?.coins.length - 3}
+                        </p>
+                        <p className="text-white text-[5px]">more</p>
+                      </div>
+                    </div>
+                  </div> */}
+                    <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-[1px]">
+                      <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center text-xs">
+                        VIEW
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </button>
+            ))}
         </div>
       </div>
       <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col sm:hidden xl:flex">
