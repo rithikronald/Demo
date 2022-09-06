@@ -115,32 +115,31 @@ const Home = () => {
   useEffect(() => {
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getDashboard`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/dashboard`,
         {
           headers: { "Content-Type": "application/json" },
         }
       )
       .then((response) => {
-        console.log("RESPONSE", response?.data?.coins);
         setcoinMetaData(response?.data?.coins);
-        // setCoinBasket(response?.data?.coinBaskets);
+        setCoinBasket(response?.data?.coinBaskets);
       })
       .catch((err) => console.log("error", err));
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getAllIndexes`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
-      .then((response) => {
-        setCoinBasket(response?.data);
-      })
-      .catch((err) => console.log("error", err));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getAllIndexes`,
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       setCoinBasket(response?.data);
+  //     })
+  //     .catch((err) => console.log("error", err));
+  // }, []);
 
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
@@ -182,8 +181,9 @@ const Home = () => {
           <div className="coinSection flex flex-row flex-wrap justify-between space-x-1">
             {/* xl-6 2xl-8 3xl-12(or)5 */}
             {coinMetaData &&
-              coinMetaData.map((item, index) =>
-                index < maxPicksList ? (
+              coinMetaData.map((item, index) => {
+                const data = getCoinMeta(item?.ticker);
+                return index < maxPicksList ? (
                   <button
                     onClick={() => navigate("/coin-desc")}
                     className="coinCard w-[250px] mt-4 h-16 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-20"
@@ -193,25 +193,25 @@ const Home = () => {
                         <img
                           alt="logo"
                           className="w-6 h-6 bg-white rounded-full"
-                          src={item?.logoUrl}
+                          src={data?.logoUrl}
                         />
                         <div className="ml-3 flex flex-col items-start">
                           <p className="text-white font-medium">
-                            {item?.ticker}
+                            {data?.ticker}
                           </p>
-                          <p className="text-gray-400 text-sm">{item?.slug}</p>
+                          <p className="text-gray-400 text-sm">{data?.slug}</p>
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
                         <p className="text-white font-semibold text-md">
                           ${item?.price?.value.toFixed(2)}
                         </p>
-                        <p className="text-red-600 text-sm">22%</p>
+                        <p className="text-green-500 text-sm">{item?.percent_change_24h}</p>
                       </div>
                     </div>
                   </button>
-                ) : null
-              )}
+                ) : null;
+              })}
           </div>
         </div>
         {/* Indexes */}
@@ -231,7 +231,11 @@ const Home = () => {
               (item, index) =>
                 index < indexesList && (
                   <button
-                    onClick={() => navigate("/indexes/indexId")}
+                    onClick={() =>
+                      navigate("/indexes/indexId", {
+                        state: { indexData: item },
+                      })
+                    }
                     className="w-[250px] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
                   >
                     <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
@@ -243,7 +247,7 @@ const Home = () => {
                       <div className="flex justify-between items-center mt-1">
                         <div className="flex py-2 space-x-1">
                           {item?.coins?.map((item, index) => {
-                            const data = getCoinMeta(item)
+                            const data = getCoinMeta(item);
                             return (
                               index < 3 && (
                                 <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
