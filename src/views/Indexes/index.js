@@ -87,7 +87,7 @@ const Indexes = () => {
   const navigate = useNavigate();
   const { height, width } = useWindowDimensions();
   const [basketData, setBasketData] = useState();
-  const [coinList, setCoinList] = useState();
+  const [indexData, setIndexData] = useState();
 
   useEffect(() => {
     axios
@@ -98,30 +98,26 @@ const Indexes = () => {
         }
       )
       .then((response) => {
-        setCoinList(response?.data?.coins);
+        setIndexData(response?.data?.[0]);
         setBasketData(response?.data);
       })
       .catch((err) => console.log("error", err));
   }, []);
 
   useEffect(() => {
-    // const list = coinList?.map((item) => {
-    //   return getCoinMeta(item);
-    // });
-    // console.log("List", list);
-    console.log("CoinList", coinList);
-  }, [coinList]);
+    // console.log("IndexData", indexData);
+  }, [indexData]);
 
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
-      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-scroll">
+      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
         <div className="flex w-full justify-between">
           <p className="text-white font-bold font-mont text-[29px] ">Indexes</p>
           <p className="text-white opacity-30 font-bold font-mont text-[14px]">
             Sort By
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-3 overflow-scroll">
+        <div className="indexListContainer grid grid-cols-3 gap-3 overflow-y-scroll">
           {basketData &&
             basketData?.map((item, index) => (
               <button
@@ -135,31 +131,32 @@ const Indexes = () => {
                     </p>
                   </div>
                   <div className="flex justify-between items-center mt-1">
-                    {/* <div className="flex py-2 space-x-1">
-                    {item?.coins?.map((item, index) => {
-                      return (
-                        index < 3 && (
-                          <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
-                            <div className="flex w-full h-full justify-center items-center">
-                              <img
-                                className="w-6 rounded-full"
-                                alt="btc"
-                                src={item?.logoUrl}
-                              />
+                    <div className="flex py-2 space-x-1">
+                      {item?.coins?.map((item, index) => {
+                        const data = getCoinMeta(item);
+                        return (
+                          index < 3 && (
+                            <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                              <div className="flex w-full h-full justify-center items-center">
+                                <img
+                                  className="w-6 rounded-full"
+                                  alt="btc"
+                                  src={data?.logoUrl}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        )
-                      );
-                    })}
-                    <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
-                      <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-col">
-                        <p className="text-white text-[7px] font-bold">
-                          + {item?.coins.length - 3}
-                        </p>
-                        <p className="text-white text-[5px]">more</p>
+                          )
+                        );
+                      })}
+                      <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                        <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-col">
+                          <p className="text-white text-[7px] font-bold">
+                            + {item?.coins.length - 3}
+                          </p>
+                          <p className="text-white text-[5px]">more</p>
+                        </div>
                       </div>
                     </div>
-                  </div> */}
                     <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-[1px]">
                       <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center text-xs">
                         VIEW
@@ -171,7 +168,15 @@ const Indexes = () => {
             ))}
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col sm:hidden xl:flex">
+      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-8 justify-around flex flex-col sm:hidden xl:flex">
+        <div>
+          <p className="text-white font-semibold text-center  text-2xl 2xl:text-2xl 3xl:text-5xl">
+            {indexData?.basketName}
+          </p>
+          <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
+            Token Composition
+          </p>
+        </div>
         <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-full h-[75%] rounded-2xl p-0.5 my-5 3xl:h-[60%]">
           <div className="bg-bg w-full h-full rounded-2xl flex flex-col justify-around pt-4">
             <div className="flex justify-center items-center relative">
@@ -191,40 +196,47 @@ const Indexes = () => {
                 </Pie>
               </PieChart>
               <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <p className="font-mont text-white font-[18px]">BTC</p>
+                <p className="font-mont text-white font-[18px]">
+                  {indexData?.coins?.[0]}
+                </p>
                 <p className="font-mont text-white font-bold text-[30px] mt-[-10px]">
                   22%
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3 p-[20px_20px_40px_20px]">
-              {[1, 2, 3, 4, 5, 6].map((ele) => (
-                <div className="flex justify-center items-center mt-[20px]">
-                  <img
-                    alt="btc"
-                    className="h-10 w-10 3xl:h-14 3xl:w-14"
-                    src={require("../../assets/btcLight.png")}
-                  />
-                  <div className="pl-[6px]">
-                    <p className="font-mont text-white text-[10px] 3xl:text-xl">
-                      BITCOIN
-                    </p>
-                    <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                    <p className="font-medium text-white text-sm 3xl:text-xl">
-                      22%
-                    </p>
+            <div className="coinList grid grid-cols-2 gap-3 p-[20px_20px_40px_20px] overflow-scroll">
+              {indexData?.coins?.map((item, index) => {
+                const data = getCoinMeta(item);
+                return (
+                  <div className="flex items-center mt-[20px] w-[100%]">
+                    <img
+                      alt="btc"
+                      className="h-10 w-10 3xl:h-14 3xl:w-14"
+                      src={data?.logoUrl}
+                    />
+                    <div className="pl-[6px]">
+                      <p className="font-mont text-white text-[10px] 3xl:text-xl">
+                        {data?.slug}
+                      </p>
+                      <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
+                      <p className="font-medium text-white text-sm 3xl:text-xl">
+                        22%
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
-        <button
-          onClick={() => navigate("/transactionSummary")}
-          className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl "
-        >
-          Invest Now
-        </button>
+        <div className="flex space-x-2">
+          <button className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center">
+            Buy
+          </button>
+          <button className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center">
+            SIP
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { Cell, Pie, PieChart } from "recharts";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 const data02 = [
   {
@@ -122,7 +123,21 @@ const Home = () => {
       .then((response) => {
         console.log("RESPONSE", response?.data?.coins);
         setcoinMetaData(response?.data?.coins);
-        setCoinBasket(response?.data?.coinBaskets);
+        // setCoinBasket(response?.data?.coinBaskets);
+      })
+      .catch((err) => console.log("error", err));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getAllIndexes`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        setCoinBasket(response?.data);
       })
       .catch((err) => console.log("error", err));
   }, []);
@@ -228,6 +243,7 @@ const Home = () => {
                       <div className="flex justify-between items-center mt-1">
                         <div className="flex py-2 space-x-1">
                           {item?.coins?.map((item, index) => {
+                            const data = getCoinMeta(item)
                             return (
                               index < 3 && (
                                 <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
@@ -235,7 +251,7 @@ const Home = () => {
                                     <img
                                       className="w-6 rounded-full"
                                       alt="btc"
-                                      src={item?.logoUrl}
+                                      src={data?.logoUrl}
                                     />
                                   </div>
                                 </div>
@@ -288,7 +304,7 @@ const Home = () => {
         {pageRightIndex == 1 && (
           <>
             <div>
-              <p className="text-white font-bold text-center mt-5 font-mont  text-2xl 2xl:text-4xl 3xl:text-5xl">
+              <p className="text-white font-bold text-center mt-5 font-mont  text-2xl 2xl:text-2xl 3xl:text-5xl">
                 Choose Your Interests
               </p>
             </div>
@@ -299,17 +315,17 @@ const Home = () => {
               <div className="flex flex-wrap flex-row justify-between items-center mt-3">
                 {categoryList.map((item, index) => (
                   <button
-                    onClick={() => navigate("/indexes")}
-                    className="tenure w-[30%] h-[120px] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-[250px] mt-5"
+                    // onClick={() => navigate("/indexes")}
+                    className="tenure w-[30%] h-[120px] rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-[250px] mt-5  hover:shadow-[0_4px_0px_rgb(0,0,0)] text-black ease-out hover:translate-y-1"
                   >
-                    <div className="optionsCard h-full w-full px-1 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start cursor-pointer hover:bg-white hover:bg-opacity-80">
+                    <div className="optionsCard h-full w-full px-1 py-4 rounded-2xl flex flex-col justify-between bg-bg items-start cursor-pointer hover:bg-white hover:bg-opacity-50">
                       <img
                         alt="img"
                         className="hover:w-[100px] hover:h-[100px] hover:absolute hover:mt-3"
                         src={require("../../assets/gaming.png")}
                       />
-                      <div className="bg-white rounded-full px-1 self-end">
-                        <p className="font-black font-mont text-[6px]">
+                      <div className="bg-white rounded-full px-1 self-end shadow-[0_1px_0px_rgb(0,0,0)]">
+                        <p className="text-black font-mont text-[7px] font-bold">
                           {item?.title}
                         </p>
                       </div>
