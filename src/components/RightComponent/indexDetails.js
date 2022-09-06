@@ -103,13 +103,17 @@ export const IndexDetails = (props) => {
       </div>
       <div className="flex space-x-2">
         <button
-          onClick={() => navigate("/transactionSummary")}
+          onClick={() =>
+            navigate("/transactionSummary", {
+              state: { indexData: props?.indexData },
+            })
+          }
           className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center"
         >
           Buy
         </button>
         <button
-          onClick={()=>props?.onClick()}
+          onClick={() => props?.onClick()}
           className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center"
         >
           SIP

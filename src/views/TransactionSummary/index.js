@@ -1,5 +1,7 @@
 import React from "react";
 import { Cell, Pie, PieChart } from "recharts";
+import { useLocation } from "react-router-dom";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
 
 const data02 = [
   {
@@ -35,48 +37,67 @@ const data02 = [
 ];
 
 const TransactionSummary = () => {
+  const location = useLocation();
   return (
     <div className="TransactionSummary bg-bgl1 flex h-screen w-full">
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-around items-center sm:flex xl:basis-3/4">
-        <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white">
+        <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
           Transaction Summary
         </p>
-        <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-[80%] h-[60%] rounded-2xl p-0.5">
-          <div className="bg-bg w-full h-full rounded-2xl flex">
-            <div className="grid grid-cols-2 gap-2 w-1/2 p-10">
-              {[1, 2, 3, 4, 5, 6].map((ele) => (
-                <div className="flex justify-center items-center mt-[20px]">
-                  <img
-                    className="h-[44px] w-[44px]"
-                    src={require("../../assets/btcLight.png")}
-                  />
-                  <div className="pl-[10px]">
-                    <p className="font-mont text-white text-[10px]">BITCOIN</p>
-                    <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                    <p className="font-mont text-white text-[19px]">BTC</p>
-                  </div>
-                </div>
-              ))}
+        <div className="flex w-[80%] ">
+          <p className="text-white font-mont">Composition Breakdown</p>
+        </div>
+        <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-[80%] h-[60%] rounded-2xl p-[1px]">
+          <div className="bg-bg w-full h-full rounded-2xl">
+            <div className="flex justify-center items-center">
+              <p className="text-white font-mont text-xl font-semibold mt-3">
+                {location?.state?.indexData?.basketName}
+              </p>
             </div>
-            <div className="flex flex-col justify-center items-center w-1/2">
-              <PieChart width={200} height={200}>
-                <Pie
-                  data={data02}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={80}
-                  outerRadius={100}
-                >
-                  {data02.map((ele) => (
-                    <Cell fill={ele.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-              <div className="flex mt-6 items-center p-3 ml-5">
-                <p className="text-gray-400 w-1/3">Portfolio Value</p>
-                <p className="text-white font-bold text-4xl ml-4">$5100</p>
+            <div className="flex w-full h-[95%]">
+              <div className="coinList grid grid-cols-2 gap-2 w-1/2 p-10 overflow-scroll">
+                {location?.state?.indexData?.coins?.map((item, index) => {
+                  const data = getCoinMeta(item);
+                  return (
+                    <div className="flex items-center mt-[20px] w-[100%]">
+                      <img
+                        alt="btc"
+                        className="h-10 w-10 3xl:h-14 3xl:w-14"
+                        src={data?.logoUrl}
+                      />
+                      <div className="pl-[6px]">
+                        <p className="font-mont text-white text-[10px] 3xl:text-xl">
+                          {data?.slug}
+                        </p>
+                        <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
+                        <p className="font-medium text-white text-sm 3xl:text-xl">
+                          22%
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex flex-col justify-center items-center w-1/2">
+                <PieChart width={200} height={200}>
+                  <Pie
+                    data={data02}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={80}
+                    outerRadius={100}
+                  >
+                    {data02.map((ele) => (
+                      <Cell fill={ele.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+                <div className="flex mt-6 items-center p-3 ml-5">
+                  <p className="text-gray-400 w-1/3">Portfolio Value</p>
+                  <p className="text-white font-bold text-4xl ml-4">$5100</p>
+                </div>
               </div>
             </div>
           </div>
