@@ -1,9 +1,9 @@
+import './style.css'
 import React from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { useNavigate } from "react-router-dom";
-
 const data02 = [
   {
     name: "Group A",
@@ -80,10 +80,10 @@ export const IndexDetails = (props) => {
             {props?.indexData?.coins?.map((item, index) => {
               const data = getCoinMeta(item);
               return (
-                <div className="flex items-center mt-[20px] w-[100%]">
+                <div className="flex items-center mt-[20px] w-[100%] px-3">
                   <img
                     alt="btc"
-                    className="h-10 w-10 3xl:h-14 3xl:w-14"
+                    className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
                     src={data?.logoUrl}
                   />
                   <div className="pl-[6px]">

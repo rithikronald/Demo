@@ -1,20 +1,4 @@
 import "./style.css";
-import cardBackground from "../../assets/bg.png";
-import {
-  CartesianGrid,
-  Cell,
-  Legend,
-  Line,
-  AreaChart,
-  Area,
-  LineChart,
-  Pie,
-  PieChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
 import marketCapLogo from "../../assets/marketCapLogo.png";
 import { useNavigate } from "react-router-dom";
 import { GradientContainer } from "../../components/GradientContainer";
@@ -25,39 +9,6 @@ import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { IndexDetails } from "../../components/RightComponent/indexDetails";
 import { useEffect, useState } from "react";
 import SetupSIP from "../../components/RightComponent/setupSIP";
-
-const data02 = [
-  {
-    name: "Group A",
-    value: 2400,
-    color: "#165DFF",
-  },
-  {
-    name: "Group B",
-    value: 4567,
-    color: "#0FC6C2",
-  },
-  {
-    name: "Group C",
-    value: 1398,
-    color: "#722ED1",
-  },
-  {
-    name: "Group D",
-    value: 9800,
-    color: "#F7BA1E",
-  },
-  {
-    name: "Group E",
-    value: 3908,
-    color: "#722ED1",
-  },
-  {
-    name: "Group F",
-    value: 4800,
-    color: "#D91AD9",
-  },
-];
 
 const Indexes = () => {
   const { height, width } = useWindowDimensions();

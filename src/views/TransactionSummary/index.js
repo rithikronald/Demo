@@ -1,3 +1,4 @@
+import "./style.css";
 import React from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { useLocation } from "react-router-dom";
@@ -48,37 +49,39 @@ const TransactionSummary = () => {
           <p className="text-white font-mont">Composition Breakdown</p>
         </div>
         <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-[80%] h-[60%] rounded-2xl p-[1px]">
-          <div className="bg-bg w-full h-full rounded-2xl">
+          <div className="bg-bg w-full h-full rounded-2xl flex flex-col">
             <div className="flex justify-center items-center">
               <p className="text-white font-mont text-xl font-semibold mt-3">
                 {location?.state?.indexData?.basketName}
               </p>
             </div>
-            <div className="flex w-full h-[95%]">
-              <div className="coinList grid grid-cols-2 gap-2 w-1/2 p-10 overflow-scroll">
+            <div className="flex w-full h-[80%] mt-5">
+              <div className="coin-list grid grid-cols-2 gap-2 w-[60%] p-10 overflow-scroll">
                 {location?.state?.indexData?.coins?.map((item, index) => {
                   const data = getCoinMeta(item);
                   return (
-                    <div className="flex items-center mt-[20px] w-[100%]">
-                      <img
-                        alt="btc"
-                        className="h-10 w-10 3xl:h-14 3xl:w-14"
-                        src={data?.logoUrl}
-                      />
-                      <div className="pl-[6px]">
-                        <p className="font-mont text-white text-[10px] 3xl:text-xl">
-                          {data?.slug}
-                        </p>
-                        <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                        <p className="font-medium text-white text-sm 3xl:text-xl">
-                          22%
-                        </p>
+                    <div className="mt-4 rounded-lg bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[0.8px]">
+                      <div className="flex items-center p-2 w-[100%] bg-bg rounded-lg h-full px-4">
+                        <img
+                          alt="btc"
+                          className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
+                          src={data?.logoUrl}
+                        />
+                        <div className="pl-[6px]">
+                          <p className="font-mont text-white text-[10px] 3xl:text-xl">
+                            {data?.slug}
+                          </p>
+                          <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
+                          <p className="font-medium text-white text-sm 3xl:text-xl">
+                            22%
+                          </p>
+                        </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <div className="flex flex-col justify-center items-center w-1/2">
+              <div className="flex flex-col justify-center items-center w-[40%]">
                 <PieChart width={200} height={200}>
                   <Pie
                     data={data02}
@@ -94,7 +97,7 @@ const TransactionSummary = () => {
                     ))}
                   </Pie>
                 </PieChart>
-                <div className="flex mt-6 items-center p-3 ml-5">
+                <div className="flex mt-6 items-center ml-5">
                   <p className="text-gray-400 w-1/3">Portfolio Value</p>
                   <p className="text-white font-bold text-4xl ml-4">$5100</p>
                 </div>
@@ -122,47 +125,60 @@ const TransactionSummary = () => {
         </div>
       </div>
       <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col sm:hidden xl:flex">
-        <div className="w-full h-[60%] mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
-          <div className="bg-bg rounded-3xl h-full flex flex-col p-6 items-center">
-            <div className="rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
-              <div className="bg-bg rounded-3xl h-full flex flex-col items-center p-2">
-                <img
-                  className="w-[150px] h-[150px]"
-                  alt="qr"
-                  src={require("../../assets/qrScanner.png")}
-                />
-                <p className="text-white mt-2">xhdodsd72661hbs</p>
-              </div>
-            </div>
-            <div className="w-full flex flex-col mt-6 h-full justify-center">
-              <div className="bg-maxPurple rounded-3xl h-8 flex items-center p-1 pl-2">
-                <select
-                  id="countries"
-                  className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-2xl focus:ring-bg focus:border-bg"
-                >
-                  <option selected value="+91">
-                    BTC (Bitcoin)
-                  </option>
-                  <option value="+1">ETH (Ethereum)</option>
-                  <option value="+33">USDT (Tether)</option>
-                </select>
-              </div>
-              <div className="flex mt-4 justify-between">
-                <div className="rounded-3xl p-1 px-3 bg-maxPurple flex justify-center items-center">
+        <div className="flex flex-col w-full h-[65%]">
+        <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
+          Deposit
+        </p>
+          <div className="w-full h-full mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
+            <div className="bg-bg rounded-3xl h-full flex flex-col p-4 items-center">
+              <div className="rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px]">
+                <div className="bg-bg rounded-3xl h-full flex flex-col items-center p-2">
                   <img
-                    alt="vector"
-                    className="w-6 h-6"
-                    src={require("../../assets/usdc.png")}
+                    className="w-[150px] h-[150px]"
+                    alt="qr"
+                    src={require("../../assets/qrScanner.png")}
                   />
-                  <p className="text-white ml-3 text-sm">USDC</p>
+                  <p className="text-white mt-2">xhdodsd72661hbs</p>
                 </div>
-                <div className="rounded-3xl p-2 px-3 bg-maxPurple flex">
-                  <img
-                    alt="vector"
-                    className="w-6 h-6"
-                    src={require("../../assets/usdc.png")}
-                  />
-                  <p className="text-white ml-3">USDC</p>
+              </div>
+              <div className="w-full flex flex-col mt-6 h-full justify-center">
+                <div className="bg-maxPurple rounded-3xl h-8 flex items-center p-1 pl-2">
+                  <select
+                    id="countries"
+                    className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-2xl focus:ring-bg focus:border-bg"
+                  >
+                    <option selected value="+91">
+                      BTC (Bitcoin)
+                    </option>
+                    <option value="+1">ETH (Ethereum)</option>
+                    <option value="+33">USDT (Tether)</option>
+                  </select>
+                </div>
+                <div className="flex mt-6 space-x-1 justify-between">
+                  <div className="rounded-3xl p-2  bg-maxPurple flex justify-center items-center">
+                    <img
+                      alt="vector"
+                      className="w-6 h-6"
+                      src={require("../../assets/usdc.png")}
+                    />
+                    <p className="text-white ml-1 text-xs">USDC</p>
+                  </div>
+                  <div className="rounded-3xl p-2  bg-maxPurple flex justify-center items-center">
+                    <img
+                      alt="vector"
+                      className="w-6 h-6"
+                      src={require("../../assets/usdt.png")}
+                    />
+                    <p className="text-white ml-1 text-xs">USDT</p>
+                  </div>
+                  <div className="rounded-3xl p-2  bg-maxPurple flex justify-center items-center">
+                    <img
+                      alt="vector"
+                      className="w-6 h-6"
+                      src={require("../../assets/busd.png")}
+                    />
+                    <p className="text-white ml-1 text-xs">BUSD</p>
+                  </div>
                 </div>
               </div>
             </div>
