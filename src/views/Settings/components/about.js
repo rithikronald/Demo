@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-const AccountDetails = () => {
+const stages = {
+  INTRO: "INTRO",
+  HELPDESK: "HELPDESK",
+};
+
+const About1 = (props) => {
   return (
     <>
       <p className="text-white opacity-40 font-mont text-[24px]">About</p>
@@ -32,17 +37,10 @@ const AccountDetails = () => {
         <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[32px] cursor-pointer"
+            onClick={() => props.setStage(stages.HELPDESK)}
           >
             Helpdesk
-          </p>
-        </div>
-        <div className="flex mt-[20px]">
-          <p
-            style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
-          >
-            Legal
           </p>
         </div>
       </div>
@@ -50,4 +48,74 @@ const AccountDetails = () => {
   );
 };
 
-export default AccountDetails;
+const About2 = (props) => {
+  return (
+    <>
+      <p
+        onClick={() => props.setStage(stages.INTRO)}
+        style={{ flex: 1, cursor: "pointer" }}
+        className="text-white opacity-40 font-mont text-[24px]"
+      >
+        {"<"} Helpdesk
+      </p>
+      <div className="absolute top-1/2 -translate-y-1/3 w-[90%] h-[70%] overflow-y-scroll">
+        <div className="flex mt-[20px]">
+          <div>
+          <p className="font-mont text-white font-bold text-[24px]">
+            What is an Index?
+          </p>
+          <p className="font-mont text-white opacity-40 text-[20px]">
+            It’s a hand-picked collection of coins grouped up to give you
+            optimal returns based on market.
+          </p>
+          </div>
+        </div>
+        <div className="flex mt-[20px]">
+          <div>
+          <p className="font-mont text-white font-bold text-[24px]">
+          What is a generated portfolio suggestion?
+          </p>
+          <p className="font-mont text-white opacity-40 text-[20px]">
+          Just tell it what to do and our Smart Suggestion Engine generates the optimal portfolio for you.
+          </p>
+          </div>
+        </div>
+        <div className="flex mt-[20px]">
+          <div>
+          <p className="font-mont text-white font-bold text-[24px]">
+          What is a transaction fee?
+          </p>
+          <p className="font-mont text-white opacity-40 text-[20px]">
+          Maximum Protocol will collect a 1% transaction fee for all purchases made.
+          </p>
+          </div>
+        </div>
+        <div className="flex mt-[20px]">
+          <div>
+          <p className="font-mont text-white font-bold text-[24px]">
+          Will there be any performance fee?
+          </p>
+          <p className="font-mont text-white opacity-40 text-[20px]">
+          Yes.
+          </p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const About = () => {
+  const [stage, setStage] = useState(stages.INTRO);
+
+  return (
+    <>
+      {stage === stages.INTRO && <About1 stage={stage} setStage={setStage} />}
+      {stage === stages.HELPDESK && (
+        <About2 stage={stage} setStage={setStage} />
+      )}
+    </>
+  );
+};
+
+export default About;

@@ -85,7 +85,7 @@ const Settings = () => {
           ))}
         </div>
         <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-full h-full rounded-2xl p-0.5">
-          <div className="bg-bg w-full h-full rounded-2xl p-12 relative">
+          <div className="bg-bg w-full h-full rounded-2xl p-12 relative box-border">
             <InnerComponent />
           </div>
         </div>
