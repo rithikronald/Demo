@@ -6,6 +6,54 @@ import tradeIcon from "../../assets/trade.png";
 import seeAllIcon from "../../assets/seeAll.png";
 import { GradientContainer } from "../../components/GradientContainer";
 import { ThemeButton } from "../../components/themeButton";
+import DataTable from "react-data-table-component";
+import axios from "axios";
+
+const columns = [
+  {
+    name: "NAME",
+    selector: (row) => row.ticker,
+    sortable: true,
+  },
+  {
+    name: "CHANGE",
+    selector: (row) => row.percent_change_24h,
+    sortable: true,
+  },
+  {
+    name: "MARKET CAP",
+    selector: (row) => row.marketcap_usd.value,
+    sortable: true,
+  },
+  {
+    name: "SUPPLY",
+    selector: (row) => row.total_supply.value,
+    sortable: true,
+  },
+  {
+    name: "VOLUME",
+    selector: (row) => row.transaction_volume.value,
+    sortable: true,
+  },
+  {
+    name: "PRICE",
+    selector: (row) => row.price.value,
+    sortable: true,
+  },
+];
+
+const data = [
+  {
+    id: 1,
+    title: "Beetlejuice",
+    year: "1988",
+  },
+  {
+    id: 2,
+    title: "Ghostbusters",
+    year: "1984",
+  },
+];
 
 const CoinList = () => {
   const tableSampleData = [
@@ -221,6 +269,21 @@ const CoinList = () => {
     );
   }
 
+  const [coinList, setCoinList] = useState();
+  useEffect(() => {
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/coinList/`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        setCoinList(response?.data);
+      })
+      .catch((err) => console.log("error", err));
+  }, []);
+
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
       {/* Left */}
@@ -270,7 +333,7 @@ const CoinList = () => {
           </form>
         </div>
         <div className="TableWithOptions">
-          <div className="Options flex justify-between">
+          {/* <div className="Options flex justify-between">
             <div className="LeftOptions flex items-center justify-center">
               <TableOption option="Sort" icon={sortIcon} />
 
@@ -286,61 +349,59 @@ const CoinList = () => {
                 10/Page
               </p>
             </div>
-          </div>
-
+          </div> */}
           <div className="Table bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 sm:rounded-lg ">
             <div className="overflow-x-auto relative shadow-md sm:rounded-lg ">
-              <table className="w-full text-sm text-left text-gray-500">
-                <thead className="text-xs text-gray-700 uppercase border-b-2 border-fuchsia-500 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="py-3 px-6">
-                      NAME
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      CHANGE
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      MARKET CAP
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      SUPPLY
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      VOLUME
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      PRICE
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableSampleData.map((data, i) => {
-                    console.log(i, data);
-                    return (
-                      <TableItem
-                        index={i}
-                        name={data.name}
-                        change={data.change}
-                        marketCap={data.marketCap}
-                        supply={data.supply}
-                        volume={data.volume}
-                        price={data.price}
-                      />
-                    );
-                  })}
-                </tbody>
-              </table>
+              <DataTable
+                columns={columns}
+                data={coinList}
+                pagination
+                striped
+                highlightOnHover
+                paginationPerPage={10}
+                responsive
+                customStyles={{
+                  rows:{
+                    stripedStyle:{
+                      backgroundColor:"#24225B",
+                      color:"#fff"
+                    },
+                    style:{
+                      backgroundColor:"#100E35",
+                      color:"#fff"
+                    }
+                  },
+                  headRow:{
+                    style:{
+                      backgroundColor:"#100E35",
+                      color:"#fff"
+                    }
+                  },
+                  pagination:{
+                    style:{
+                      backgroundColor:"#100E35",
+                      color:"#fff",
+                    },
+                    pageButtonsStyle:{
+                      fill:"#fff",
+                      '&:disabled': {
+                        fill: "#5c5c5c",
+                      },
+                    }
+                  },
+                }}
+              />
             </div>
           </div>
         </div>
         {/* <Example /> */}
-        <div className="Pager flex justify-end">
+        {/* <div className="Pager flex justify-end">
           <Pager number="<" />
           <Pager number={1} current={true} />
           <Pager number="2" />
           <Pager number="3" />
           <Pager number=">" />
-        </div>
+        </div> */}
       </div>
 
       {/* Right */}
