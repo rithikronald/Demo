@@ -9,13 +9,13 @@ import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import "./style.css";
 
-
 const Indexes = () => {
   const navigate = useNavigate();
   const { height, width } = useWindowDimensions();
   const [basketData, setBasketData] = useState();
   const [indexData, setIndexData] = useState();
   const [pageRightIndex, setPageRightIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0)
   useEffect(() => {
     axios
       .get(
@@ -31,8 +31,8 @@ const Indexes = () => {
   }, []);
 
   useEffect(() => {
-    setIndexData(basketData?.[0]);
-  }, [basketData]);
+    setIndexData(basketData?.[currentIndex]);
+  }, [basketData,currentIndex]);
 
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
@@ -46,12 +46,7 @@ const Indexes = () => {
         <div className="indexListContainer grid grid-cols-3 gap-3 overflow-y-scroll">
           {basketData &&
             basketData?.map((item, index) => (
-              <button
-                onClick={() =>
-                  navigate("/indexes/indexId", { state: { indexData: item } })
-                }
-                className="w-[250px] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
-              >
+              <button onClick={()=>setCurrentIndex(index)} className="w-[250px] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80">
                 <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
                   <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl p-4">
                     <p className="text-white text-lg font-semibold">
@@ -86,7 +81,14 @@ const Indexes = () => {
                       </div>
                     </div>
                     <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-[1px]">
-                      <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center text-xs">
+                      <button
+                        onClick={() =>
+                          navigate("/indexes/indexId", {
+                            state: { indexData: item },
+                          })
+                        }
+                        className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center text-xs"
+                      >
                         VIEW
                       </button>
                     </div>
