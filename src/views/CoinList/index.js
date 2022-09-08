@@ -251,6 +251,8 @@ const CoinList = () => {
                     style: {
                       backgroundColor: "#100E35",
                       color: "#fff",
+                      borderBottomWidth:1,
+                      borderBottomColor:"#9433d5"
                     },
                   },
                   pagination: {
