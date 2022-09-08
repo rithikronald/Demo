@@ -2,8 +2,165 @@ import "./style.css";
 import marketCapLogo from "../../assets/marketCapLogo.png";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const CoinDesc = () => {
+import axios from "axios";
+
+const CoinDesc = (props) => {
+  const [loaderOpen, setLoaderOpen] = useState(false);
+  const [data, setData] = useState();
+  const [priceGrapgh, setPriceGrapgh] = useState([]);
+  const [priceIndex, setPriceIndex] = useState("1d");
+  const [mainIndex, setMainIndex] = useState("1d");
+  const [socialIndex, setSocialIndex] = useState("1d");
+  const [networkIndex, setNetworkIndex] = useState("1d");
+  const [developerIndex, setDeveloperIndex] = useState("1d");
+  const [sentimentIndex, setSentimentIndex] = useState("1d");
+  const [mainSecondaryIndex, setMainSecondaryIndex] = useState("marketcap_usd");
+  const [activeWalletPercentageChange, setActiveWalletPercentageChange] =
+    useState("");
+  const [activeAddressPerct, setActiveAddressPerct] = useState(0);
+  const [dailyActivePerct, setDailyActivePerct] = useState(0);
+  const [transactionVolumePerct, setTransactionVolumePerct] = useState(0);
+  const [nvtRatioPerct, setNvtRatioPerct] = useState(0);
+
+  const params = useParams();
+
+  useEffect(() => {
+    setLoaderOpen(true);
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getCoinData/?coin=${params.coinId}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        setData(response?.data);
+        setLoaderOpen(false);
+        setActiveAddressPerct(
+          oneDayPercentage(
+            response?.data?.active_addresses.value,
+            response?.data?.active_addresses?.change_1d
+          )
+        );
+        setDailyActivePerct(
+          oneDayPercentage(
+            response?.data?.daily_active_addresses.value,
+            response.data?.daily_active_addresses?.change_1d
+          )
+        );
+        setTransactionVolumePerct(
+          oneDayPercentage(
+            response?.data?.transaction_volume.value,
+            response.data?.transaction_volume?.change_1d
+          )
+        );
+        setNvtRatioPerct(
+          oneDayPercentage(
+            response?.data?.nvt.value,
+            response.data?.nvt?.change_1d
+          )
+        );
+      })
+      .catch((err) => console.log("error", err));
+  }, []);
+
+  const arrGen = (arr) => {
+    const tempArr = [];
+    arr?.map((item, index) => {
+      // console.log("ITEM",item)
+      tempArr.push(item?.value);
+    });
+    // console.log("TEMP ARR",tempArr)
+    return tempArr;
+  };
+
+  function numberWithCommas(x) {
+    if (!x) {
+      return x;
+    }
+    let numbers = x.toString().split(".");
+    let firstPart = Number(parseInt(numbers[0])).toLocaleString("en");
+
+    return numbers[1] ? firstPart + "." + numbers[1] : firstPart;
+    // return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  useEffect(() => {
+    // const resArr = arrGen(data?.price?.change_1d);
+    // console.log("RES ARR", resArr);
+  }, [data]);
+
+  const priceChange = (index) => {
+    setPriceIndex(index);
+  };
+
+  const mainChange = (index) => {
+    setMainIndex(index);
+  };
+
+  const mainSecondaryChange = (ele) => {
+    console.log("index", ele);
+    if (ele == "Market Cap") {
+      setMainSecondaryIndex("marketcap_usd");
+    } else if (ele == "Social Volume") {
+      setMainSecondaryIndex("sociaVolume");
+    } else if (ele == "Active Wallets") {
+      setMainSecondaryIndex("active_addresses");
+    }
+  };
+  const socialChange = (index) => {
+    setSocialIndex(index);
+  };
+  const networkChange = (index) => {
+    setNetworkIndex(index);
+  };
+  const developerChange = (index) => {
+    setDeveloperIndex(index);
+  };
+  const sentimentChange = (index) => {
+    setSentimentIndex(index);
+  };
+
+  const calculatePercentage = (value, days) => {
+    let num1 = value;
+    let num2 = days[days.length - 1]?.value;
+    let diff = num1 - num2;
+    let div = diff / num1;
+    let percentage = div * 100;
+    console.log("Percentage", percentage);
+    return percentage;
+  };
+
+  const nullValues = (value) => {
+    if (value == null) return "Coming Soon";
+    else return Number(value).toFixed(3);
+  };
+
+  const oneDayPercentage = (value, days) => {
+    let num1 = value;
+    let num2 = days[days.length - 2]?.value;
+    let diff = num1 - num2;
+    let div = diff / num1;
+    let percentage = div * 100;
+    console.log("Percentage", percentage);
+    return percentage;
+  };
+
+  const colorChange = (value) => {
+    console.log("VALUE", value);
+    const str = value.toString();
+    const changeSymbol = str[0];
+    console.log("STRING", changeSymbol);
+    if (changeSymbol == "-") {
+      return "red";
+    }
+    return "lightGreen";
+  };
+
   return (
     <div className="p-5 px-10 overflow-hidden w-screen h-screen bg-bgl1 justify-between flex flex-col">
       <div className="flex justify-end space-x-8">
@@ -22,7 +179,7 @@ const CoinDesc = () => {
           <div>
             <div className="flex">
               <p className="text-3xl font-mont text-white font-bold">
-                Bitcoin BTC
+                {data?.slug}
               </p>
               <div className="flex space-x-1 ml-2">
                 <div className="w-2 h-2 bg-red-500 rounded-full" />

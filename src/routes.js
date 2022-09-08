@@ -25,7 +25,7 @@ const routes = [
     component: OTPVerification,
   },
   { path: "/", name: "Home", exact: true, component: Home },
-  { path: "/coin-desc", name: "CoinDesc", exact: true, component: CoinDesc },
+  { path: "/coin-desc/:coinId", name: "CoinDesc", exact: true, component: CoinDesc },
   { path: "/indexes", name: "Indexes", exact: true, component: Indexes },
   { path: "/coinList", name: "CoinList", exact: true, component: CoinList },
   {
