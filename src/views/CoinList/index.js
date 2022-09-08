@@ -1,19 +1,26 @@
-import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import classnames from "classnames";
-import sortIcon from "../../assets/sort.png";
-import tradeIcon from "../../assets/trade.png";
-import seeAllIcon from "../../assets/seeAll.png";
+import DataTable from "react-data-table-component";
 import { GradientContainer } from "../../components/GradientContainer";
 import { ThemeButton } from "../../components/themeButton";
-import DataTable from "react-data-table-component";
-import axios from "axios";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
 
 const columns = [
   {
     name: "NAME",
-    selector: (row) => row.ticker,
+    selector: (row) => {
+      console.log("ROW", getCoinMeta(row.ticker));
+      const coinData = getCoinMeta(row.ticker);
+      return (
+        <div className="flex items-center">
+          <img className="w-6 h-6 rounded-full bg-white" src={coinData?.logoUrl} alt ="logo" />
+          <p className="text- font-bold ml-2">{coinData?.ticker}</p>
+          <p className="text-white ml-2">{coinData?.slug}</p>
+        </div>
+      );
+    },
     sortable: true,
+    grow:2
   },
   {
     name: "CHANGE",
@@ -41,234 +48,118 @@ const columns = [
     sortable: true,
   },
 ];
-
-const data = [
+const tabsData = [
   {
-    id: 1,
-    title: "Beetlejuice",
-    year: "1988",
+    label: "Buy",
   },
   {
-    id: 2,
-    title: "Ghostbusters",
-    year: "1984",
+    label: "Sell",
+  },
+];
+const innertabsData = [
+  {
+    label: "Limit",
+  },
+  {
+    label: "Market",
   },
 ];
 
+const RightContainer = ({ option, icon }) => {
+  return (
+    <div className="py-10 px-6 flex justify-center flex-col">
+      <Tabs data={innertabsData} />;
+      <div className="bg-transparent my-2 px-2">
+        <p className="text-white font-medium text-lg">Price</p>
+        <GradientContainer
+          height="h-16"
+          width="w-full"
+          children={
+            <input
+              type="text"
+              className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+            />
+          }
+        />
+      </div>
+      <div className="bg-transparent my-2 px-2">
+        <p className="text-white font-medium text-lg">Amount</p>
+        <GradientContainer
+          height="h-16"
+          width="w-full"
+          children={
+            <input
+              type="text"
+              className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+            />
+          }
+        />
+      </div>
+      <div className="bg-transparent my-2 px-2">
+        <p className="text-white font-medium text-lg">Total</p>
+        <GradientContainer
+          height="h-16"
+          width="w-full"
+          children={
+            <p className="text-white font-medium text-lg text-center mt-4">
+              $6553.94
+            </p>
+          }
+        />
+      </div>
+      <ThemeButton text="Trade" className="w-full mt-4" />
+    </div>
+  );
+};
+
+function Tabs({ data, innerTabs = false }) {
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
+  const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
+
+  const tabsRef = useRef([]);
+
+  useEffect(() => {
+    function setTabPosition() {
+      const currentTab = tabsRef.current[activeTabIndex];
+      console.log(currentTab?.offsetLeft, currentTab?.clientWidth);
+      setTabUnderlineLeft(currentTab?.offsetLeft ?? 0);
+      setTabUnderlineWidth(currentTab?.clientWidth ?? 0);
+    }
+
+    setTabPosition();
+    window.addEventListener("resize", setTabPosition);
+
+    return () => window.removeEventListener("resize", setTabPosition);
+  }, [activeTabIndex]);
+
+  return (
+    <>
+      <div className="relative">
+        <div className="flex space-x-3 text-white text-lg font-semibold  items-center justify-center">
+          {data.map((tab, idx) => {
+            return (
+              <button
+                key={idx}
+                ref={(el) => (tabsRef.current[idx] = el)}
+                className="pt-2 pb-3"
+                onClick={() => setActiveTabIndex(idx)}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+        <span
+          className="absolute bottom-0 block h-1 bg-primaryButton rounded-md transition-all duration-300"
+          style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
+        />
+      </div>
+    </>
+  );
+}
+
 const CoinList = () => {
-  const tableSampleData = [
-    {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
-    },
-    {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
-    },
-    {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
-    },
-    {
-      name: "Bitcoin",
-      change: "+32%",
-      marketCap: "$203,122,218,705",
-      supply: "$20,727,732,216",
-      volume: "12,430,561 ETH",
-      price: "$1,667.48",
-    },
-  ];
-
-  const tabsData = [
-    {
-      label: "Buy",
-    },
-    {
-      label: "Sell",
-    },
-  ];
-
-  const innertabsData = [
-    {
-      label: "Limit",
-    },
-    {
-      label: "Market",
-    },
-  ];
-
-  const TableItem = ({
-    index,
-    name,
-    change,
-    marketCap,
-    supply,
-    volume,
-    price,
-  }) => {
-    return (
-      <tr
-        className={classnames(
-          `border-b ${
-            index % 2 === 0 ? `dark:bg-bg` : "dark:bg-[#24225B]"
-          } dark:border-gray-700`
-        )}
-      >
-        <th
-          scope="row"
-          className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-        >
-          {name}
-        </th>
-
-        <td className="py-4 px-6 text-white">{change}</td>
-        <td className="py-4 px-6 text-white">{marketCap}</td>
-        <td className="py-4 px-6 text-white">{supply}</td>
-        <td className="py-4 px-6 text-white">{volume}</td>
-        <td className="py-4 px-6 text-white">{price}</td>
-      </tr>
-    );
-  };
-
-  const Pager = ({ number, current = false }) => {
-    return (
-      <button
-        className={classnames(
-          `h-8  w-8 rounded-md mx-1 flex items-center justify-center ${
-            current
-              ? `bg-primaryButton`
-              : `bg-transparent border border-gray-600`
-          }`
-        )}
-      >
-        <p
-          className={classnames(
-            `font-semibold text-sm text-center ${
-              current ? `text-white` : `text-gray-600`
-            }`
-          )}
-        >
-          {number}
-        </p>
-      </button>
-    );
-  };
-
-  const TableOption = ({ option, icon }) => {
-    return (
-      <div className="flex m-1 justify-center items-center">
-        <img src={icon} alt="" className="h-4" />
-        <p className="text-white text-base  font-medium ml-1 ">{option}</p>
-      </div>
-    );
-  };
-
-  const RightContainer = ({ option, icon }) => {
-    return (
-      <div className="py-10 px-6 flex justify-center flex-col">
-        <Tabs data={innertabsData} />;
-        <div className="bg-transparent my-2 px-2">
-          <p className="text-white font-medium text-lg">Price</p>
-          <GradientContainer
-            height="h-16"
-            width="w-full"
-            children={
-              <input
-                type="text"
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
-            }
-          />
-        </div>
-        <div className="bg-transparent my-2 px-2">
-          <p className="text-white font-medium text-lg">Amount</p>
-          <GradientContainer
-            height="h-16"
-            width="w-full"
-            children={
-              <input
-                type="text"
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
-            }
-          />
-        </div>
-        <div className="bg-transparent my-2 px-2">
-          <p className="text-white font-medium text-lg">Total</p>
-          <GradientContainer
-            height="h-16"
-            width="w-full"
-            children={
-              <p className="text-white font-medium text-lg text-center mt-4">
-                $6553.94
-              </p>
-            }
-          />
-        </div>
-        <ThemeButton text="Trade" className="w-full mt-4" />
-      </div>
-    );
-  };
-
-  function Tabs({ data, innerTabs = false }) {
-    const [activeTabIndex, setActiveTabIndex] = useState(0);
-    const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
-    const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
-
-    const tabsRef = useRef([]);
-
-    useEffect(() => {
-      function setTabPosition() {
-        const currentTab = tabsRef.current[activeTabIndex];
-        console.log(currentTab?.offsetLeft, currentTab?.clientWidth);
-        setTabUnderlineLeft(currentTab?.offsetLeft ?? 0);
-        setTabUnderlineWidth(currentTab?.clientWidth ?? 0);
-      }
-
-      setTabPosition();
-      window.addEventListener("resize", setTabPosition);
-
-      return () => window.removeEventListener("resize", setTabPosition);
-    }, [activeTabIndex]);
-
-    return (
-      <>
-        <div className="relative">
-          <div className="flex space-x-3 text-white text-lg font-semibold  items-center justify-center">
-            {data.map((tab, idx) => {
-              return (
-                <button
-                  key={idx}
-                  ref={(el) => (tabsRef.current[idx] = el)}
-                  className="pt-2 pb-3"
-                  onClick={() => setActiveTabIndex(idx)}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-          <span
-            className="absolute bottom-0 block h-1 bg-primaryButton rounded-md transition-all duration-300"
-            style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
-          />
-        </div>
-      </>
-    );
-  }
-
   const [coinList, setCoinList] = useState();
   useEffect(() => {
     axios
@@ -333,23 +224,7 @@ const CoinList = () => {
           </form>
         </div>
         <div className="TableWithOptions">
-          {/* <div className="Options flex justify-between">
-            <div className="LeftOptions flex items-center justify-center">
-              <TableOption option="Sort" icon={sortIcon} />
-
-              <p className="text-gray-500  text-sm  font-normal ml-5 ">
-                Ascending
-              </p>
-            </div>
-            <div className="RightOptions flex items-center justify-center">
-              <TableOption option="Trade" icon={tradeIcon} />
-              <TableOption option="See All" icon={seeAllIcon} />
-
-              <p className="text-gray-500  text-sm  font-normal ml-5 ">
-                10/Page
-              </p>
-            </div>
-          </div> */}
+          {/*  */}
           <div className="Table bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 sm:rounded-lg ">
             <div className="overflow-x-auto relative shadow-md sm:rounded-lg ">
               <DataTable
@@ -357,51 +232,44 @@ const CoinList = () => {
                 data={coinList}
                 pagination
                 striped
+                paginationComponentOptions={{ noRowsPerPage: true }}
                 highlightOnHover
                 paginationPerPage={10}
                 responsive
                 customStyles={{
-                  rows:{
-                    stripedStyle:{
-                      backgroundColor:"#24225B",
-                      color:"#fff"
+                  rows: {
+                    stripedStyle: {
+                      backgroundColor: "#24225B",
+                      color: "#fff",
                     },
-                    style:{
-                      backgroundColor:"#100E35",
-                      color:"#fff"
-                    }
-                  },
-                  headRow:{
-                    style:{
-                      backgroundColor:"#100E35",
-                      color:"#fff"
-                    }
-                  },
-                  pagination:{
-                    style:{
-                      backgroundColor:"#100E35",
-                      color:"#fff",
+                    style: {
+                      backgroundColor: "#100E35",
+                      color: "#fff",
                     },
-                    pageButtonsStyle:{
-                      fill:"#fff",
-                      '&:disabled': {
+                  },
+                  headRow: {
+                    style: {
+                      backgroundColor: "#100E35",
+                      color: "#fff",
+                    },
+                  },
+                  pagination: {
+                    style: {
+                      backgroundColor: "#100E35",
+                      color: "#fff",
+                    },
+                    pageButtonsStyle: {
+                      fill: "#fff",
+                      "&:disabled": {
                         fill: "#5c5c5c",
                       },
-                    }
+                    },
                   },
                 }}
               />
             </div>
           </div>
         </div>
-        {/* <Example /> */}
-        {/* <div className="Pager flex justify-end">
-          <Pager number="<" />
-          <Pager number={1} current={true} />
-          <Pager number="2" />
-          <Pager number="3" />
-          <Pager number=">" />
-        </div> */}
       </div>
 
       {/* Right */}
