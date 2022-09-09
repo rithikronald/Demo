@@ -16,7 +16,7 @@ module.exports = {
       colors:{
         bg:"#100E35",
         regularPurple:"#AF3BFF",
-        maxPurple:"#2E205B",
+        maxPurple:"#402F6A",
         bgl1:"#131136",
         bgl2:"#181546",
         left:"#1A1B69",

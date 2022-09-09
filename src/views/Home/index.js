@@ -5,90 +5,9 @@ import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { indBgImgList,categoryList,risk,tenure,data02 } from "../../constants/constants";
+import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
-const data02 = [
-  {
-    name: "Group A",
-    value: 2400,
-    color: "#165DFF",
-  },
-  {
-    name: "Group B",
-    value: 4567,
-    color: "#0FC6C2",
-  },
-  {
-    name: "Group C",
-    value: 1398,
-    color: "#722ED1",
-  },
-  {
-    name: "Group D",
-    value: 9800,
-    color: "#F7BA1E",
-  },
-  {
-    name: "Group E",
-    value: 3908,
-    color: "#722ED1",
-  },
-  {
-    name: "Group F",
-    value: 4800,
-    color: "#D91AD9",
-  },
-];
-
-
-
-const categoryList = [
-  {
-    title: "Gaming",
-  },
-  {
-    title: "NFT",
-  },
-  {
-    title: "Smart Contract",
-  },
-  {
-    title: "Metaverse",
-  },
-  {
-    title: "Defi",
-  },
-  {
-    title: "Storage",
-  },
-];
-const tenure = [
-  {
-    title: "Short-Term",
-    desc: "1-3 years",
-  },
-  {
-    title: "Mid-Term",
-    desc: "3-5 years",
-  },
-  {
-    title: "Long-Term",
-    desc: "5+ years",
-  },
-];
-const risk = [
-  {
-    title: "Bold",
-    desc: "High Returns Great Volatility",
-  },
-  {
-    title: "Balance",
-    desc: "Moderate Returns Fair Volatility",
-  },
-  {
-    title: "Basic",
-    desc: "Modest Returns Low Volatility",
-  },
-];
 
 const Home = () => {
   const { height, width } = useWindowDimensions();
@@ -114,6 +33,10 @@ const Home = () => {
     }
   }, [width, height]);
 
+  useEffect(()=>{
+    console.log("IMG",indBgImgList[0])
+  })
+
   useEffect(() => {
     axios
       .get(
@@ -128,20 +51,6 @@ const Home = () => {
       })
       .catch((err) => console.log("error", err));
   }, []);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getAllIndexes`,
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       setCoinBasket(response?.data);
-  //     })
-  //     .catch((err) => console.log("error", err));
-  // }, []);
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
@@ -190,7 +99,8 @@ const Home = () => {
                     onClick={() => navigate("/coin-desc")}
                     className="coinCard w-[24%] mt-4 h-16 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-20"
                   >
-                    <div className="bg-bg rounded-2xl w-full h-full flex flex-row justify-between items-center p-4 px-4">
+                    <div className="flex w-full h-full bg-bgl2 rounded-2xl">
+                    <div className="bg-gradient-to-b from-maxPurple ... rounded-2xl w-full h-full flex flex-row justify-between items-center p-4 px-4">
                       <div className="flex flex-row items-center">
                         <img
                           alt="logo"
@@ -207,10 +117,12 @@ const Home = () => {
                           ${item?.price?.value.toFixed(2)}
                         </p>
                         <p className="text-green-500 text-[10px]">
-                        <i class="fa-sharp fa-solid fa-caret-up text-green-500 mr-[1px]"/> {item?.percent_change_24h}
+                        <i class="fa-sharp fa-solid fa-caret-up text-green-500 mr-[1px]"/> {item?.percent_change_24h}%
                         </p>
                       </div>
                     </div>
+                    </div>
+
                   </button>
                 ) : null;
               })}
@@ -224,7 +136,7 @@ const Home = () => {
               onClick={() => navigate("/indexes/")}
               className="text-gray-400 text-xs"
             >
-              view all
+              View All
             </button>
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
@@ -240,11 +152,15 @@ const Home = () => {
                     }
                     className="w-[24%] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
                   >
-                    <div className="bg-bg rounded-3xl w-full h-full flex flex-col justify-between p-2">
-                      <div className={`bg-gradient-to-tl from-right via-left to-top  flex h-5/6 w-full rounded-2xl p-[6%]`}>
+                    <div className="flex w-full h-full bg-bgl2 rounded-3xl">
+                    <div className="bg-gradient-to-b from-maxPurple ... rounded-3xl w-full h-full flex flex-col justify-between p-2">
+                      <div style={{backgroundImage:`url('${indBgImgList[index]}')`}} className={`bg-no-repeat bg-cover bg-center flex items-start justify-between flex-col h-5/6 w-full rounded-2xl p-[6%]`}>
                         <p className="text-white text-md font-semibold">
                           {item?.basketName}
                         </p>
+                        <div className="flex w-full h-[90%]">
+                        <CustomLineChart width={"100%"} height={"100%"} />
+                        </div>
                       </div>
                       <div className="flex justify-between items-center mt-1">
                         <div className="flex py-2 space-x-1">
@@ -280,13 +196,14 @@ const Home = () => {
                         </div>
                       </div>
                     </div>
+                    </div>
                   </button>
                 )
             )}
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tl from-bg to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex">
+      <div className="Right basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex">
         {pageRightIndex == 0 && (
           <>
             {/* pageIndex-0 */}
