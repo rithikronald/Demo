@@ -154,7 +154,7 @@ const Home = () => {
                   >
                     <div className="flex w-full h-full bg-bgl2 rounded-3xl">
                     <div className="bg-gradient-to-b from-maxPurple ... rounded-3xl w-full h-full flex flex-col justify-between p-2">
-                      <div style={{backgroundImage:`url('${indBgImgList[index]}')`}} className={`bg-no-repeat bg-cover bg-center flex items-start justify-between flex-col h-5/6 w-full rounded-2xl p-[6%]`}>
+                      <div style={{backgroundImage:`url('${indBgImgList[index+4]}')`}} className={`bg-no-repeat bg-cover bg-center flex items-start justify-between flex-col h-5/6 w-full rounded-2xl p-[6%]`}>
                         <p className="text-white text-md font-semibold">
                           {item?.basketName}
                         </p>
