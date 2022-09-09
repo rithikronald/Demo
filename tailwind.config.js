@@ -16,19 +16,22 @@ module.exports = {
       colors:{
         bg:"#100E35",
         regularPurple:"#AF3BFF",
-        maxPurple:"#2E205B",
+        maxPurple:"#351F59",
+        maxPurple1:"#402F6A",
         bgl1:"#131136",
         bgl2:"#181546",
         left:"#1A1B69",
         right:"#8A165E",
         top:"#165A4F",
-        darkPurple:"#341E63"
+        darkPurple:"#341E63",
+        cnl1:"#AF3BFF",
+        cnl2:"#AF3BFF"
       },
       fontFamily: {
         mont: ['Montserrat']
       },
       backgroundImage: {
-        primaryButton: 'radial-gradient(86.8% 325.5% at 8% 0%, #D446F1 0%, #9A35EB 100%)'
+        primaryButton: 'radial-gradient(86.8% 325.5% at 8% 0%, #D446F1 0%, #9A35EB 100%)',
       },
     },
   },
