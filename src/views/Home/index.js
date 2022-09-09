@@ -185,7 +185,7 @@ const Home = () => {
                 const data = getCoinMeta(item?.ticker);
                 return index < maxPicksList ? (
                   <button
-                    onClick={() => navigate(`/coin-desc/${data?.slug}`)}
+                    onClick={() => navigate(`/coin-desc/${data?.ticker}`)}
                     className="coinCard w-[250px] mt-4 h-16 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-20"
                   >
                     <div className="bg-bg rounded-2xl w-full h-full flex flex-row justify-between items-center p-4 px-4">
@@ -199,7 +199,7 @@ const Home = () => {
                           <p className="text-white font-medium">
                             {data?.ticker}
                           </p>
-                          <p className="text-gray-400 text-sm">{data?.slug}</p>
+                          <p className="text-gray-400 text-sm">{data?.ticker}</p>
                         </div>
                       </div>
                       <div className="flex flex-col items-end">

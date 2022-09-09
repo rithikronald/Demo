@@ -24,6 +24,8 @@ const CoinDesc = (props) => {
   const [dailyActivePerct, setDailyActivePerct] = useState(0);
   const [transactionVolumePerct, setTransactionVolumePerct] = useState(0);
   const [nvtRatioPerct, setNvtRatioPerct] = useState(0);
+  const [marketCap, setMarketCap] =  useState(0)
+  const [tradingVolume, setTradingVolume] = useState(0)
 
   const params = useParams();
 
@@ -31,7 +33,7 @@ const CoinDesc = (props) => {
     setLoaderOpen(true);
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getCoinData/?coin=${params.coinId}`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getCoin?ticker=${params.coinId}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -42,28 +44,40 @@ const CoinDesc = (props) => {
         setLoaderOpen(false);
         setActiveAddressPerct(
           oneDayPercentage(
-            response?.data?.active_addresses.value,
+            response?.data?.active_addresses?.value,
             response?.data?.active_addresses?.change_1d
           )
         );
         setDailyActivePerct(
           oneDayPercentage(
-            response?.data?.daily_active_addresses.value,
+            response?.data?.daily_active_addresses?.value,
             response.data?.daily_active_addresses?.change_1d
           )
         );
         setTransactionVolumePerct(
           oneDayPercentage(
-            response?.data?.transaction_volume.value,
+            response?.data?.transaction_volume?.value,
             response.data?.transaction_volume?.change_1d
           )
         );
         setNvtRatioPerct(
           oneDayPercentage(
-            response?.data?.nvt.value,
+            response?.data?.nvt?.value,
             response.data?.nvt?.change_1d
           )
         );
+        setMarketCap(
+          oneDayPercentage(
+            response?.data?.marketcap_usd?.value,
+            response?.data?.marketcap_usd?.change_1d,
+          )
+        )
+        setTradingVolume(
+          oneDayPercentage(
+            response?.data?.tradingVolume?.value, 
+            response?.data?.tradingVolume?.change_1d, 
+          )
+        )
       })
       .catch((err) => console.log("error", err));
   }, []);
@@ -141,13 +155,19 @@ const CoinDesc = (props) => {
   };
 
   const oneDayPercentage = (value, days) => {
+    console.log('ONE DAY PERCENTAGE',value, days)
     let num1 = value;
     let num2 = days[days.length - 2]?.value;
     let diff = num1 - num2;
     let div = diff / num1;
     let percentage = div * 100;
     console.log("Percentage", percentage);
-    return percentage;
+    // if(percentage) {
+    //   return `${Math.floor(percentage)}${getAfterDecimalValue(percentage)}`
+    // } else {
+    //   return 0
+    // }
+    return Math.floor(value)
   };
 
   const colorChange = (value) => {
@@ -160,6 +180,15 @@ const CoinDesc = (props) => {
     }
     return "lightGreen";
   };
+
+  const getAfterDecimalValue = (num) => {
+    if(!num) {
+      return
+    }
+    let str = JSON.stringify(num)
+    let newStr = str.split(".")[1]
+    return newStr.slice(0,2)
+  }
 
   return (
     <div className="p-5 px-10 overflow-hidden w-screen h-screen bg-bgl1 justify-between flex flex-col">
@@ -176,7 +205,7 @@ const CoinDesc = (props) => {
       </div>
       <div className="flex  h-[30%]">
         <div className="flex basis-1/2 mt-5">
-          <div>
+          <div style={{flex: 1}}>
             <div className="flex">
               <p className="text-3xl font-mont text-white font-bold">
                 {data?.slug}
@@ -188,10 +217,7 @@ const CoinDesc = (props) => {
               </div>
             </div>
             <p className="font-mont text-white text-sm mt-8 pr-[40px]">
-              Bitcoin is a decentralized digital currency that can be
-              transferred on the peer-to-peer bitcoin network. Bitcoin
-              transactions are verified by network nodes through cryptography
-              and recorded in a public distributed ledger called a blockchain.
+              {data?.description}
             </p>
           </div>
           <div className="flex-col text-white flex justify-">
@@ -199,8 +225,10 @@ const CoinDesc = (props) => {
               <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
                 <p className="text-[12px] ">Price</p>
                 <p className="text-[18px] ml-[5px]">$</p>
-                <p className="text-[25px] font-bold">40123</p>
-                <p className="text-[15px] font-bold">.79</p>
+                <p className="text-[25px] font-bold">{Math.floor(data?.price?.value)}</p>
+                <p className="text-[15px] font-bold">.{
+                  getAfterDecimalValue(data?.price?.value)
+                }</p>
               </div>
             </div>
             <div className="flex justify-center items-end mt-8">
@@ -214,38 +242,38 @@ const CoinDesc = (props) => {
           {[
             {
               title: "Market Cap",
-              logo: marketCapLogo,
-              value: "1239k",
+              logo: require('../../assets/marketCapIcon.png'),
+              value: numberWithCommas(marketCap),
             },
             {
-              title: "Market Cap",
-              logo: marketCapLogo,
-              value: "1239k",
+              title: "Transaction Volume",
+              logo: require('../../assets/transactionVolumeIcon.png'),
+              value: `${numberWithCommas(transactionVolumePerct)}k`,
             },
             {
-              title: "Market Cap",
-              logo: marketCapLogo,
-              value: "1239k",
+              title: "NVT Ratio",
+              logo: require('../../assets/nvtRatioIcon.png'),
+              value: numberWithCommas(nvtRatioPerct),
             },
             {
-              title: "Market Cap",
-              logo: marketCapLogo,
-              value: "1239k",
+              title: "Trading Volume",
+              logo: require('../../assets/tradingVolumeIcon.png'),
+              value: numberWithCommas(tradingVolume),
             },
             {
-              title: "Market Cap",
-              logo: marketCapLogo,
-              value: "1239k",
+              title: "Active Wallet Addresses",
+              logo: require('../../assets/activeWalletAddressIcon.png'),
+              value: numberWithCommas(activeAddressPerct),
             },
             {
-              title: "Market Cap",
-              logo: marketCapLogo,
-              value: "1239k",
+              title: "Daily Active Addresses",
+              logo: require('../../assets/dailyActiveAddressIcon.png'),
+              value: numberWithCommas(dailyActivePerct),
             },
           ].map((ele) => (
             <div className="flex items-center">
               <img src={ele.logo} />
-              <div className="ml-3 font-mont text-white">
+              <div className="ml-[-15px] font-mont text-white">
                 <p className="text-[9px]">{ele.title}</p>
                 <p className="text-[25px] font-bold">{ele.value}</p>
               </div>
