@@ -1,5 +1,4 @@
 export const indBgImgList = [
-    'images/bg.png',
     'images/bg1.png',
     'images/bg3.png',
     'images/bg4.png',
@@ -10,6 +9,11 @@ export const indBgImgList = [
     'images/bg9.png',
     'images/bg10.png',
     'images/bg11.png',
+    'images/bg1.png',
+    'images/bg3.png',
+    'images/bg6.png',
+    'images/bg7.png',
+    'images/bg8.png',
  ] 
  export const categoryList = [
     {
