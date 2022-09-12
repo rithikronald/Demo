@@ -11,9 +11,9 @@ export const GradientContainer = ({
   return (
     <div
       className={classnames(
-        `${width !== "" ? `${width}` : "w-1/5"}
+        `${width !== "" ? `${width}` : "w-auto"}
         ${
-          height !== "" ? `${height}` : "h-20"
+          height !== "" ? `${height}` : "h-auto"
         }  rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500  p-[1px] ${className}`
       )}
     >

@@ -61,7 +61,12 @@ const Home = () => {
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
-      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
+      <div
+        // style={{
+        //   backgroundImage: `url('/images/mainbg.png')`,
+        // }}
+        className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4"
+      >
         {/* Banner */}
         <div className="flex w-full h-1/3">
           <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-r from-purple-700 ... flex 2xl:pl-10">
@@ -227,7 +232,12 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex">
+      <div
+        style={{
+          backgroundImage: `url('/images/rightSectionbg.png')`,
+        }}
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex"
+      >
         {pageRightIndex == 0 && (
           <>
             {/* pageIndex-0 */}
@@ -466,7 +476,9 @@ const Home = () => {
                       </Pie>
                     </PieChart>
                     <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                      <p className="bg-white text-sm px-2 font-semibold rounded-full">Basic</p>
+                      <p className="bg-white text-sm px-2 font-semibold rounded-full">
+                        Basic
+                      </p>
                       <p className="bg-white font-semibold px-2 rounded-full mt-1">
                         long-term
                       </p>

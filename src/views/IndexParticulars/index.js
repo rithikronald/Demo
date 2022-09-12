@@ -25,14 +25,14 @@ const Indexes = () => {
   }, [location]);
 
   return (
-    <div className="App bg-bgl1 flex h-screen w-full">
-      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
+    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
+      <div className="Left p-10 px-16 flex flex-col justify-around sm:flex xl:basis-3/4">
         <div className="h-[25%] flex mt-[20px] w-full text-white">
           <div className="flex flex-col w-1/2">
-            <p className="text-3xl font-mont text-white font-bold">
+            <p className="text-3xl  text-white font-bold">
               Gaming Index
             </p>
-            <p className="font-mont text-white text-sm pr-[15px] mt-3">
+            <p className=" text-white text-sm pr-[15px] mt-3">
               Crypto gaming is on the rise, {"&"} gaming coins are becoming a
               popular choice as an investment. Play to earn is an emerging
               gaming model that rewards players in cryptocurrencies
@@ -63,13 +63,13 @@ const Indexes = () => {
             ].map((ele) => (
               <div className="flex items-center">
                 <img className="w-14 h-14" alt={"atr"} src={ele.logo} />
-                <div className="font-mont text-white ml-2">
+                <div className=" text-white ml-2">
                   <p className="text-[9px]">{ele.title}</p>
                   <div className="flex items-end">
                     <p className="text-[25px] font-bold">{ele.value}</p>
                     <p
                       style={{ transform: "translateY(-5px)" }}
-                      className="ml-3 text-[10px] font-mont font-bold text-red-600"
+                      className="ml-3 text-[10px]  font-bold text-red-600"
                     >
                       32%
                     </p>
@@ -82,7 +82,7 @@ const Indexes = () => {
         <div className="flex flex-col h-[80%]">
           <div className="flex">
             {["1D", "7D", "30D"].map((ele) => (
-              <button className="text-[10px] text-white font-mont w-[50px] rounded-full p-1 flex justify-center items-center focus:bg-purple-600">
+              <button className="text-[10px] text-white  w-[50px] rounded-full p-1 flex justify-center items-center focus:bg-purple-600">
                 {ele}
               </button>
             ))}
@@ -115,7 +115,7 @@ const Indexes = () => {
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col sm:hidden xl:flex">
+      <div className="Right basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-10 justify-around flex flex-col sm:hidden xl:flex">
         {pageRightIndex == 0 && (
           <IndexDetails
             indexData={location?.state?.indexData}
