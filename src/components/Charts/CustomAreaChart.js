@@ -79,7 +79,7 @@ export const CustomAreaChart = (props) => {
   return (
     <ResponsiveContainer width={props.width} height={props.height}>
       <AreaChart
-        data={data}
+        data={props.data || data}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
         <defs>
