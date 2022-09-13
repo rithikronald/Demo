@@ -24,8 +24,9 @@ const CoinDesc = (props) => {
   const [dailyActivePerct, setDailyActivePerct] = useState(0);
   const [transactionVolumePerct, setTransactionVolumePerct] = useState(0);
   const [nvtRatioPerct, setNvtRatioPerct] = useState(0);
-  const [marketCap, setMarketCap] =  useState(0)
-  const [tradingVolume, setTradingVolume] = useState(0)
+  const [marketCap, setMarketCap] = useState(0);
+  const [tradingVolume, setTradingVolume] = useState(0);
+  const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
 
   const params = useParams();
 
@@ -69,26 +70,38 @@ const CoinDesc = (props) => {
         setMarketCap(
           oneDayPercentage(
             response?.data?.marketcap_usd?.value,
-            response?.data?.marketcap_usd?.change_1d,
+            response?.data?.marketcap_usd?.change_1d
           )
-        )
+        );
         setTradingVolume(
           oneDayPercentage(
-            response?.data?.tradingVolume?.value, 
-            response?.data?.tradingVolume?.change_1d, 
+            response?.data?.tradingVolume?.value,
+            response?.data?.tradingVolume?.change_1d
           )
-        )
+        );
       })
       .catch((err) => console.log("error", err));
   }, []);
 
   const arrGen = (arr) => {
+    const monthsArr = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "July",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     const tempArr = [];
     arr?.map((item, index) => {
-      // console.log("ITEM",item)
-      tempArr.push(item?.value);
+      tempArr.push({ uv: item?.value, name: monthsArr[index] });
     });
-    // console.log("TEMP ARR",tempArr)
     return tempArr;
   };
 
@@ -96,11 +109,16 @@ const CoinDesc = (props) => {
     if (!x) {
       return x;
     }
+
     let numbers = x.toString().split(".");
     let firstPart = Number(parseInt(numbers[0])).toLocaleString("en");
+    let listOfTokens = firstPart.split(",");
+    if (listOfTokens.length > 1) {
+      listOfTokens.pop();
+    }
+    let newFirstPart = listOfTokens.join(",");
 
-    return numbers[1] ? firstPart + "." + numbers[1] : firstPart;
-    // return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return firstPart.split(",").length > 1 ? `${newFirstPart}k` : newFirstPart;
   }
 
   useEffect(() => {
@@ -155,7 +173,7 @@ const CoinDesc = (props) => {
   };
 
   const oneDayPercentage = (value, days) => {
-    console.log('ONE DAY PERCENTAGE',value, days)
+    console.log("ONE DAY PERCENTAGE", value, days);
     let num1 = value;
     let num2 = days[days.length - 2]?.value;
     let diff = num1 - num2;
@@ -167,7 +185,7 @@ const CoinDesc = (props) => {
     // } else {
     //   return 0
     // }
-    return Math.floor(value)
+    return Math.floor(value);
   };
 
   const colorChange = (value) => {
@@ -182,56 +200,57 @@ const CoinDesc = (props) => {
   };
 
   const getAfterDecimalValue = (num) => {
-    if(!num) {
-      return
+    if (!num) {
+      return;
     }
-    let str = JSON.stringify(num)
-    let newStr = str.split(".")[1]
-    return newStr.slice(0,2)
-  }
+    let str = JSON.stringify(num);
+    let newStr = str.split(".")[1];
+    return newStr.slice(0, 2);
+  };
 
   return (
     <div className="p-5 px-10 overflow-hidden w-screen h-screen bg-bgl1 justify-between flex flex-col">
-      <div className="flex justify-end space-x-8">
-        {["1W", "1M", "3M", "1Y", "ALL"].map((ele) => (
-          <div
-            className={`text-[12px] text-white font-mont w-[70px] flex justify-center items-center ${
-              ele === "1Y" ? "bg-regularPurple rounded-full p-1" : ""
-            }`}
-          >
-            {ele}
-          </div>
-        ))}
-      </div>
       <div className="flex  h-[30%]">
         <div className="flex basis-1/2 mt-5">
-          <div style={{flex: 1}}>
-            <div className="flex">
+          <div style={{ flex: 1 }}>
+            <div className="flex items-center">
               <p className="text-3xl font-mont text-white font-bold">
                 {data?.slug}
               </p>
-              <div className="flex space-x-1 ml-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full" />
-                <div className="w-2 h-2 bg-yellow-500 rounded-full" />
-                <div className="w-2 h-2 bg-green-500 rounded-full" />
-              </div>
+              <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
+                {data?.ticker}
+              </p>
             </div>
             <p className="font-mont text-white text-sm mt-8 pr-[40px]">
               {data?.description}
             </p>
           </div>
-          <div className="flex-col text-white flex justify-">
+          <div className="flex-col justify-between text-white flex justify-">
             <div className="priceBorder p-[1px]">
               <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
                 <p className="text-[12px] ">Price</p>
                 <p className="text-[18px] ml-[5px]">$</p>
-                <p className="text-[25px] font-bold">{Math.floor(data?.price?.value)}</p>
-                <p className="text-[15px] font-bold">.{
-                  getAfterDecimalValue(data?.price?.value)
-                }</p>
+                <p className="text-[25px] font-bold">
+                  {Math.floor(data?.price?.value)}
+                </p>
+                <p className="text-[15px] font-bold">
+                  .{getAfterDecimalValue(data?.price?.value)}
+                </p>
               </div>
             </div>
-            <div className="flex justify-center items-end mt-8">
+            <div className="flex">
+              <div className="priceBorder p-[1px]">
+                <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                  <p className="text-[12px] ">Deposit</p>
+                </div>
+              </div>
+              <div className="priceBorder p-[1px] ml-[10px]">
+                <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                  <p className="text-[12px] ">Withdraw</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center items-end">
               <button className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]">
                 Trade Now
               </button>
@@ -242,32 +261,32 @@ const CoinDesc = (props) => {
           {[
             {
               title: "Market Cap",
-              logo: require('../../assets/marketCapIcon.png'),
+              logo: require("../../assets/marketCapIcon.png"),
               value: numberWithCommas(marketCap),
             },
             {
               title: "Transaction Volume",
-              logo: require('../../assets/transactionVolumeIcon.png'),
-              value: `${numberWithCommas(transactionVolumePerct)}k`,
+              logo: require("../../assets/transactionVolumeIcon.png"),
+              value: `${numberWithCommas(transactionVolumePerct)}`,
             },
             {
               title: "NVT Ratio",
-              logo: require('../../assets/nvtRatioIcon.png'),
+              logo: require("../../assets/nvtRatioIcon.png"),
               value: numberWithCommas(nvtRatioPerct),
             },
             {
               title: "Trading Volume",
-              logo: require('../../assets/tradingVolumeIcon.png'),
+              logo: require("../../assets/tradingVolumeIcon.png"),
               value: numberWithCommas(tradingVolume),
             },
             {
               title: "Active Wallet Addresses",
-              logo: require('../../assets/activeWalletAddressIcon.png'),
+              logo: require("../../assets/activeWalletAddressIcon.png"),
               value: numberWithCommas(activeAddressPerct),
             },
             {
               title: "Daily Active Addresses",
-              logo: require('../../assets/dailyActiveAddressIcon.png'),
+              logo: require("../../assets/dailyActiveAddressIcon.png"),
               value: numberWithCommas(dailyActivePerct),
             },
           ].map((ele) => (
@@ -275,24 +294,81 @@ const CoinDesc = (props) => {
               <img src={ele.logo} />
               <div className="ml-[-15px] font-mont text-white">
                 <p className="text-[9px]">{ele.title}</p>
-                <p className="text-[25px] font-bold">{ele.value}</p>
+                <p className="text-[22px] font-bold">{ele.value}</p>
               </div>
             </div>
           ))}
         </div>
+      </div>
+      <div className="flex justify-end space-x-8">
+        {["1d", "7d", "30d"].map((ele) => (
+          <div
+            className={`cursor-pointer text-[12px] text-white font-mont w-[70px] flex justify-center items-center ${
+              ele === priceIndex ? "bg-regularPurple rounded-full p-1" : ""
+            }`}
+            onClick={() => setPriceIndex(ele)}
+          >
+            {ele}
+          </div>
+        ))}
       </div>
       <div className="grid grid-cols-2 gap-10">
         <div>
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
-            <p>Market Cap</p>
-            <p className="bg-regularPurple rounded-full px-2 ">Social Volume</p>
-            <p>Social Volume</p>
+            {[
+              {
+                name: "Market Cap",
+                value: data?.marketcap_usd,
+                annotation: "marketcap",
+              },
+              {
+                name: "Social Volume",
+                value: data?.sociaVolume,
+                annotation: "socialvolume",
+              },
+              {
+                name: "Active Wallets",
+                value: data?.active_addresses,
+                annotation: "activeaddresses",
+              },
+            ].map((ele) => (
+              <div
+                onClick={() => setFirstBoxAnnotation(ele.annotation)}
+                className={`cursor-pointer ${
+                  ele.annotation === firstBoxAnnotation
+                    ? "bg-regularPurple"
+                    : ""
+                } rounded-full px-2 `}
+              >
+                {ele.name}
+              </div>
+            ))}
           </div>
           <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
-              <CustomAreaChart width={"100%"} height={"98%"} />
+              {firstBoxAnnotation === "marketcap" && (
+                <CustomAreaChart
+                  width={"100%"}
+                  height={"98%"}
+                  data={arrGen(data?.marketcap_usd[`change_${priceIndex}`])}
+                />
+              )}
+              {firstBoxAnnotation === "socialvolume" && (
+                <CustomAreaChart
+                  width={"100%"}
+                  height={"98%"}
+                  data={arrGen(data?.sociaVolume[`change_${priceIndex}`])}
+                />
+              )}
+              {firstBoxAnnotation === "activeaddresses" && (
+                <CustomAreaChart
+                  width={"100%"}
+                  height={"98%"}
+                  data={arrGen(data?.active_addresses[`change_${priceIndex}`])}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -304,7 +380,11 @@ const CoinDesc = (props) => {
           </div>
           <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
-              <CustomAreaChart width={"100%"} height={"98%"} />
+              <CustomAreaChart
+                width={"100%"}
+                height={"98%"}
+                data={arrGen(data?.price[`change_${priceIndex}`])}
+              />
             </div>
           </div>
         </div>
@@ -318,7 +398,11 @@ const CoinDesc = (props) => {
           </div>
           <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
             <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
-              <CustomAreaChart width={"100%"} height={"98%"} />
+              <CustomAreaChart
+                data={arrGen(data?.socialDominance[`change_${priceIndex}`])}
+                width={"100%"}
+                height={"98%"}
+              />
             </div>
           </div>
         </div>
@@ -330,7 +414,11 @@ const CoinDesc = (props) => {
           </div>
           <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
             <div className="flex items-center newGraphBorderInner h-[128px] bg-bgl1">
-              <CustomAreaChart width={"100%"} height={"98%"} />
+              <CustomAreaChart
+                data={arrGen(data?.networkGrowth[`change_${priceIndex}`])}
+                width={"100%"}
+                height={"98%"}
+              />
             </div>
           </div>
         </div>
@@ -342,7 +430,13 @@ const CoinDesc = (props) => {
           </div>
           <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
             <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
-              <CustomLineChart width={"100%"} height={"98%"} />
+              <CustomLineChart
+                data={arrGen(
+                  data?.sentiment_positive_total[`change_${priceIndex}`]
+                )}
+                width={"100%"}
+                height={"98%"}
+              />
             </div>
           </div>
         </div>
@@ -354,7 +448,11 @@ const CoinDesc = (props) => {
           </div>
           <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
             <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
-              <CustomLineChart width={"100%"} height={"98%"} />
+              <CustomLineChart
+                data={arrGen(data?.dev_activity[`change_${priceIndex}`])}
+                width={"100%"}
+                height={"98%"}
+              />
             </div>
           </div>
         </div>
