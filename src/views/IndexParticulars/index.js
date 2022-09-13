@@ -26,6 +26,7 @@ const Indexes = () => {
   const [nvtRation, setNvtRation] = useState();
   const [pageRightIndex, setPageRightIndex] = useState(0);
   const [basketData, setBasketData] = useState();
+  const [priceIndex, setPriceIndex] = useState("1d");
 
   useEffect(() => {
     axios
@@ -46,6 +47,28 @@ const Indexes = () => {
     console.log("transaction volume", basketData?.transaction_volume);
     console.log("K formatter", kFormatter(basketData?.transaction_volume));
   }, [basketData]);
+
+  const arrGen = (arr) => {
+    const monthsArr = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "July",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const tempArr = [];
+    arr?.map((item, index) => {
+      tempArr.push({ uv: item?.value, name: monthsArr[index] });
+    });
+    return tempArr;
+  };
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
@@ -105,39 +128,68 @@ const Indexes = () => {
         </div>
         <div className="flex flex-col h-[80%]">
           <div className="flex">
-            {["1D", "7D", "30D"].map((ele) => (
-              <button className="text-[10px] text-white  w-[50px] rounded-full p-1 flex justify-center items-center focus:bg-purple-600">
+            {["1d", "7d", "30d"].map((ele) => (
+              <button
+                onClick={() => setPriceIndex(ele)}
+                className={`text-[10px] text-white  w-[50px] rounded-full p-1 flex justify-center items-center ${priceIndex === ele ? "bg-purple-600" : ""}`}
+              >
                 {ele}
               </button>
             ))}
           </div>
           <div className="flex flex-wrap  h-full justify-between mt-5">
-            {[{ name: "Price Action" }, { name: "Network Growth" }].map(
-              (item) => (
-                <div className="flex flex-col w-[48%]">
-                  <p className="text-white">{item.name}</p>
-                  <GradientContainer
-                    height="h-[100%]"
-                    width="w-full"
-                    className={"mt-3"}
-                    children={<CustomAreaChart width={"100%"} height={"90%"} />}
+            {[
+              {
+                name: "Price Action",
+                data: arrGen(basketData?.price[`change_${priceIndex}`]),
+              },
+              {
+                name: "Network Growth",
+                data: arrGen(basketData?.networkGrowth[`change_${priceIndex}`]),
+              },
+            ].map((item) => (
+              <div className="flex flex-col w-[48%]">
+                <p className="text-white">{item.name}</p>
+                <GradientContainer
+                  height="h-[100%]"
+                  width="w-full"
+                  className={"mt-3"}
+                >
+                  <CustomAreaChart
+                    data={item.data}
+                    width={"100%"}
+                    height={"90%"}
                   />
-                </div>
-              )
-            )}
-            {[{ name: "Market Sentiment" }, { name: "Dev Activity" }].map(
-              (item) => (
-                <div className="flex flex-col w-[48%] mt-2">
-                  <p className="text-white">{item.name}</p>
-                  <GradientContainer
-                    height="h-[100%]"
-                    width="w-full"
-                    className={"mt-3"}
-                    children={<CustomLineChart width={"100%"} height={"90%"} />}
+                </GradientContainer>
+              </div>
+            ))}
+            {[
+              {
+                name: "Social Dominance",
+                data: arrGen(
+                  basketData?.socialDominance[`change_${priceIndex}`]
+                ),
+              },
+              {
+                name: "Dev Activity",
+                data: arrGen(basketData?.dev_activity[`change_${priceIndex}`]),
+              },
+            ].map((item) => (
+              <div className="flex flex-col w-[48%] mt-2">
+                <p className="text-white">{item.name}</p>
+                <GradientContainer
+                  height="h-[100%]"
+                  width="w-full"
+                  className={"mt-3"}
+                >
+                  <CustomLineChart
+                    width={"100%"}
+                    height={"90%"}
+                    data={item?.data}
                   />
-                </div>
-              )
-            )}
+                </GradientContainer>
+              </div>
+            ))}
           </div>
         </div>
       </div>
