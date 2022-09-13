@@ -16,7 +16,7 @@ const Sidebar = () => {
     { title: "Dashboard", src: Dashboard, onClick: "/" },
     { title: "Indexes", src: Indexes, onClick: "/indexes" },
     { title: "My Wallet", src: Briefcase, onClick: "/walletOverview" },
-    { title: "Trending", src: MaxPicks, onClick: "/transactions" },
+    { title: "Trending", src: MaxPicks, onClick: "/coinList" },
     { title: "Settings", src: Settings, onClick: "/settings" },
   ];
   return (

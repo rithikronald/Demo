@@ -22,7 +22,7 @@ const Indexes = () => {
   useEffect(() => {
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getAllIndexes`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/indexes`,
         {
           headers: { "Content-Type": "application/json" },
         }
