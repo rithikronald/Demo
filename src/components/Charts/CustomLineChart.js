@@ -71,19 +71,19 @@ export const CustomLineChart = (props) => {
   return (
     <ResponsiveContainer width={props.width} height={props.height}>
       <LineChart
-        data={data}
+        data={props.data || data}
         // margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         {/* <XAxis style={{fontSize:12}} axisLine={false} /> */}
         {/* <CartesianGrid strokeDasharray="3 3" stroke="#282929" /> */}
         {/* <YAxis style={{fontSize:12}} axisLine={false} /> */}
-        <Line
+        {/* <Line
           type="monotone"
           dataKey="pv"
           dot={false}
-          strokeWidth={2}
-          stroke=""
-        />
+          strokeWidth={3}
+          stroke="#E323FF"
+        /> */}
         <Line
           type="monotone"
           dataKey="uv"

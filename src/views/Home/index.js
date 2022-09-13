@@ -113,7 +113,7 @@ const Home = () => {
                     height="h-16"
                     children={
                       <button
-                        onClick={() => navigate("/coin-desc")}
+                        onClick={() => navigate(`/coin-desc/${data?.ticker}`)}
                         className="flex justify-between items-center p-4 px-4 w-full h-full"
                       >
                         <div className="flex flex-row items-center">
