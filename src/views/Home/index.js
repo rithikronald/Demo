@@ -5,88 +5,9 @@ import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { indBgImgList,categoryList,risk,tenure,data02 } from "../../constants/constants";
+import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
-const data02 = [
-  {
-    name: "Group A",
-    value: 2400,
-    color: "#165DFF",
-  },
-  {
-    name: "Group B",
-    value: 4567,
-    color: "#0FC6C2",
-  },
-  {
-    name: "Group C",
-    value: 1398,
-    color: "#722ED1",
-  },
-  {
-    name: "Group D",
-    value: 9800,
-    color: "#F7BA1E",
-  },
-  {
-    name: "Group E",
-    value: 3908,
-    color: "#722ED1",
-  },
-  {
-    name: "Group F",
-    value: 4800,
-    color: "#D91AD9",
-  },
-];
-
-const categoryList = [
-  {
-    title: "Gaming",
-  },
-  {
-    title: "NFT",
-  },
-  {
-    title: "Smart Contract",
-  },
-  {
-    title: "Metaverse",
-  },
-  {
-    title: "Defi",
-  },
-  {
-    title: "Storage",
-  },
-];
-const tenure = [
-  {
-    title: "Short-Term",
-    desc: "1-3 years",
-  },
-  {
-    title: "Mid-Term",
-    desc: "3-5 years",
-  },
-  {
-    title: "Long-Term",
-    desc: "5+ years",
-  },
-];
-const risk = [
-  {
-    title: "Bold",
-    desc: "High Returns Great Volatility",
-  },
-  {
-    title: "Balance",
-    desc: "Moderate Returns Fair Volatility",
-  },
-  {
-    title: "Basic",
-    desc: "Modest Returns Low Volatility",
-  },
-];
 
 const Home = () => {
   const { height, width } = useWindowDimensions();
@@ -107,10 +28,14 @@ const Home = () => {
       setMaxPicksList(8);
       setIndexesList(4);
     } else if (width >= 1440) {
-      setMaxPicksList(6);
-      setIndexesList(3);
+      setMaxPicksList(8);
+      setIndexesList(4);
     }
   }, [width, height]);
+
+  useEffect(()=>{
+    console.log("IMG",indBgImgList[0])
+  })
 
   useEffect(() => {
     axios
@@ -127,38 +52,24 @@ const Home = () => {
       .catch((err) => console.log("error", err));
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/getAllIndexes`,
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       setCoinBasket(response?.data);
-  //     })
-  //     .catch((err) => console.log("error", err));
-  // }, []);
-
   return (
-    <div className="App bg-bgl1 flex h-screen w-full">
+    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
       <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
         {/* Banner */}
         <div className="flex w-full h-1/3">
-          <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-l to-purple-600 from-purple-900 flex 2xl:pl-10">
-            <div className="cardLeft basis:1/2 w-full h-full p-6 flex flex-col justify-around 3xl:py-20">
-              <p className="text-md text-white font-medium 3xl:text-3xl ">
+          <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-r from-purple-700 ... flex 2xl:pl-10">
+            <div className="cardLeft w-1/2 h-full p-6 pl-[10%] flex flex-col  justify-around 3xl:py-20">
+              <p className="text-sm text-white font-bold 3xl:text-3xl ">
                 Welcome Ram!
               </p>
-              <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white">
+              <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-bold text-white">
                 Enhance your financial life with Maximum Protocol
               </p>
-              <button className="bg-purple-500 text-white font-bold rounded-lg md:w-40 h-14 shadow-lg mt-3">
-                Watch Now
+              <button className="bg-purple-500 text-white font-bold text-sm rounded-lg md:w-40 h-14 shadow-lg mt-3">
+                <i class="fa-solid fa-play text-white"/> Watch Now
               </button>
             </div>
-            <div className="cardLeft basis:1/2 w-full h-full flex justify-center">
+            <div className="cardLeft w-1/2  h-full flex justify-center">
               <img
                 alt="welcomeImg"
                 className="h-full"
@@ -170,15 +81,15 @@ const Home = () => {
         {/* Coins */}
         <div className="flex flex-col mt-4">
           <div className="maxPicks flex flex-row justify-between">
-            <p className="text-white text-lg">Max Picks</p>
+            <p className="text-white text-lg font-medium">Max Picks</p>
             <button
               onClick={() => navigate("/coinList")}
-              className="text-gray-400 text"
+              className="text-gray-400 text-xs"
             >
-              view all
+              View All
             </button>
           </div>
-          <div className="coinSection flex flex-row flex-wrap justify-between space-x-1">
+          <div className="coinSection flex flex-row flex-wrap justify-between">
             {/* xl-6 2xl-8 3xl-12(or)5 */}
             {coinMetaData &&
               coinMetaData.map((item, index) => {
@@ -188,11 +99,12 @@ const Home = () => {
                     onClick={() => navigate(`/coin-desc/${data?.ticker}`)}
                     className="coinCard w-[250px] mt-4 h-16 rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-20"
                   >
-                    <div className="bg-bg rounded-2xl w-full h-full flex flex-row justify-between items-center p-4 px-4">
+                    <div className="flex w-full h-full bg-bgl2 rounded-2xl">
+                    <div className="bg-gradient-to-b from-maxPurple ... rounded-2xl w-full h-full flex flex-row justify-between items-center p-4 px-4">
                       <div className="flex flex-row items-center">
                         <img
                           alt="logo"
-                          className="w-6 h-6 bg-white rounded-full"
+                          className="w-8 h-8 bg-white rounded-full"
                           src={data?.logoUrl}
                         />
                         <div className="ml-3 flex flex-col items-start">
@@ -203,12 +115,16 @@ const Home = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
-                        <p className="text-white font-semibold text-md">
+                        <p className="text-white font-semibold text-sm">
                           ${item?.price?.value.toFixed(2)}
                         </p>
-                        <p className="text-green-500 text-sm">{item?.percent_change_24h}</p>
+                        <p className="text-green-500 text-[10px]">
+                        <i class="fa-sharp fa-solid fa-caret-up text-green-500 mr-[1px]"/> {item?.percent_change_24h}%
+                        </p>
                       </div>
                     </div>
+                    </div>
+
                   </button>
                 ) : null;
               })}
@@ -217,12 +133,12 @@ const Home = () => {
         {/* Indexes */}
         <div className="flex flex-col mt-4">
           <div className="maxPicks flex flex-row justify-between">
-            <p className="text-white text-lg">Indexes</p>
+            <p className="text-white text-lg font-medium">Indexes</p>
             <button
               onClick={() => navigate("/indexes/")}
-              className="text-gray-400 text"
+              className="text-gray-400 text-xs"
             >
-              view all
+              View All
             </button>
           </div>
           <div className="basketCard flex flex-row flex-wrap justify-between">
@@ -236,13 +152,17 @@ const Home = () => {
                         state: { indexData: item },
                       })
                     }
-                    className="w-[250px] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
+                    className="w-[24%] h-56 mt-4 rounded-3xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-[1px] 3xl:h-80"
                   >
-                    <div className="bg-bg rounded-3xl h-full flex flex-col justify-between p-2">
-                      <div className="bg-gradient-to-tl from-right via-left to-top flex h-5/6 w-full rounded-2xl p-4">
-                        <p className="text-white text-lg font-semibold">
+                    <div className="flex w-full h-full bg-bgl2 rounded-3xl">
+                    <div className="bg-gradient-to-b from-maxPurple ... rounded-3xl w-full h-full flex flex-col justify-between p-2">
+                      <div style={{backgroundImage:`url('${indBgImgList[index+4]}')`}} className={`bg-no-repeat bg-cover bg-center flex items-start justify-between flex-col h-5/6 w-full rounded-2xl p-[6%]`}>
+                        <p className="text-white text-md font-semibold">
                           {item?.basketName}
                         </p>
+                        <div className="flex w-full h-[90%]">
+                        <CustomLineChart width={"100%"} height={"100%"} />
+                        </div>
                       </div>
                       <div className="flex justify-between items-center mt-1">
                         <div className="flex py-2 space-x-1">
@@ -253,7 +173,7 @@ const Home = () => {
                                 <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
                                   <div className="flex w-full h-full justify-center items-center">
                                     <img
-                                      className="w-6 rounded-full"
+                                      className="w-6 rounded-full bg-white"
                                       alt="btc"
                                       src={data?.logoUrl}
                                     />
@@ -271,12 +191,13 @@ const Home = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 h-6 w-1/3 rounded-2xl p-[1px]">
-                          <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center text-xs">
+                        <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 h-6 w-10 rounded-2xl p-[1px]">
+                          <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center font-bold text-[8px]">
                             VIEW
                           </button>
                         </div>
                       </div>
+                    </div>
                     </div>
                   </button>
                 )
@@ -284,7 +205,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-8 justify-around flex flex-col sm:hidden xl:flex">
+      <div className="Right basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex">
         {pageRightIndex == 0 && (
           <>
             {/* pageIndex-0 */}
@@ -299,7 +220,7 @@ const Home = () => {
             <img alt="img" src={require("../../assets/illustration.png")} />
             <button
               onClick={() => setPageRightIndex(1)}
-              className="bg-primaryButton text-white p-4 font-bold rounded-lg w-full h-16 shadow-lg text-xl"
+              className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
             >
               Start Now
             </button>
@@ -308,12 +229,12 @@ const Home = () => {
         {pageRightIndex == 1 && (
           <>
             <div>
-              <p className="text-white font-bold text-center mt-5 font-mont  text-2xl 2xl:text-2xl 3xl:text-5xl">
+              <p className="text-white font-bold text-center mt-5   text-2xl 2xl:text-2xl 3xl:text-5xl">
                 Choose Your Interests
               </p>
             </div>
             <div>
-              <p className="text-sm text-center text-white font-mont font-bold 3xl:text-3xl ">
+              <p className="text-sm text-center text-white  font-bold 3xl:text-3xl ">
                 Select an Option
               </p>
               <div className="flex flex-wrap flex-row justify-between items-center mt-3">
@@ -329,7 +250,7 @@ const Home = () => {
                         src={require("../../assets/gaming.png")}
                       />
                       <div className="bg-white rounded-full px-1 self-end shadow-[0_1px_0px_rgb(0,0,0)]">
-                        <p className="text-black font-mont text-[7px] font-bold">
+                        <p className="text-black  text-[7px] font-bold">
                           {item?.title}
                         </p>
                       </div>
@@ -339,7 +260,7 @@ const Home = () => {
               </div>
             </div>
             <div>
-              <p className="text-white font-mont font-extralight text-center text-sm">
+              <p className="text-white  font-extralight text-center text-sm">
                 Try out our Smart Suggest to get personalised recommendations
               </p>
               <button
@@ -489,8 +410,8 @@ const Home = () => {
                     </Pie>
                   </PieChart>
                   <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <p className="font-mont text-white font-[18px]">BTC</p>
-                    <p className="font-mont text-white font-bold text-[30px] mt-[-10px]">
+                    <p className=" text-white font-[18px]">BTC</p>
+                    <p className=" text-white font-bold text-[30px] mt-[-10px]">
                       22%
                     </p>
                   </div>
@@ -504,7 +425,7 @@ const Home = () => {
                         src={require("../../assets/btcLight.png")}
                       />
                       <div className="pl-[6px]">
-                        <p className="font-mont text-white text-[10px] 3xl:text-xl">
+                        <p className=" text-white text-[10px] 3xl:text-xl">
                           BITCOIN
                         </p>
                         <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>

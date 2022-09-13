@@ -13,7 +13,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const Menus = [
-    { title: "Dashboard", src: Dashboard, onClick: "/dashboard" },
+    { title: "Dashboard", src: Dashboard, onClick: "/" },
     { title: "Indexes", src: Indexes, onClick: "/indexes" },
     { title: "My Wallet", src: Briefcase, onClick: "/walletOverview" },
     { title: "Trending", src: MaxPicks, onClick: "/transactions" },

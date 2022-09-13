@@ -4,8 +4,8 @@ import { Line, LineChart, ResponsiveContainer } from "recharts";
 const data = [
   {
     name: "Jan",
-    uv: 4000,
-    pv: 2400,
+    uv: 400,
+    pv: 400,
   },
   {
     name: "Feb",
@@ -15,7 +15,7 @@ const data = [
   {
     name: "Mar",
     uv: 2000,
-    pv: 9800,
+    pv: 5600,
   },
   {
     name: "Apr",
@@ -88,8 +88,8 @@ export const CustomLineChart = (props) => {
           type="monotone"
           dataKey="uv"
           dot={false}
-          strokeWidth={3}
-          stroke="#4DFFDF"
+          strokeWidth={2}
+          stroke="#c2c2c2"
         />
       </LineChart>
     </ResponsiveContainer>
