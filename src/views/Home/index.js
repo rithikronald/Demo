@@ -14,6 +14,7 @@ import {
 } from "../../constants/constants";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
+import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = () => {
@@ -188,7 +189,7 @@ const Home = () => {
                             {item?.basketName}
                           </p>
                           <div className="flex w-full h-[90%]">
-                            <CustomLineChart width={"100%"} height={"100%"} />
+                            <CustomIndexChart width={"100%"} height={"100%"} />
                           </div>
                         </div>
                         <div className="flex w-full justify-between items-center mt-1">

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Cell, Pie, PieChart } from "recharts";
+import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
 import { IndexDetails } from "../../components/RightComponent/indexDetails";
@@ -67,7 +68,7 @@ const Indexes = () => {
                         {item?.basketName}
                       </p>
                       <div className="flex w-full h-[90%]">
-                        <CustomLineChart width={"100%"} height={"100%"} />
+                        <CustomIndexChart width={"100%"} height={"100%"} />
                       </div>
                     </div>
                     <div className="flex w-full justify-between items-center mt-1">
@@ -116,7 +117,9 @@ const Indexes = () => {
             ))}
         </div>
       </div>
-      <div className="Right basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex">
+      <div  style={{
+          backgroundImage: `url('/images/rightSectionbg.png')`,
+        }} className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex">
         {pageRightIndex == 0 && (
           <IndexDetails
             indexData={indexData}

@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import SetupSIP from "../../components/RightComponent/setupSIP";
 import axios from "axios";
 import { kFormatter } from "../../utility/kFormatter";
+import moment from "moment";
 
 const Indexes = () => {
   const { height, width } = useWindowDimensions();
@@ -65,19 +66,20 @@ const Indexes = () => {
     ];
     const tempArr = [];
     arr?.map((item, index) => {
-      tempArr.push({ uv: item?.value, name: monthsArr[index] });
+      tempArr.push({ uv: item?.value, name:priceIndex == "1d"? moment(item?.date).format('ddd'): priceIndex == '7d'?moment(item?.date).format('D MMM'):moment(item?.date).format('MMM') });
     });
     return tempArr;
   };
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left p-10 px-16 flex flex-col justify-around sm:flex xl:basis-3/4">
+      <div className="Left p-10 px-28 flex flex-col justify-center sm:flex xl:basis-3/4">
         <div className="h-[25%] flex mt-[20px] w-full text-white">
           <div className="flex flex-col w-1/2">
             <p className="text-3xl  text-white font-bold">
               {location?.state?.indexData?.basketName}
             </p>
+            <p className="text-purple-600 font-light text-sm">Index</p>
             <p className=" text-white text-sm pr-[15px] mt-3">
               Crypto gaming is on the rise, {"&"} gaming coins are becoming a
               popular choice as an investment. Play to earn is an emerging
@@ -126,12 +128,14 @@ const Indexes = () => {
               ))}
           </div>
         </div>
-        <div className="flex flex-col h-[80%]">
+        <div className="flex flex-col h-[70%] mt-4">
           <div className="flex">
             {["1d", "7d", "30d"].map((ele) => (
               <button
                 onClick={() => setPriceIndex(ele)}
-                className={`text-[10px] text-white  w-[50px] rounded-full p-1 flex justify-center items-center ${priceIndex === ele ? "bg-purple-600" : ""}`}
+                className={`text-[10px] text-white  w-[50px] rounded-full p-1 flex justify-center items-center ${
+                  priceIndex === ele ? "bg-purple-600" : ""
+                }`}
               >
                 {ele}
               </button>
@@ -148,17 +152,18 @@ const Indexes = () => {
                 data: arrGen(basketData?.networkGrowth[`change_${priceIndex}`]),
               },
             ].map((item) => (
-              <div className="flex flex-col w-[48%]">
-                <p className="text-white">{item.name}</p>
+              <div className="flex flex-col w-[48%] h-[45%]">
+                <p className="text-white font-medium text-sm">{item.name}</p>
                 <GradientContainer
                   height="h-[100%]"
                   width="w-full"
                   className={"mt-3"}
                 >
+                  {console.log("ITEM",item?.data)}
                   <CustomAreaChart
                     data={item.data}
                     width={"100%"}
-                    height={"90%"}
+                    height={"100%"}
                   />
                 </GradientContainer>
               </div>
@@ -175,8 +180,8 @@ const Indexes = () => {
                 data: arrGen(basketData?.dev_activity[`change_${priceIndex}`]),
               },
             ].map((item) => (
-              <div className="flex flex-col w-[48%] mt-2">
-                <p className="text-white">{item.name}</p>
+              <div className="flex flex-col w-[48%] h-[45%] mt-4">
+                <p className="text-white font-medium text-sm">{item.name}</p>
                 <GradientContainer
                   height="h-[100%]"
                   width="w-full"
@@ -184,7 +189,7 @@ const Indexes = () => {
                 >
                   <CustomLineChart
                     width={"100%"}
-                    height={"90%"}
+                    height={"100%"}
                     data={item?.data}
                   />
                 </GradientContainer>
@@ -193,7 +198,12 @@ const Indexes = () => {
           </div>
         </div>
       </div>
-      <div className="Right basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-10 justify-around flex flex-col sm:hidden xl:flex">
+      <div
+        style={{
+          backgroundImage: `url('/images/rightSectionbg.png')`,
+        }}
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-10 justify-around flex flex-col sm:hidden xl:flex"
+      >
         {pageRightIndex == 0 && (
           <IndexDetails
             indexData={location?.state?.indexData}
