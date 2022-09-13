@@ -4,6 +4,7 @@ import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Modal from './modal'
 
 import axios from "axios";
 
@@ -27,6 +28,7 @@ const CoinDesc = (props) => {
   const [marketCap, setMarketCap] = useState(0);
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
+  const [modalOpen, setModalOpen] = useState(true)
 
   const params = useParams();
 
@@ -210,6 +212,7 @@ const CoinDesc = (props) => {
 
   return (
     <div className="p-5 px-10 overflow-hidden w-screen h-screen bg-bgl1 justify-between flex flex-col">
+      <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
       <div className="flex  h-[30%]">
         <div className="flex basis-1/2 mt-5">
           <div style={{ flex: 1 }}>
@@ -251,7 +254,7 @@ const CoinDesc = (props) => {
               </div>
             </div>
             <div className="flex justify-center items-end">
-              <button className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]">
+              <button onClick={() => setModalOpen(true)} className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]">
                 Trade Now
               </button>
             </div>
