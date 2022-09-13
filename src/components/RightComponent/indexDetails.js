@@ -1,10 +1,12 @@
 import "./style.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { useNavigate } from "react-router-dom";
 import { GradientContainer } from "../GradientContainer";
+import { CustomPieChart } from "../Charts/CustomPieChart";
+import { pieColors } from "../../constants/constants";
 const data02 = [
   {
     name: "Group A",
@@ -55,38 +57,15 @@ export const IndexDetails = (props) => {
         height="h-[72%]"
         className={"my-5 2xl:h-[60%]"}
         children={
-          <div className="  w-full h-full rounded-2xl flex flex-col justify-around pt-4">
-            <div className="flex justify-center items-center relative">
-            <PieChart
-                      width={width > 1600 ? 240 : 220}
-                      height={height > 768 ? 240 : 200}
-                      // style={{backgroundColor:"red"}}
-                    >
-                      <Pie
-                        data={data02}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={width > 1600 ? 85 : 70}
-                        outerRadius={width > 1600 ? 105 : 90}
-                        strokeWidth={0}
-                      >
-                        {data02.map((ele) => (
-                          <Cell fill={ele.color} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-              <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <p className="font-mont text-white font-[18px]">
-                  {props?.indexData?.coins?.[0]}
-                </p>
-                <p className="font-mont text-white font-bold text-[30px] mt-[-10px]">
-                  22%
-                </p>
-              </div>
-            </div>
-            <div className="coinList grid grid-cols-2 gap-x-2 p-[20px_20px_40px_20px] overflow-scroll">
+          <div className="w-full h-full rounded-2xl flex flex-col justify-around pt-4">
+            {props?.indexData && (
+              <CustomPieChart
+                data={props?.indexData}
+                width={"100%"}
+                height={"70%"}
+              />
+            )}
+            <div className="coinList grid grid-cols-2 p-[20px_10px_40px_20px] overflow-scroll">
               {props?.indexData?.coins?.map((item, index) => {
                 const data = getCoinMeta(item);
                 return (
@@ -97,12 +76,19 @@ export const IndexDetails = (props) => {
                       src={data?.logoUrl}
                     />
                     <div className="pl-[6px]">
-                      <p className="font-mont text-white text-[10px] 3xl:text-xl">
+                      <p className="font-mont font-light text-white text-[10px] 3xl:text-xl">
                         {data?.slug}
                       </p>
-                      <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                      <p className="font-medium text-white text-sm 3xl:text-xl">
-                        22%
+                      <div
+                        className={`h-[6px] w-[${
+                          (100 / props?.indexData?.coins.length).toFixed(2) + 20
+                        }px] rounded-lg bg-[${pieColors[index]}]`}
+                      ></div>
+                      <p className="font-semibold text-white text-sm 3xl:text-xl">
+                        {/* {Number(
+                          (100 / props?.indexData?.coins.length).toFixed(2)
+                        )}% */}
+                        {data?.ticker}
                       </p>
                     </div>
                   </div>

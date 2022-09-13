@@ -6,8 +6,7 @@ import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { GradientContainer } from "../../components/GradientContainer";
 import { Tooltip } from "flowbite-react";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
-
-
+import { pieColors } from "../../constants/constants";
 
 const TransactionSummary = () => {
   const location = useLocation();
@@ -49,9 +48,16 @@ const TransactionSummary = () => {
                               <p className="font-mont text-white text-[10px] 3xl:text-xl">
                                 {data?.slug}
                               </p>
-                              <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                              <p className="font-medium text-white text-sm 3xl:text-xl">
-                                22%
+                              <div
+                                className={`h-[6px] w-[${
+                                  (
+                                    100 /
+                                    location?.state?.indexData?.coins.length
+                                  ).toFixed(2) + 20
+                                }px] rounded-lg bg-[${pieColors[index]}]`}
+                              ></div>
+                              <p className="font-semibold text-white text-sm 3xl:text-xl">
+                                {data?.ticker}
                               </p>
                             </div>
                           </div>
@@ -61,10 +67,18 @@ const TransactionSummary = () => {
                   })}
                 </div>
                 <div className="flex flex-col justify-center items-center w-[40%]">
-                  <CustomPieChart data={location?.state?.indexData} width={"100%"} height={"100%"} />
+                  <CustomPieChart
+                    data={location?.state?.indexData}
+                    width={"100%"}
+                    height={"100%"}
+                  />
                   <div className="flex mt-3 items-center ml-5">
-                    <p className="text-gray-400 text-sm font-medium w-1/3">Portfolio Value</p>
-                    <p className="text-white font-semibold text-4xl ml-4">$5100</p>
+                    <p className="text-gray-400 text-sm font-medium w-1/3">
+                      Portfolio Value
+                    </p>
+                    <p className="text-white font-semibold text-4xl ml-4">
+                      $5100
+                    </p>
                   </div>
                 </div>
               </div>

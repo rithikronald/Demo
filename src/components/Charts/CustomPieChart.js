@@ -37,10 +37,24 @@ const renderActiveShape = (props) => {
 
   return (
     <g>
-      <text className="font-mont font-bold" x={cx} y={cy-10} dy={8} textAnchor="middle" fill={fill}>
+      <text
+        className="font-mont font-bold"
+        x={cx}
+        y={cy - 10}
+        dy={8}
+        textAnchor="middle"
+        fill={fill}
+      >
         {payload.name}
       </text>
-      <text className="font-mont font-bold" x={cx+3} y={cy-5} dy={30} textAnchor="middle" fill={fill}>
+      <text
+        className="font-mont font-bold"
+        x={cx + 3}
+        y={cy - 5}
+        dy={30}
+        textAnchor="middle"
+        fill={fill}
+      >
         {payload.value}%
       </text>
       <Sector
@@ -113,19 +127,14 @@ export const CustomPieChart = (props) => {
   );
   useEffect(() => {
     const temp = [];
-    console.log("DATA", props?.data?.coins);
     props?.data?.coins?.map((item, index) => {
       temp?.push({
         name: item,
-        value: 22,
+        value: Number((100 / props?.data?.coins?.length).toFixed(2)) ,
       });
     });
     setpieData(temp);
   }, [props]);
-
-  useEffect(() => {
-    console.log("PieData", pieData);
-  }, [pieData]);
 
   return (
     <ResponsiveContainer width={props.width} height={props.height}>

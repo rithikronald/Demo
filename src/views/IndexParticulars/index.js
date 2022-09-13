@@ -13,16 +13,39 @@ import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { IndexDetails } from "../../components/RightComponent/indexDetails";
 import { useEffect, useState } from "react";
 import SetupSIP from "../../components/RightComponent/setupSIP";
+import axios from "axios";
+import { kFormatter } from "../../utility/kFormatter";
 
 const Indexes = () => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
   const location = useLocation();
+  const [activeWalletAddress, setActiveWalletAddress] = useState();
+  const [dailyActiveAddress, setDailyActiveAddress] = useState();
+  const [transactionVolume, setTransactionVolume] = useState();
+  const [nvtRation, setNvtRation] = useState();
   const [pageRightIndex, setPageRightIndex] = useState(0);
+  const [basketData, setBasketData] = useState();
 
   useEffect(() => {
-    console.log("PARAMS", location?.state?.indexData);
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getIndex/${location?.state?.indexData?.basketName}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        console.log("Response", response?.data);
+        setBasketData(response?.data?.basketData);
+      })
+      .catch((err) => console.log("error", err));
   }, [location]);
+
+  useEffect(() => {
+    console.log("transaction volume", basketData?.transaction_volume);
+    console.log("K formatter", kFormatter(basketData?.transaction_volume));
+  }, [basketData]);
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
@@ -30,7 +53,7 @@ const Indexes = () => {
         <div className="h-[25%] flex mt-[20px] w-full text-white">
           <div className="flex flex-col w-1/2">
             <p className="text-3xl  text-white font-bold">
-              Gaming Index
+              {location?.state?.indexData?.basketName}
             </p>
             <p className=" text-white text-sm pr-[15px] mt-3">
               Crypto gaming is on the rise, {"&"} gaming coins are becoming a
@@ -39,44 +62,45 @@ const Indexes = () => {
             </p>
           </div>
           <div className="grid grid-cols-2 gap-1 w-1/2">
-            {[
-              {
-                title: "Active Wallet Addresses",
-                logo: lg1,
-                value: "12039",
-              },
-              {
-                title: "Daily Active Addresses",
-                logo: lg2,
-                value: "752",
-              },
-              {
-                title: "Transation Volume",
-                logo: lg3,
-                value: "2346k",
-              },
-              {
-                title: "NVT Ratio",
-                logo: lg4,
-                value: "120",
-              },
-            ].map((ele) => (
-              <div className="flex items-center">
-                <img className="w-14 h-14" alt={"atr"} src={ele.logo} />
-                <div className=" text-white ml-2">
-                  <p className="text-[9px]">{ele.title}</p>
-                  <div className="flex items-end">
-                    <p className="text-[25px] font-bold">{ele.value}</p>
-                    <p
-                      style={{ transform: "translateY(-5px)" }}
-                      className="ml-3 text-[10px]  font-bold text-red-600"
-                    >
-                      32%
-                    </p>
+            {location?.state?.indexData &&
+              [
+                {
+                  title: "Active Wallet Addresses",
+                  logo: lg1,
+                  value: kFormatter(basketData?.active_addresses),
+                },
+                {
+                  title: "Daily Active Addresses",
+                  logo: lg2,
+                  value: kFormatter(basketData?.daily_active_addresses),
+                },
+                {
+                  title: "Transation Volume",
+                  logo: lg3,
+                  value: kFormatter(basketData?.transaction_volume),
+                },
+                {
+                  title: "NVT Ratio",
+                  logo: lg4,
+                  value: kFormatter(basketData?.nvt),
+                },
+              ].map((ele) => (
+                <div className="flex items-center">
+                  <img className="w-14 h-14" alt={"atr"} src={ele.logo} />
+                  <div className=" text-white ml-2">
+                    <p className="text-[9px]">{ele.title}</p>
+                    <div className="flex items-end">
+                      <p className="text-[25px] font-bold">{ele.value}</p>
+                      <p
+                        style={{ transform: "translateY(-5px)" }}
+                        className="ml-3 text-[10px]  font-bold text-red-600"
+                      >
+                        32%
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <div className="flex flex-col h-[80%]">
@@ -101,17 +125,19 @@ const Indexes = () => {
                 </div>
               )
             )}
-            {[{ name: "Market Sentiment" }, { name: "Dev Activity" }].map((item) => (
-              <div className="flex flex-col w-[48%] mt-2">
-                <p className="text-white">{item.name}</p>
-                <GradientContainer
-                  height="h-[100%]"
-                  width="w-full"
-                  className={"mt-3"}
-                  children={<CustomLineChart width={"100%"} height={"90%"} />}
-                />
-              </div>
-            ))}
+            {[{ name: "Market Sentiment" }, { name: "Dev Activity" }].map(
+              (item) => (
+                <div className="flex flex-col w-[48%] mt-2">
+                  <p className="text-white">{item.name}</p>
+                  <GradientContainer
+                    height="h-[100%]"
+                    width="w-full"
+                    className={"mt-3"}
+                    children={<CustomLineChart width={"100%"} height={"90%"} />}
+                  />
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>
