@@ -435,7 +435,7 @@ const CoinDesc = (props) => {
                   data?.sentiment_positive_total[`change_${priceIndex}`]
                 )}
                 width={"100%"}
-                height={"98%"}
+                height={"100%"}
               />
             </div>
           </div>
@@ -451,7 +451,7 @@ const CoinDesc = (props) => {
               <CustomLineChart
                 data={arrGen(data?.dev_activity[`change_${priceIndex}`])}
                 width={"100%"}
-                height={"98%"}
+                height={"100%"}
               />
             </div>
           </div>

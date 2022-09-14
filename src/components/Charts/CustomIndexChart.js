@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Line, LineChart, ResponsiveContainer } from "recharts";
 
 const data = [
   {
@@ -75,34 +67,29 @@ const data = [
   },
 ];
 
-export const CustomLineChart = (props) => {
+export const CustomIndexChart = (props) => {
   return (
     <ResponsiveContainer width={props.width} height={props.height}>
       <LineChart
         data={props.data || data}
-        margin={{ top: 15, right: 18, left: 10, bottom: 10 }}
+        // margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="#282929" />
+        {/* <XAxis style={{fontSize:12}} axisLine={false} /> */}
+        {/* <CartesianGrid strokeDasharray="3 3" stroke="#282929" /> */}
+        {/* <YAxis style={{fontSize:12}} axisLine={false} /> */}
+        {/* <Line
+          type="monotone"
+          dataKey="pv"
+          dot={false}
+          strokeWidth={3}
+          stroke="#E323FF"
+        /> */}
         <Line
           type="monotone"
           dataKey="uv"
           dot={false}
           strokeWidth={2}
-          stroke="#805DE3"
-        />
-        <XAxis
-          style={{ fontSize: 12 }}
-          axisLine={false}
-          stroke={"#595959"}
-          dataKey="name"
-          height={17}
-        />
-        <YAxis
-          style={{ fontSize: 12 }}
-          axisLine={false}
-          stroke={"#595959"}
-          tickCount={4}
-          width={40}
+          stroke="#c2c2c2"
         />
       </LineChart>
     </ResponsiveContainer>

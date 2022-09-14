@@ -9,7 +9,6 @@ const columns = [
   {
     name: "NAME",
     selector: (row) => {
-      console.log("ROW", getCoinMeta(row.ticker));
       const coinData = getCoinMeta(row.ticker);
       return (
         <div className="flex items-center">
@@ -122,7 +121,6 @@ function Tabs({ data, innerTabs = false }) {
   useEffect(() => {
     function setTabPosition() {
       const currentTab = tabsRef.current[activeTabIndex];
-      console.log(currentTab?.offsetLeft, currentTab?.clientWidth);
       setTabUnderlineLeft(currentTab?.offsetLeft ?? 0);
       setTabUnderlineWidth(currentTab?.clientWidth ?? 0);
     }
@@ -176,9 +174,9 @@ const CoinList = () => {
   }, []);
 
   return (
-    <div className="App bg-bgl1 flex h-screen w-full">
+    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full">
       {/* Left */}
-      <div className="Left bg-yellow-40 p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
+      <div className="Left p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
         <div className="Header flex justify-between ">
           <p className="text-white text-2xl font-semibold">All Coins</p>
           <form>
@@ -275,7 +273,9 @@ const CoinList = () => {
       </div>
 
       {/* Right */}
-      <div className="Right basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col">
+      <div style={{
+          backgroundImage: `url('/images/rightSectionbg.png')`,
+        }} className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col">
         <Tabs data={tabsData} />
         <GradientContainer
           height="h-4/5"

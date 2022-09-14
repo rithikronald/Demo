@@ -76,11 +76,12 @@ const data = [
 ];
 
 export const CustomAreaChart = (props) => {
+  console.log("Graph Data",props?.data)
   return (
     <ResponsiveContainer width={props.width} height={props.height}>
       <AreaChart
-        data={props.data || data}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        data={props?.data}
+        margin={{ top: 15, right: 18, left: 10, bottom: 10 }}
       >
         <defs>
           <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -97,12 +98,14 @@ export const CustomAreaChart = (props) => {
           axisLine={false}
           stroke={"#595959"}
           dataKey="name"
+          height={17}
         />
         <YAxis
           style={{ fontSize: 12 }}
           axisLine={false}
           stroke={"#595959"}
           tickCount={4}
+          width={40}
         />
         <CartesianGrid strokeDasharray="3 3" stroke="#282929" />
         <Tooltip />
@@ -111,8 +114,8 @@ export const CustomAreaChart = (props) => {
           type="monotone"
           dataKey="uv"
           stroke="#805DE3"
-          strokeWidth={3}
-          fillOpacity={1}
+          strokeWidth={1.5}
+          fillOpacity={0.5}
           fill="url(#colorUv)"
         />
       </AreaChart>
