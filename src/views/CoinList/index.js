@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { GradientContainer } from "../../components/GradientContainer";
+import { Table } from "../../components/Table";
+import { FilterComponent } from "../../components/Table/filterComponent";
 import { ThemeButton } from "../../components/themeButton";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 
@@ -12,39 +14,63 @@ const columns = [
       const coinData = getCoinMeta(row.ticker);
       return (
         <div className="flex items-center">
-          <img className="w-6 h-6 rounded-full bg-white" src={coinData?.logoUrl} alt ="logo" />
+          <img
+            className="w-6 h-6 rounded-full bg-white"
+            src={coinData?.logoUrl}
+            alt="logo"
+          />
           <p className="text- font-bold ml-2">{coinData?.ticker}</p>
           <p className="text-white ml-2">{coinData?.slug}</p>
         </div>
       );
     },
     sortable: true,
-    grow:2
+    grow: 1.5,
   },
   {
     name: "CHANGE",
-    selector: (row) => row.percent_change_24h,
+    selector: (row) => row.percent_change_24h + "%",
     sortable: true,
+    style: {
+      color: "#3fa34d",
+      fontWeight: "500",
+    },
   },
   {
     name: "MARKET CAP",
     selector: (row) => row.marketcap_usd.value,
     sortable: true,
+    style: {
+      color: "#fff",
+      fontWeight: "500",
+    },
   },
   {
     name: "SUPPLY",
     selector: (row) => row.total_supply.value,
     sortable: true,
+    style: {
+      color: "#7d8597",
+      fontWeight: "500",
+    },
   },
   {
     name: "VOLUME",
     selector: (row) => row.transaction_volume.value,
     sortable: true,
+    style: {
+      color: "#7d8597",
+      fontWeight: "500",
+    },
   },
   {
     name: "PRICE",
     selector: (row) => row.price.value,
     sortable: true,
+    style: {
+      color: "#fff",
+      fontWeight: "500",
+    },
   },
 ];
 const tabsData = [
@@ -66,47 +92,49 @@ const innertabsData = [
 
 const RightContainer = ({ option, icon }) => {
   return (
-    <div className="py-10 px-6 flex justify-center flex-col">
+    <div className="flex  flex-col p-4 px-6 w-full h-full">
       <Tabs data={innertabsData} />;
-      <div className="bg-transparent my-2 px-2">
-        <p className="text-white font-medium text-lg">Price</p>
-        <GradientContainer
-          height="h-16"
-          width="w-full"
-          children={
-            <input
-              type="text"
-              className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-            />
-          }
-        />
+      <div>
+        <div className="mt-4">
+          <p className="text-white font-medium text-xs ml-2 mb-1">Price</p>
+          <GradientContainer
+            height="h-16"
+            width="w-full"
+            children={
+              <input
+                type="text"
+                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+              />
+            }
+          />
+        </div>
+        <div className="mt-4">
+          <p className="text-white font-medium text-xs ml-2 mb-1">Amount</p>
+          <GradientContainer
+            height="h-16"
+            width="w-full"
+            children={
+              <input
+                type="text"
+                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+              />
+            }
+          />
+        </div>
+        <div className="mt-4">
+          <p className="text-white font-medium text-xs ml-2 mb-1">Total</p>
+          <GradientContainer
+            height="h-16"
+            width="w-full"
+            children={
+              <input
+                type="text"
+                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+              />
+            }
+          />
+        </div>
       </div>
-      <div className="bg-transparent my-2 px-2">
-        <p className="text-white font-medium text-lg">Amount</p>
-        <GradientContainer
-          height="h-16"
-          width="w-full"
-          children={
-            <input
-              type="text"
-              className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-            />
-          }
-        />
-      </div>
-      <div className="bg-transparent my-2 px-2">
-        <p className="text-white font-medium text-lg">Total</p>
-        <GradientContainer
-          height="h-16"
-          width="w-full"
-          children={
-            <p className="text-white font-medium text-lg text-center mt-4">
-              $6553.94
-            </p>
-          }
-        />
-      </div>
-      <ThemeButton text="Trade" className="w-full mt-4" />
     </div>
   );
 };
@@ -134,7 +162,7 @@ function Tabs({ data, innerTabs = false }) {
   return (
     <>
       <div className="relative">
-        <div className="flex space-x-3 text-white text-lg font-semibold  items-center justify-center">
+        <div className="flex space-x-10 text-white text-sm font-semibold  items-center justify-center">
           {data.map((tab, idx) => {
             return (
               <button
@@ -174,114 +202,31 @@ const CoinList = () => {
   }, []);
 
   return (
-    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full">
+    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
       {/* Left */}
-      <div className="Left p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
+      <div className="Left p-10 px-14 flex w-[75%] flex-col sm:flex">
         <div className="Header flex justify-between ">
           <p className="text-white text-2xl font-semibold">All Coins</p>
-          <form>
-            <div className="flex">
-              <label
-                for="search-dropdown"
-                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
-              >
-                Your Email
-              </label>
-
-              <div className="relative w-full">
-                <input
-                  type="search"
-                  id="search-dropdown"
-                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-regularPurple focus:border-regularPurple focus:outline-none"
-                  placeholder="Search Coin"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-primaryButton rounded-r-lg border border-regularPurple hover:bg-regularPurple focus:ring-4 focus:outline-none "
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    ></path>
-                  </svg>
-                  <span className="sr-only">Search</span>
-                </button>
-              </div>
-            </div>
-          </form>
+         
         </div>
         <div className="TableWithOptions">
-          {/*  */}
-          <div className="Table bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 sm:rounded-lg ">
-            <div className="overflow-x-auto relative shadow-md sm:rounded-lg ">
-              <DataTable
-                columns={columns}
-                data={coinList}
-                pagination
-                striped
-                paginationComponentOptions={{ noRowsPerPage: true }}
-                highlightOnHover
-                paginationPerPage={10}
-                responsive
-                customStyles={{
-                  rows: {
-                    stripedStyle: {
-                      backgroundColor: "#24225B",
-                      color: "#fff",
-                    },
-                    style: {
-                      backgroundColor: "#100E35",
-                      color: "#fff",
-                    },
-                  },
-                  headRow: {
-                    style: {
-                      backgroundColor: "#100E35",
-                      color: "#fff",
-                      borderBottomWidth:1,
-                      borderBottomColor:"#9433d5"
-                    },
-                  },
-                  pagination: {
-                    style: {
-                      backgroundColor: "#100E35",
-                      color: "#fff",
-                    },
-                    pageButtonsStyle: {
-                      fill: "#fff",
-                      "&:disabled": {
-                        fill: "#5c5c5c",
-                      },
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
+             {coinList && <Table data={coinList} />} 
         </div>
       </div>
-
       {/* Right */}
-      <div style={{
+      <div
+        style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
-        }} className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around flex flex-col">
+        }}
+        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around items-center flex flex-col"
+      >
         <Tabs data={tabsData} />
         <GradientContainer
-          height="h-4/5"
-          width="3/4"
+          height="h-[65%]"
+          className={"w-[95%]"}
           children={<RightContainer />}
         />
+        <ThemeButton text="Trade" className="w-[90%] mt-4" />
       </div>
     </div>
   );
