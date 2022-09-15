@@ -94,7 +94,8 @@ export const Table = (props) => {
 
   return (
     <div className="flex flex-col">
-      <div className="w-[20%] self-end">
+      <div className="w-full flex justify-between self-end">
+        <p className="text-white text-2xl font-semibold">{props?.title}</p>
         <FilterComponent
           onFilter={(e) => setFilterText(e.target.value)}
           onClear={handleClear}

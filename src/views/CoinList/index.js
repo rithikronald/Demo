@@ -205,12 +205,8 @@ const CoinList = () => {
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
       {/* Left */}
       <div className="Left p-10 px-14 flex w-[75%] flex-col sm:flex">
-        <div className="Header flex justify-between ">
-          <p className="text-white text-2xl font-semibold">All Coins</p>
-         
-        </div>
         <div className="TableWithOptions">
-             {coinList && <Table data={coinList} />} 
+             {coinList && <Table title={"All Coins"} data={coinList} />} 
         </div>
       </div>
       {/* Right */}
