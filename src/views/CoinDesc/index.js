@@ -4,7 +4,7 @@ import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Modal from './modal'
+import Modal from "./modal";
 
 import axios from "axios";
 
@@ -28,7 +28,7 @@ const CoinDesc = (props) => {
   const [marketCap, setMarketCap] = useState(0);
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
-  const [modalOpen, setModalOpen] = useState(true)
+  const [modalOpen, setModalOpen] = useState(true);
 
   const params = useParams();
 
@@ -83,6 +83,23 @@ const CoinDesc = (props) => {
         );
       })
       .catch((err) => console.log("error", err));
+
+    axios
+      .get("https://sandbox-api.coinmarketcap.com/v2/cryptocurrency/info", {
+        headers: {
+          "X-CMC_PRO_API_KEY": "9d13b9e1-e116-4f08-9fe7-45850d8667ab",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      });
+    // axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/info', {
+    //   headers: {
+    //     'X-CMC_PRO_API_KEY': '9d13b9e1-e116-4f08-9fe7-45850d8667ab',
+    //   },
+    // }).then(res => {
+    //   console.log(res)
+    // })
   }, []);
 
   const arrGen = (arr) => {
@@ -211,99 +228,168 @@ const CoinDesc = (props) => {
   };
 
   return (
-    <div className="p-5 px-10 overflow-hidden w-screen h-screen bg-bgl1 justify-between flex flex-col">
+    <div
+      className={`p-5 px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-bgl1 justify-between flex flex-col ${
+        modalOpen ? "pr-[540px]" : "pr-[100px]"
+      }`}
+    >
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
-      <div className="flex  h-[30%]">
-        <div className="flex basis-1/2 mt-5">
-          <div style={{ flex: 1 }}>
-            <div className="flex items-center">
-              <p className="text-3xl font-mont text-white font-bold">
-                {data?.slug}
-              </p>
-              <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
-                {data?.ticker}
-              </p>
-            </div>
-            <p className="font-mont text-white text-sm mt-8 pr-[40px]">
-              {data?.description}
-            </p>
-          </div>
-          <div className="flex-col justify-between text-white flex justify-">
-            <div className="priceBorder p-[1px]">
-              <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                <p className="text-[12px] ">Price</p>
-                <p className="text-[18px] ml-[5px]">$</p>
-                <p className="text-[25px] font-bold">
-                  {Math.floor(data?.price?.value)}
+      {!modalOpen ? (
+        <div
+          className={`grid ${
+            modalOpen ? "grid-cols-1" : "grid-cols-2 h-[30%]"
+          }`}
+        >
+          <div className={`flex basis-1/2 mt-5`}>
+            <div style={{ flex: 1 }}>
+              <div className="flex items-center">
+                <p className="text-3xl font-mont text-white font-bold">
+                  {data?.slug}
                 </p>
-                <p className="text-[15px] font-bold">
-                  .{getAfterDecimalValue(data?.price?.value)}
+                <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
+                  {data?.ticker}
                 </p>
               </div>
+              <p className="font-mont text-white text-sm mt-8 pr-[40px]">
+                {data?.description}
+              </p>
             </div>
-            <div className="flex">
+            <div className="flex-col justify-between text-white flex justify-">
               <div className="priceBorder p-[1px]">
                 <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                  <p className="text-[12px] ">Deposit</p>
+                  <p className="text-[12px] ">Price</p>
+                  <p className="text-[18px] ml-[5px]">$</p>
+                  <p className="text-[25px] font-bold">
+                    {Math.floor(data?.price?.value)}
+                  </p>
+                  <p className="text-[15px] font-bold">
+                    .{getAfterDecimalValue(data?.price?.value)}
+                  </p>
                 </div>
               </div>
-              <div className="priceBorder p-[1px] ml-[10px]">
-                <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                  <p className="text-[12px] ">Withdraw</p>
+              <div className="flex">
+                <div className="priceBorder p-[1px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Deposit</p>
+                  </div>
                 </div>
+                <div className="priceBorder p-[1px] ml-[10px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Withdraw</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-center items-end">
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]"
+                >
+                  Trade Now
+                </button>
               </div>
             </div>
-            <div className="flex justify-center items-end">
-              <button onClick={() => setModalOpen(true)} className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]">
-                Trade Now
-              </button>
+          </div>
+          <div className="grid grid-cols-3 grid-rows-2 w-[100%] ml-5">
+            {[
+              {
+                title: "Market Cap",
+                logo: require("../../assets/marketCapIcon.png"),
+                value: numberWithCommas(marketCap),
+              },
+              {
+                title: "Transaction Volume",
+                logo: require("../../assets/transactionVolumeIcon.png"),
+                value: `${numberWithCommas(transactionVolumePerct)}`,
+              },
+              {
+                title: "NVT Ratio",
+                logo: require("../../assets/nvtRatioIcon.png"),
+                value: numberWithCommas(nvtRatioPerct),
+              },
+              {
+                title: "Trading Volume",
+                logo: require("../../assets/tradingVolumeIcon.png"),
+                value: numberWithCommas(tradingVolume),
+              },
+              {
+                title: "Active Wallet Addresses",
+                logo: require("../../assets/activeWalletAddressIcon.png"),
+                value: numberWithCommas(activeAddressPerct),
+              },
+              {
+                title: "Daily Active Addresses",
+                logo: require("../../assets/dailyActiveAddressIcon.png"),
+                value: numberWithCommas(dailyActivePerct),
+              },
+            ].map((ele) => (
+              <div className="flex items-center">
+                <img src={ele.logo} />
+                <div className="ml-[-15px] font-mont text-white">
+                  <p className="text-[9px]">{ele.title}</p>
+                  <p className="text-[22px] font-bold">{ele.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`grid ${
+            modalOpen ? "grid-cols-1 h-auto" : "grid-cols-2 h-[30%]"
+          }`}
+        >
+          <div className={`flex basis-1/2 mt-5`}>
+            <div style={{ flex: 1 }}>
+              <div className="flex items-center">
+                <p className="text-3xl font-mont text-white font-bold">
+                  {data?.slug}
+                </p>
+                <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
+                  {data?.ticker}
+                </p>
+              </div>
+              <p className="font-mont text-white text-sm mt-8 pr-[40px]">
+                {data?.description}
+              </p>
+            </div>
+            <div className="flex-col justify-between text-white flex justify-">
+              <div className="priceBorder p-[1px]">
+                <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                  <p className="text-[12px] ">Price</p>
+                  <p className="text-[18px] ml-[5px]">$</p>
+                  <p className="text-[25px] font-bold">
+                    {Math.floor(data?.price?.value)}
+                  </p>
+                  <p className="text-[15px] font-bold">
+                    .{getAfterDecimalValue(data?.price?.value)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex">
+                <div className="priceBorder p-[1px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Deposit</p>
+                  </div>
+                </div>
+                <div className="priceBorder p-[1px] ml-[10px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Withdraw</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-center items-end">
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]"
+                >
+                  Trade Now
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 grid-rows-2 w-[50%] ml-5">
-          {[
-            {
-              title: "Market Cap",
-              logo: require("../../assets/marketCapIcon.png"),
-              value: numberWithCommas(marketCap),
-            },
-            {
-              title: "Transaction Volume",
-              logo: require("../../assets/transactionVolumeIcon.png"),
-              value: `${numberWithCommas(transactionVolumePerct)}`,
-            },
-            {
-              title: "NVT Ratio",
-              logo: require("../../assets/nvtRatioIcon.png"),
-              value: numberWithCommas(nvtRatioPerct),
-            },
-            {
-              title: "Trading Volume",
-              logo: require("../../assets/tradingVolumeIcon.png"),
-              value: numberWithCommas(tradingVolume),
-            },
-            {
-              title: "Active Wallet Addresses",
-              logo: require("../../assets/activeWalletAddressIcon.png"),
-              value: numberWithCommas(activeAddressPerct),
-            },
-            {
-              title: "Daily Active Addresses",
-              logo: require("../../assets/dailyActiveAddressIcon.png"),
-              value: numberWithCommas(dailyActivePerct),
-            },
-          ].map((ele) => (
-            <div className="flex items-center">
-              <img src={ele.logo} />
-              <div className="ml-[-15px] font-mont text-white">
-                <p className="text-[9px]">{ele.title}</p>
-                <p className="text-[22px] font-bold">{ele.value}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex justify-end space-x-8">
+      )}
+      <div className={`flex ${modalOpen ? "pt-[20px] pb-[20px]" : "justify-end"} space-x-8`}>
         {["1d", "7d", "30d"].map((ele) => (
           <div
             className={`cursor-pointer text-[12px] text-white font-mont w-[70px] flex justify-center items-center ${
@@ -375,7 +461,7 @@ const CoinDesc = (props) => {
             </div>
           </div>
         </div>
-        <div>
+        {!modalOpen ? <div>
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
@@ -390,9 +476,52 @@ const CoinDesc = (props) => {
               />
             </div>
           </div>
-        </div>
+        </div> : <div>
+        <div className="grid grid-cols-2 w-[100%]">
+            {[
+              {
+                title: "Market Cap",
+                logo: require("../../assets/marketCapIcon.png"),
+                value: numberWithCommas(marketCap),
+              },
+              {
+                title: "Transaction Volume",
+                logo: require("../../assets/transactionVolumeIcon.png"),
+                value: `${numberWithCommas(transactionVolumePerct)}`,
+              },
+              {
+                title: "NVT Ratio",
+                logo: require("../../assets/nvtRatioIcon.png"),
+                value: numberWithCommas(nvtRatioPerct),
+              },
+              {
+                title: "Trading Volume",
+                logo: require("../../assets/tradingVolumeIcon.png"),
+                value: numberWithCommas(tradingVolume),
+              },
+              {
+                title: "Active Wallet Addresses",
+                logo: require("../../assets/activeWalletAddressIcon.png"),
+                value: numberWithCommas(activeAddressPerct),
+              },
+              {
+                title: "Daily Active Addresses",
+                logo: require("../../assets/dailyActiveAddressIcon.png"),
+                value: numberWithCommas(dailyActivePerct),
+              },
+            ].map((ele) => (
+              <div className="flex items-center">
+                <img src={ele.logo} />
+                <div className="ml-[-15px] font-mont text-white">
+                  <p className="text-[9px]">{ele.title}</p>
+                  <p className="text-[22px] font-bold">{ele.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>}
       </div>
-      <div className="grid grid-cols-4 gap-8 mt-4">
+      <div className={`grid ${modalOpen ? "grid-cols-2" : "grid-cols-4"} gap-8 mt-4`}>
         <div>
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
