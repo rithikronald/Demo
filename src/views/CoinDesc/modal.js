@@ -6,7 +6,7 @@ const Modal = (props) => {
   const [buy, setBuy] = useState(false);
 
   return (
-    <div className={`flex flex-col transitionClass items-center justify-center fixed top-0 right-0 h-[100vh] w-[500px] ${props.modalOpen ? "translate-x-[0px]" : "translate-x-[450px]"}  bg-bgl2 z-[100]`}>
+    <div className={`flex flex-col transitionClass items-center justify-center fixed top-0 right-0 h-[100vh] w-[30vw] ${props.modalOpen ? "translate-x-[0px]" : "translate-x-[27vw]"}  bg-bgl2 z-[100]`}>
       <div className="w-[50px] h-[100vh] absolute top-0 left-0 cursor-pointer" onClick={() => props.setModalOpen(!props.modalOpen)}>
       <div className="h-[30px] w-[4px] rounded-3xl bg-white opacity-25 absolute left-[20px] top-1/2 -translate-y-1/2"></div></div>
       <div className="flex w-[200px] justify-around mb-[60px]">
