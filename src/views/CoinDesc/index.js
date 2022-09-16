@@ -483,7 +483,7 @@ const CoinDesc = (props) => {
             </div>
           </div>
         ) : (
-          <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center p-[1px] mt-[38px] w-full">
+          <div className="flex  rounded-2xl items-center p-[1px] mt-[38px] w-full">
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
             <div className="grid grid-cols-2 w-[100%]">
               {[
