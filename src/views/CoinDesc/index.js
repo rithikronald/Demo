@@ -29,7 +29,7 @@ const CoinDesc = (props) => {
   const [marketCap, setMarketCap] = useState(0);
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const params = useParams();
 
@@ -223,7 +223,7 @@ const CoinDesc = (props) => {
   return (
     <div
       className={`p-5 px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-bgl1 justify-between flex flex-col ${
-        modalOpen ? "pr-[540px]" : "pr-[100px]"
+        modalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
@@ -358,7 +358,7 @@ const CoinDesc = (props) => {
                   </p>
                 </div>
               </div>
-              <div className="flex">
+              <div className="flex mt-2">
                 <div className="priceBorder p-[1px]">
                   <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
                     <p className="text-[12px] ">Deposit</p>
@@ -370,7 +370,7 @@ const CoinDesc = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-center items-end">
+              <div className="flex justify-center items-end mt-2">
                 <button
                   onClick={() => setModalOpen(true)}
                   className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]"
@@ -382,7 +382,11 @@ const CoinDesc = (props) => {
           </div>
         </div>
       )}
-      <div className={`flex ${modalOpen ? "pt-[20px] pb-[20px]" : "justify-end"} space-x-8`}>
+      <div
+        className={`flex ${
+          modalOpen ? "pt-[20px] pb-[20px]" : "justify-end"
+        } space-x-8`}
+      >
         {["1d", "7d", "30d"].map((ele) => (
           <div
             className={`cursor-pointer text-[12px] text-white font-mont w-[70px] flex justify-center items-center ${
@@ -394,8 +398,8 @@ const CoinDesc = (props) => {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-10">
-        <div>
+      <div className="grid grid-cols-2 gap-10 items-stretch">
+        <div className="h-full" >
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
@@ -428,7 +432,7 @@ const CoinDesc = (props) => {
               </div>
             ))}
           </div>
-          <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
+          <div className={`flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl ${modalOpen ? "h-[350px]" : "h-[226px]"} items-center p-[1px] mt-4 w-full`}>
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
               {firstBoxAnnotation === "marketcap" && (
                 <CustomAreaChart
@@ -454,67 +458,77 @@ const CoinDesc = (props) => {
             </div>
           </div>
         </div>
-        {!modalOpen ? <div>
-          <div
-            className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
-          >
-            <p style={{ transform: "translateX(20px)" }}>Price Action</p>
-          </div>
-          <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
-            <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
-              <CustomAreaChart
-                width={"100%"}
-                height={"98%"}
-                data={arrGen(data?.price[`change_${priceIndex}`])}
-              />
+        {!modalOpen ? (
+          <div>
+            <div
+              className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
+            >
+              <p style={{ transform: "translateX(20px)" }}>Price Action</p>
+            </div>
+            <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
+              <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
+                <CustomAreaChart
+                  width={"100%"}
+                  height={"98%"}
+                  data={arrGen(data?.price[`change_${priceIndex}`])}
+                />
+              </div>
             </div>
           </div>
-        </div> : <div>
-        <div className="grid grid-cols-2 w-[100%]">
-            {[
-              {
-                title: "Market Cap",
-                logo: require("../../assets/marketCapIcon.png"),
-                value: numberWithCommas(marketCap),
-              },
-              {
-                title: "Transaction Volume",
-                logo: require("../../assets/transactionVolumeIcon.png"),
-                value: `${numberWithCommas(transactionVolumePerct)}`,
-              },
-              {
-                title: "NVT Ratio",
-                logo: require("../../assets/nvtRatioIcon.png"),
-                value: numberWithCommas(nvtRatioPerct),
-              },
-              {
-                title: "Trading Volume",
-                logo: require("../../assets/tradingVolumeIcon.png"),
-                value: numberWithCommas(tradingVolume),
-              },
-              {
-                title: "Active Wallet Addresses",
-                logo: require("../../assets/activeWalletAddressIcon.png"),
-                value: numberWithCommas(activeAddressPerct),
-              },
-              {
-                title: "Daily Active Addresses",
-                logo: require("../../assets/dailyActiveAddressIcon.png"),
-                value: numberWithCommas(dailyActivePerct),
-              },
-            ].map((ele) => (
-              <div className="flex items-center">
-                <img src={ele.logo} />
-                <div className="ml-[-15px] font-mont text-white">
-                  <p className="text-[9px]">{ele.title}</p>
-                  <p className="text-[22px] font-bold">{ele.value}</p>
+        ) : (
+          <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center p-[1px] mt-[38px] w-full">
+            <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
+            <div className="grid grid-cols-2 w-[100%]">
+              {[
+                {
+                  title: "Market Cap",
+                  logo: require("../../assets/marketCapIcon.png"),
+                  value: numberWithCommas(marketCap),
+                },
+                {
+                  title: "Transaction Volume",
+                  logo: require("../../assets/transactionVolumeIcon.png"),
+                  value: `${numberWithCommas(transactionVolumePerct)}`,
+                },
+                {
+                  title: "NVT Ratio",
+                  logo: require("../../assets/nvtRatioIcon.png"),
+                  value: numberWithCommas(nvtRatioPerct),
+                },
+                {
+                  title: "Trading Volume",
+                  logo: require("../../assets/tradingVolumeIcon.png"),
+                  value: numberWithCommas(tradingVolume),
+                },
+                {
+                  title: "Active Wallet Addresses",
+                  logo: require("../../assets/activeWalletAddressIcon.png"),
+                  value: numberWithCommas(activeAddressPerct),
+                },
+                {
+                  title: "Daily Active Addresses",
+                  logo: require("../../assets/dailyActiveAddressIcon.png"),
+                  value: numberWithCommas(dailyActivePerct),
+                },
+              ].map((ele) => (
+                <div className="flex items-center">
+                  <img src={ele.logo} />
+                  <div className="ml-[-15px] font-mont text-white">
+                    <p className="text-[9px]">{ele.title}</p>
+                    <p className="text-[22px] font-bold">{ele.value}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            </div>
           </div>
-        </div>}
+        )}
       </div>
-      <div className={`grid ${modalOpen ? "grid-cols-2" : "grid-cols-4"} gap-8 mt-4`}>
+      <div
+        className={`grid ${
+          modalOpen ? "grid-cols-2" : "grid-cols-4"
+        } gap-8 mt-4`}
+      >
         <div>
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
