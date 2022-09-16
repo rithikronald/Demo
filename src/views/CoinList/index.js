@@ -28,6 +28,15 @@ const columns = [
     grow: 1.5,
   },
   {
+    name: "PRICE",
+    selector: (row) => row.price.value,
+    sortable: true,
+    style: {
+      color: "#fff",
+      fontWeight: "500",
+    },
+  },
+  {
     name: "CHANGE",
     selector: (row) => row.percent_change_24h + "%",
     sortable: true,
@@ -46,15 +55,6 @@ const columns = [
     },
   },
   {
-    name: "SUPPLY",
-    selector: (row) => row.total_supply.value,
-    sortable: true,
-    style: {
-      color: "#7d8597",
-      fontWeight: "500",
-    },
-  },
-  {
     name: "VOLUME",
     selector: (row) => row.transaction_volume.value,
     sortable: true,
@@ -64,11 +64,11 @@ const columns = [
     },
   },
   {
-    name: "PRICE",
-    selector: (row) => row.price.value,
+    name: "SUPPLY",
+    selector: (row) => row.total_supply.value,
     sortable: true,
     style: {
-      color: "#fff",
+      color: "#7d8597",
       fontWeight: "500",
     },
   },
@@ -90,7 +90,7 @@ const innertabsData = [
   },
 ];
 
-const RightContainer = ({ option, icon }) => {
+export const RightContainer = ({ option, icon }) => {
   return (
     <div className="flex  flex-col p-4 px-6 w-full h-full">
       <Tabs data={innertabsData} />;
@@ -139,7 +139,7 @@ const RightContainer = ({ option, icon }) => {
   );
 };
 
-function Tabs({ data, innerTabs = false }) {
+export function Tabs({ data, innerTabs = false }) {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
@@ -203,13 +203,11 @@ const CoinList = () => {
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
-      {/* Left */}
       <div className="Left p-10 px-14 flex w-[75%] flex-col sm:flex">
         <div className="TableWithOptions">
              {coinList && <Table title={"All Coins"} data={coinList} />} 
         </div>
       </div>
-      {/* Right */}
       <div
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,

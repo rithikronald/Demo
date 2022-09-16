@@ -252,7 +252,7 @@ const Home = () => {
             </div>
             <img
               alt="img"
-              className="w-full h-[60%]"
+              className="w-full h-[50%]"
               src={require("../../assets/illustration.png")}
             />
             <button
