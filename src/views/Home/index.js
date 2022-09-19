@@ -11,10 +11,13 @@ import {
   risk,
   tenure,
   data02,
+  pieColors,
 } from "../../constants/constants";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
 import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
+import { CustomPieChart } from "../../components/Charts/CustomPieChart";
+import pimg  from "../../assets/usdc.png";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = () => {
@@ -24,8 +27,10 @@ const Home = () => {
   const [pageRightIndex, setPageRightIndex] = useState(0);
   const [coinMetaData, setcoinMetaData] = useState();
   const [coinBasket, setCoinBasket] = useState();
-  const [tenureIndex, setTenureIndex] = useState(0);
-  const [riskIndex, setRiskIndex] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [tenureIndex, setTenureIndex] = useState("s");
+  const [riskIndex, setRiskIndex] = useState("0");
+  const [smartSuggestList, setSmartSuggestList] = useState();
   const navigate = useNavigate();
   useEffect(() => {
     if (width >= 2500) {
@@ -39,8 +44,6 @@ const Home = () => {
       setIndexesList(4);
     }
   }, [width, height]);
-
-  useEffect(() => {});
 
   useEffect(() => {
     axios
@@ -56,6 +59,26 @@ const Home = () => {
       })
       .catch((err) => console.log("error", err));
   }, []);
+
+  const getSmartSuggestList = (val) => {
+    console.log("Value", val);
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/smartSuggest/${val}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        console.log("RESPONSE", response?.data);
+        setSmartSuggestList(response?.data);
+      })
+      .catch((err) => console.log("error", err));
+  };
+
+  useEffect(() => {
+    console.log("sss", tenureIndex, riskIndex);
+  }, [tenureIndex, riskIndex]);
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
@@ -355,9 +378,21 @@ const Home = () => {
               <p className="text-sm text-center text-white font-medium 3xl:text-3xl mt-3">
                 How much would you like to Invest?
               </p>
-              <p className="text-white font-bold text-center mt-5  text-2xl 2xl:text-4xl 3xl:text-5xl">
-                <span className="font-normal">$</span>12500
-              </p>
+              <div className="text-white justify-center items-center flex font-bold text-center mt-5 text-2xl 2xl:text-4xl 3xl:text-5xl">
+                <p className="font-normal">$</p>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => {
+                    console.log(
+                      "comma",
+                      Number(e.target.value).toLocaleString()
+                    );
+                    setAmount(e.target.value);
+                  }}
+                  className="h-10 w-[80%] ring-1 bg-transparent text-white ring-purple-600 text-2xl ml-2 font-bold rounded-xl text-center form-control outline-0"
+                />
+              </div>
             </div>
             <div>
               <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
@@ -372,7 +407,10 @@ const Home = () => {
                     children={
                       <button
                         onClick={() => setTenureIndex(index)}
-                        className="optionsCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start"
+                        className={`tenureCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start ${
+                          tenureIndex === index && `ring-2 ring-white`
+                        }`}
+                        tabIndex="1"
                       >
                         <img
                           alt="img"
@@ -403,8 +441,11 @@ const Home = () => {
                     className={"3xl:h-[250px]"}
                     children={
                       <button
-                        onClick={() => console.log("Index", index)}
-                        className="optionsCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start"
+                        onClick={() => setRiskIndex(index + 1)}
+                        className={`riskCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start ${
+                          riskIndex === index + 1 && `ring-2 ring-white`
+                        }`}
+                        tabIndex="2"
                       >
                         <img
                           alt="img"
@@ -424,7 +465,12 @@ const Home = () => {
               </div>
             </div>
             <button
-              onClick={() => setPageRightIndex(3)}
+              onClick={() => {
+                setPageRightIndex(3);
+                const duration =
+                  tenureIndex == 0 ? "s" : tenureIndex == 1 ? "m" : "l";
+                getSmartSuggestList(duration + riskIndex);
+              }}
               className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
             >
               Smart Suggest
@@ -460,59 +506,66 @@ const Home = () => {
             </div>
             <GradientContainer
               width="w-full"
-              height="h-[70%]"
+              height="h-[72%]"
               className={"my-5 2xl:h-[60%]"}
               children={
                 <div className="w-full h-full rounded-2xl flex flex-col justify-around pt-4">
-                  <div className="flex justify-center items-center relative">
-                    <PieChart
-                      width={width > 1600 ? 240 : 220}
-                      height={height > 768 ? 240 : 200}
-                      // style={{backgroundColor:"red"}}
-                    >
-                      <Pie
-                        data={data02}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={width > 1600 ? 85 : 70}
-                        outerRadius={width > 1600 ? 105 : 90}
-                        strokeWidth={0}
-                      >
-                        {data02.map((ele) => (
-                          <Cell fill={ele.color} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                    <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                      <p className="bg-white text-sm px-2 font-semibold rounded-full">
-                        Basic
-                      </p>
-                      <p className="bg-white font-semibold px-2 rounded-full mt-1">
-                        long-term
-                      </p>
-                    </div>
+                  {smartSuggestList && (
+                    <CustomPieChart
+                      data={smartSuggestList}
+                      width={"100%"}
+                      height={"50%"}
+                    />
+                  )}
+                  <div className="flex flex-row w-full justify-center items-center gap-2 text-sm font-semibold">
+                    <p className="p-1 px-2 bg-white rounded-xl">
+                      {tenureIndex == "s"
+                        ? "short-term"
+                        : tenureIndex == "m"
+                        ? "mid-term"
+                        : "long-term"}
+                    </p>
+                    <p className="p-1 px-2 bg-white rounded-xl">
+                      {riskIndex == 1
+                        ? "bold"
+                        : riskIndex == 2
+                        ? "balance"
+                        : "basic"}
+                    </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-x-2 p-[20px_20px_40px_20px]">
-                    {[1, 2, 3, 4, 5, 6].map((ele) => (
-                      <div className="flex justify-center items-center mt-[20px]">
-                        <img
-                          alt="btc"
-                          className="h-10 w-10 3xl:h-14 3xl:w-14"
-                          src={require("../../assets/btcLight.png")}
-                        />
-                        <div className="pl-[6px]">
-                          <p className=" text-white font-semibold text-[10px] 3xl:text-xl">
-                            BITCOIN
-                          </p>
-                          <div className="h-[6px] w-[20px] rounded-lg bg-yellow-400"></div>
-                          <p className="font-bold text-white text-sm 3xl:text-xl">
-                            22%
-                          </p>
+                  <div className="coinList grid grid-cols-2 p-[10px_10px_40px_20px] overflow-scroll ml-1">
+                    {smartSuggestList?.coins?.map((item, index) => {
+                      const data = getCoinMeta(item);
+                      return (
+                        <div className="flex items-center mt-[20px] w-[100%] px-3">
+                          <img
+                            alt="btc"
+                            className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
+                            src={data?.logoUrl ? data?.logoUrl : pimg}
+                          />
+                          <div className="pl-[6px]">
+                            <p className="font-mont font-semibold text-white text-[10px] 3xl:text-xl">
+                              {data?.ticker}
+                            </p>
+                            <div
+                              className={`h-[6px] w-[${
+                                (100 / smartSuggestList?.coins.length).toFixed(
+                                  2
+                                ) + 20
+                              }px] rounded-lg bg-[${pieColors[index]}]`}
+                            ></div>
+                            <p className="font-semibold text-white text-sm 3xl:text-xl">
+                              {Number(
+                                (100 / smartSuggestList?.coins.length).toFixed(
+                                  2
+                                )
+                              )}
+                              %{/* {data?.ticker} */}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               }
