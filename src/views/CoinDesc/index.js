@@ -220,17 +220,20 @@ const CoinDesc = (props) => {
     return newStr.slice(0, 2);
   };
 
+  const fakeModalOpen = false
+
+
   return (
     <div
       className={`p-5 px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-bgl1 justify-between flex flex-col ${
-        modalOpen ? "pr-[31vw]" : "pr-[100px]"
+        fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
-      {!modalOpen ? (
+      {!fakeModalOpen ? (
         <div
           className={`grid ${
-            modalOpen ? "grid-cols-1" : "grid-cols-2 h-[30%]"
+            fakeModalOpen ? "grid-cols-1" : "grid-cols-2 h-[30%]"
           }`}
         >
           <div className={`flex basis-1/2 mt-5`}>
@@ -328,7 +331,7 @@ const CoinDesc = (props) => {
       ) : (
         <div
           className={`grid ${
-            modalOpen ? "grid-cols-1 h-auto" : "grid-cols-2 h-[30%]"
+            fakeModalOpen ? "grid-cols-1 h-auto" : "grid-cols-2 h-[30%]"
           }`}
         >
           <div className={`flex basis-1/2 mt-5`}>
@@ -384,7 +387,7 @@ const CoinDesc = (props) => {
       )}
       <div
         className={`flex ${
-          modalOpen ? "pt-[20px] pb-[20px]" : "justify-end"
+          fakeModalOpen ? "pt-[20px] pb-[20px]" : "justify-end"
         } space-x-8`}
       >
         {["1d", "7d", "30d"].map((ele) => (
@@ -432,7 +435,7 @@ const CoinDesc = (props) => {
               </div>
             ))}
           </div>
-          <div className={`flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl ${modalOpen ? "h-[350px]" : "h-[226px]"} items-center p-[1px] mt-4 w-full`}>
+          <div className={`flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl ${fakeModalOpen ? "h-[350px]" : "h-[226px]"} items-center p-[1px] mt-4 w-full`}>
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
               {firstBoxAnnotation === "marketcap" && (
                 <CustomAreaChart
@@ -458,7 +461,7 @@ const CoinDesc = (props) => {
             </div>
           </div>
         </div>
-        {!modalOpen ? (
+        {!fakeModalOpen ? (
           <div>
             <div
               className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
@@ -526,7 +529,7 @@ const CoinDesc = (props) => {
       </div>
       <div
         className={`grid ${
-          modalOpen ? "grid-cols-2" : "grid-cols-4"
+          fakeModalOpen ? "grid-cols-2" : "grid-cols-4"
         } gap-8 mt-4`}
       >
         <div>
