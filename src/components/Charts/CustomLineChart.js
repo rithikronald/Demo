@@ -8,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CustomTooltip, DataFormater } from "./CustomAreaChart";
 
 const data = [
   {
@@ -86,17 +87,19 @@ export const CustomLineChart = (props) => {
         <Line
           type="monotone"
           dataKey="uv"
-          dot={false}
+          dot={true}
           strokeWidth={2}
           stroke="#805DE3"
         />
         <YAxis
-          style={{ fontSize: 12 }}
           axisLine={false}
           stroke={"#595959"}
-          tickCount={4}
-          width={40}
+          tickCount={6}
+          width={30}
+          tick={{fontSize:10,fontWeight:"normal",fill:"#eff1ed"}}
+          tickFormatter={DataFormater}
         />
+         <Tooltip content={<CustomTooltip />} />
       </LineChart>
     </ResponsiveContainer>
   );
