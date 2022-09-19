@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import axios from "axios";
+import moment from "moment";
 
 const CoinDesc = (props) => {
   const [loaderOpen, setLoaderOpen] = useState(false);
@@ -40,7 +41,6 @@ const CoinDesc = (props) => {
         }
       )
       .then((response) => {
-        console.log(response);
         setData(response?.data);
         setLoaderOpen(false);
         setActiveAddressPerct(
@@ -100,7 +100,7 @@ const CoinDesc = (props) => {
     ];
     const tempArr = [];
     arr?.map((item, index) => {
-      tempArr.push({ uv: item?.value, name: monthsArr[index] });
+      tempArr.push({ uv: item?.value, name: moment(item?.date).format('DDMMM YYYY') });
     });
     return tempArr;
   };
@@ -123,7 +123,6 @@ const CoinDesc = (props) => {
 
   useEffect(() => {
     // const resArr = arrGen(data?.price?.change_1d);
-    // console.log("RES ARR", resArr);
   }, [data]);
 
   const priceChange = (index) => {
@@ -135,7 +134,6 @@ const CoinDesc = (props) => {
   };
 
   const mainSecondaryChange = (ele) => {
-    console.log("index", ele);
     if (ele == "Market Cap") {
       setMainSecondaryIndex("marketcap_usd");
     } else if (ele == "Social Volume") {
@@ -163,7 +161,6 @@ const CoinDesc = (props) => {
     let diff = num1 - num2;
     let div = diff / num1;
     let percentage = div * 100;
-    console.log("Percentage", percentage);
     return percentage;
   };
 
@@ -173,13 +170,11 @@ const CoinDesc = (props) => {
   };
 
   const oneDayPercentage = (value, days) => {
-    console.log("ONE DAY PERCENTAGE", value, days);
     let num1 = value;
     let num2 = days[days.length - 2]?.value;
     let diff = num1 - num2;
     let div = diff / num1;
     let percentage = div * 100;
-    console.log("Percentage", percentage);
     // if(percentage) {
     //   return `${Math.floor(percentage)}${getAfterDecimalValue(percentage)}`
     // } else {
@@ -189,10 +184,8 @@ const CoinDesc = (props) => {
   };
 
   const colorChange = (value) => {
-    console.log("VALUE", value);
     const str = value.toString();
     const changeSymbol = str[0];
-    console.log("STRING", changeSymbol);
     if (changeSymbol == "-") {
       return "red";
     }

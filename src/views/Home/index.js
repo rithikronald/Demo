@@ -28,7 +28,6 @@ const Home = () => {
   const [riskIndex, setRiskIndex] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("DIMENSION", width, height);
     if (width >= 2500) {
       setMaxPicksList(12);
       setIndexesList(6);
@@ -42,7 +41,6 @@ const Home = () => {
   }, [width, height]);
 
   useEffect(() => {
-    console.log("IMG", indBgImgList[0]);
   });
 
   useEffect(() => {

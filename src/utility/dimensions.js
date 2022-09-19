@@ -14,7 +14,6 @@ const w = 1695,
 export const wp = async (dimension) => {
   // let percent = (dimension / FIGMA_WIDTH) * 100;
   // let data = ((percent / 100) * w).toFixed(1) + "px";
-  console.log("w", ((dimension / FIGMA_WIDTH) * w).toFixed(1) + "px");
   return ((dimension / FIGMA_WIDTH) * w).toFixed(1) + "px";
 };
 
@@ -28,7 +27,6 @@ export const wp = async (dimension) => {
 export const hp = (dimension) => {
   // let percent = (dimension / FIGMA_HEIGHT) * 100;
   // let data = ((percent / 100) * h).toFixed(1) + "px";
-  console.log("h", ((dimension / FIGMA_HEIGHT) * h).toFixed(0) + "px");
   // return data.toString();
   return ((dimension / FIGMA_HEIGHT) * h).toFixed(0) + "px";
 };

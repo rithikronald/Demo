@@ -90,13 +90,6 @@ export const CustomLineChart = (props) => {
           strokeWidth={2}
           stroke="#805DE3"
         />
-        <XAxis
-          style={{ fontSize: 12 }}
-          axisLine={false}
-          stroke={"#595959"}
-          dataKey="name"
-          height={17}
-        />
         <YAxis
           style={{ fontSize: 12 }}
           axisLine={false}

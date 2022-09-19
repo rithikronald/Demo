@@ -77,7 +77,6 @@ export const Table = (props) => {
 
   const filteredItems = props?.data.filter((item) => {
     const coinData = getCoinMeta(item?.ticker);
-    console.log("SLUG", coinData?.slug + coinData?.ticker);
     return (
       JSON.stringify(coinData?.slug + coinData?.ticker)
         .toLowerCase()

@@ -1,82 +1,29 @@
-import { Tooltip } from "flowbite-react";
 import React from "react";
 import {
   Area,
   AreaChart,
   CartesianGrid,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 
-const data = [
-  {
-    name: "Jan",
-    uv: 4000,
-    pv: 2400,
-  },
-  {
-    name: "Feb",
-    uv: 3000,
-    pv: 1398,
-  },
-  {
-    name: "Mar",
-    uv: 2000,
-    pv: 9800,
-  },
-  {
-    name: "Apr",
-    uv: 2780,
-    pv: 3908,
-  },
-  {
-    name: "May",
-    uv: 1890,
-    pv: 4800,
-  },
-  {
-    name: "Jun",
-    uv: 2390,
-    pv: 3800,
-  },
-  {
-    name: "Jul",
-    uv: 3490,
-    pv: 4300,
-  },
-  {
-    name: "Aug",
-    uv: 2090,
-    pv: 4300,
-  },
-  {
-    name: "Sep",
-    uv: 2490,
-    pv: 3500,
-  },
-  {
-    name: "Oct",
-    uv: 3300,
-    pv: 4100,
-    amt: 2000,
-  },
-  {
-    name: "Nov",
-    uv: 2090,
-    pv: 3560,
-    amt: 1800,
-  },
-  {
-    name: "Dec",
-    uv: 4090,
-    pv: 4000,
-    amt: 1000,
-  },
-];
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    console.log("PARAMS", active, payload, label);
+    return (
+      <div className="custom-tooltip bg-black text-white font-mont rounded-lg p-2 text-xs font-semibold">
+        <p className="underline">{payload[0]?.payload?.name}</p>
+        <p className="label mt-2">{`$${Number(payload[0].value).toFixed(2)}`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
 
 export const CustomAreaChart = (props) => {
-  console.log("Graph Data",props?.data)
   return (
     <ResponsiveContainer width={props.width} height={props.height}>
       <AreaChart
@@ -93,13 +40,6 @@ export const CustomAreaChart = (props) => {
             <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis
-          style={{ fontSize: 12 }}
-          axisLine={false}
-          stroke={"#595959"}
-          dataKey="name"
-          height={17}
-        />
         <YAxis
           style={{ fontSize: 12 }}
           axisLine={false}
@@ -108,16 +48,16 @@ export const CustomAreaChart = (props) => {
           width={40}
         />
         <CartesianGrid strokeDasharray="3 3" stroke="#282929" />
-        <Tooltip />
         <Area
-          dot={true}
           type="monotone"
           dataKey="uv"
           stroke="#805DE3"
           strokeWidth={1.5}
           fillOpacity={0.5}
           fill="url(#colorUv)"
+          dot={true}
         />
+        <Tooltip content={<CustomTooltip />} />
       </AreaChart>
     </ResponsiveContainer>
   );

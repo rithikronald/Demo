@@ -66,7 +66,7 @@ const Indexes = () => {
     ];
     const tempArr = [];
     arr?.map((item, index) => {
-      tempArr.push({ uv: item?.value, name:priceIndex == "1d"? moment(item?.date).format('ddd'): priceIndex == '7d'?moment(item?.date).format('D MMM'):moment(item?.date).format('MMM') });
+      tempArr.push({ uv: item?.value, name:moment(item?.date).format('DDMMM YYYY')});
     });
     return tempArr;
   };

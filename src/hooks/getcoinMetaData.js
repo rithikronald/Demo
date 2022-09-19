@@ -710,7 +710,6 @@ let arr = [
 ];
 function getCoinMeta(ticker) {
   let obj = arr.find((o) => o.ticker === ticker);
-  //   console.log(obj);
   return obj;
 }
 
