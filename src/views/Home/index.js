@@ -40,8 +40,7 @@ const Home = () => {
     }
   }, [width, height]);
 
-  useEffect(() => {
-  });
+  useEffect(() => {});
 
   useEffect(() => {
     axios
@@ -134,8 +133,20 @@ const Home = () => {
                           <p className="text-white font-semibold text-sm">
                             ${item?.price?.value.toFixed(2)}
                           </p>
-                          <p className="text-green-500 text-[10px]">
-                            <i class="fa-sharp fa-solid fa-caret-up text-green-500 mr-[1px]" />{" "}
+                          <p
+                            className={`${
+                              Number(item?.percent_change_24h) > 0
+                                ? "text-green-500"
+                                : "text-red-500"
+                            } text-[10px] font-semibold`}
+                          >
+                            <i
+                              class={`fa-sharp fa-solid ${
+                                Number(item?.percent_change_24h) > 0
+                                  ? "text-green-500 fa-caret-up"
+                                  : "text-red-500 fa-caret-down"
+                              } mr-[1px]`}
+                            />{" "}
                             {item?.percent_change_24h}%
                           </p>
                         </div>

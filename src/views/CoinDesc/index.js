@@ -4,7 +4,7 @@ import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import { numFormatter } from "../../utility/kFormatter";
 import axios from "axios";
 import moment from "moment";
 
@@ -255,32 +255,32 @@ const CoinDesc = (props) => {
             {
               title: "Market Cap",
               logo: require("../../assets/marketCapIcon.png"),
-              value: numberWithCommas(marketCap),
+              value: numFormatter(marketCap),
             },
             {
               title: "Transaction Volume",
               logo: require("../../assets/transactionVolumeIcon.png"),
-              value: `${numberWithCommas(transactionVolumePerct)}`,
+              value: numFormatter(transactionVolumePerct),
             },
             {
               title: "NVT Ratio",
               logo: require("../../assets/nvtRatioIcon.png"),
-              value: numberWithCommas(nvtRatioPerct),
+              value: numFormatter(nvtRatioPerct),
             },
             {
               title: "Trading Volume",
               logo: require("../../assets/tradingVolumeIcon.png"),
-              value: numberWithCommas(tradingVolume),
+              value: numFormatter(tradingVolume),
             },
             {
               title: "Active Wallet Addresses",
               logo: require("../../assets/activeWalletAddressIcon.png"),
-              value: numberWithCommas(activeAddressPerct),
+              value: numFormatter(activeAddressPerct),
             },
             {
               title: "Daily Active Addresses",
               logo: require("../../assets/dailyActiveAddressIcon.png"),
-              value: numberWithCommas(dailyActivePerct),
+              value: numFormatter(dailyActivePerct),
             },
           ].map((ele) => (
             <div className="flex items-center">
@@ -377,6 +377,7 @@ const CoinDesc = (props) => {
                 width={"100%"}
                 height={"98%"}
                 data={arrGen(data?.price[`change_${priceIndex}`])}
+                isDollar={true}
               />
             </div>
           </div>
