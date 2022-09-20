@@ -1,9 +1,10 @@
 import { GradientContainer } from "../../components/GradientContainer";
 import { ThemeButton } from "../../components/themeButton";
-import {useNavigate} from'react-router-dom'
+import OTPInput, { ResendOTP } from "otp-input-react";
+import { useEffect, useState } from "react";
 
 const OTPVerification = () => {
-  const navigate = useNavigate();
+  const [OTP, setOTP] = useState("");
   const OTPinput = ({ id }) => {
     return (
       <input
@@ -14,6 +15,25 @@ const OTPVerification = () => {
       />
     );
   };
+
+  const verifyOTP = () => {
+    window.confirmationResult
+      .confirm(OTP)
+      .then((result) => {
+        // User signed in successfully.
+        const user = result.user;
+        console.log("USER VERIFIED", user);
+        // navigate("/dashboard");
+      })
+      .catch((error) => {
+        console.log("USER NOT VERIFIED", error);
+      });
+  };
+
+  useEffect(() => {
+    console.log("OTP", OTP);
+  }, [OTP]);
+
   return (
     <div className="App bg-bgl1 flex h-screen w-full">
       {/* Left Banner */}
@@ -39,16 +59,31 @@ const OTPVerification = () => {
             Code is sent. If you still didn’t get the code, please make sure
             you’ve filled your phone number correctly
           </p>
-          <div className="inputContainer flex w-full items-center justify-around">
-            {Array.apply(null, Array(4)).map((index, data) => (
-              <GradientContainer children={<OTPinput id={index} />} />
-            ))}
+          <div className="inputContainer w-full justify-around">
+            <OTPInput
+              value={OTP}
+              onChange={setOTP}
+              autoFocus
+              OTPLength={6}
+              otpType="number"
+              disabled={false}
+              secure
+              inputStyles={{
+                backgroundColor: "#00000000",
+                color: "#fff",
+                borderWidth: "2px",
+                borderColor: "#9c27b0",
+                borderRadius: 10,
+                width: "50px",
+                height: "50px",
+              }}
+            />
           </div>
           <div className="checkboxRow w-full justify-between  flex flex-col m-1">
             <p className="text-base text-center text-white font-normal 4xl:text-2xl mb-4">
               Didn’t get the code?
             </p>
-            <ThemeButton text="Verify" onClick={()=>navigate('/dashboard')} />
+            <ThemeButton text="Verify" onClick={verifyOTP} />
           </div>
         </div>
       </div>
