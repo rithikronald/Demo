@@ -11,8 +11,10 @@ import { indBgImgList } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import "./style.css";
+import {connect} from 'react-redux'
+import types from "../../store/types";
 
-const Indexes = () => {
+const Indexes = (props) => {
   const navigate = useNavigate();
   const { height, width } = useWindowDimensions();
   const [basketData, setBasketData] = useState();
@@ -20,6 +22,7 @@ const Indexes = () => {
   const [pageRightIndex, setPageRightIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
+    props.openLoader()
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/indexes`,
@@ -29,8 +32,12 @@ const Indexes = () => {
       )
       .then((response) => {
         setBasketData(response?.data);
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
+      });
   }, []);
 
   useEffect(() => {
@@ -133,4 +140,12 @@ const Indexes = () => {
     </div>
   );
 };
-export default Indexes;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Indexes);

@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import { auth } from "./firebas-config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Loader from './components/Loader'
 
 const makeRoutes = () => {
   return (
@@ -68,10 +69,11 @@ function App() {
   }, []);
   return (
     <userIdContext.Provider value={userDetails}>
-      <div className="App flex">
-        <Sidebar />
-        {makeRoutes()}
-      </div>
+    <div className="App flex">
+      <Loader />
+      <Sidebar />
+      {makeRoutes()}
+    </div>
     </userIdContext.Provider>
   );
 }

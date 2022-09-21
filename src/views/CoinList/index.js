@@ -1,3 +1,4 @@
+import { propTypesSelected } from "@material-tailwind/react/types/components/select";
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
@@ -8,6 +9,8 @@ import { FilterComponent } from "../../components/Table/filterComponent";
 import { ThemeButton } from "../../components/themeButton";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { maximumInstance } from "../../setup";
+import {connect} from 'react-redux'
+import types from "../../store/types";
 
 const columns = [
   {
@@ -187,10 +190,11 @@ export function Tabs({ data, innerTabs = false }) {
   );
 }
 
-const CoinList = () => {
+const CoinList = (props) => {
   const [coinList, setCoinList] = useState();
   var contextData = useContext(userIdContext);
   useEffect(() => {
+    props.openLoader()
     maximumInstance
       .get(`/coinList`, {
         headers: {
@@ -199,8 +203,12 @@ const CoinList = () => {
       })
       .then((response) => {
         setCoinList(response?.data);
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
+      });
   }, []);
 
   return (
@@ -228,4 +236,12 @@ const CoinList = () => {
   );
 };
 
-export default CoinList;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(CoinList);

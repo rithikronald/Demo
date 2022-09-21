@@ -8,9 +8,10 @@ import Modal from "./modal";
 import { numFormatter } from "../../utility/kFormatter";
 import axios from "axios";
 import moment from "moment";
+import types from "../../store/types";
+import {connect} from 'react-redux'
 
 const CoinDesc = (props) => {
-  const [loaderOpen, setLoaderOpen] = useState(false);
   const [data, setData] = useState();
   const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
@@ -34,7 +35,7 @@ const CoinDesc = (props) => {
   const params = useParams();
 
   useEffect(() => {
-    setLoaderOpen(true);
+    props.openLoader()
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getCoin?ticker=${params.coinId}`,
@@ -44,7 +45,6 @@ const CoinDesc = (props) => {
       )
       .then((response) => {
         setData(response?.data);
-        setLoaderOpen(false);
         setActiveAddressPerct(
           oneDayPercentage(
             response?.data?.active_addresses?.value,
@@ -81,25 +81,12 @@ const CoinDesc = (props) => {
             response?.data?.tradingVolume?.change_1d
           )
         );
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
-
-    axios
-      .get("https://sandbox-api.coinmarketcap.com/v2/cryptocurrency/info", {
-        headers: {
-          "X-CMC_PRO_API_KEY": "9d13b9e1-e116-4f08-9fe7-45850d8667ab",
-        },
-      })
-      .then((res) => {
-        console.log(res);
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
       });
-    // axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/info', {
-    //   headers: {
-    //     'X-CMC_PRO_API_KEY': '9d13b9e1-e116-4f08-9fe7-45850d8667ab',
-    //   },
-    // }).then(res => {
-    //   console.log(res)
-    // })
   }, []);
 
   const arrGen = (arr) => {
@@ -603,4 +590,11 @@ const CoinDesc = (props) => {
   );
 };
 
-export default CoinDesc;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(CoinDesc);

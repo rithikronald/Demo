@@ -16,8 +16,10 @@ import SetupSIP from "../../components/RightComponent/setupSIP";
 import axios from "axios";
 import { numFormatter } from "../../utility/kFormatter";
 import moment from "moment";
+import types from "../../store/types";
+import {connect} from 'react-redux'
 
-const Indexes = () => {
+const Indexes = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,6 +32,7 @@ const Indexes = () => {
   const [priceIndex, setPriceIndex] = useState("1d");
 
   useEffect(() => {
+    props.openLoader()
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getIndex/${location?.state?.indexData?.basketName}`,
@@ -40,8 +43,12 @@ const Indexes = () => {
       .then((response) => {
         console.log("Response", response?.data);
         setBasketData(response?.data?.basketData);
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
+      });
   }, [location]);
 
   useEffect(() => {
@@ -221,4 +228,12 @@ const Indexes = () => {
     </div>
   );
 };
-export default Indexes;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Indexes);

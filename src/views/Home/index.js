@@ -21,9 +21,11 @@ import pimg from "../../assets/usdc.png";
 import { getAuth, signOut } from "firebase/auth";
 import { maximumInstance } from "../../setup";
 import { userIdContext } from "../../App";
+import types from "../../store/types";
+import {connect} from 'react-redux'
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
-const Home = () => {
+const Home = (props) => {
   const { height, width } = useWindowDimensions();
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
@@ -55,6 +57,7 @@ const Home = () => {
   }, [contextData]);
 
   useEffect(() => {
+    props.openLoader()
     maximumInstance
       .get(`/dashboard`, {
         headers: {
@@ -64,8 +67,12 @@ const Home = () => {
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
+      });
   }, []);
 
   const getSmartSuggestList = (val) => {
@@ -607,4 +614,11 @@ const Home = () => {
   );
 };
 
-export default Home;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Home);
