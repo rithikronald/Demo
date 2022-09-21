@@ -35,9 +35,6 @@ const Home = () => {
   }, [width, height]);
 
   useEffect(() => {
-  });
-
-  useEffect(() => {
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/dashboard`,
