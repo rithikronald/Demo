@@ -16,7 +16,7 @@ const WalletOverview = React.lazy(() => import("./views/WalletOverview"));
 const Settings = React.lazy(() => import("./views/Settings"));
 
 const routes = [
-  // { path: "/", name: "Splash", exact: true, component: Splash },
+  { path: "/", name: "Splash", exact: true, component: Splash },
   { path: "/login", name: "Login", exact: true, component: Login },
   {
     path: "/otpVerification",
@@ -24,7 +24,7 @@ const routes = [
     exact: true,
     component: OTPVerification,
   },
-  { path: "/", name: "Home", exact: true, component: Home },
+  { path: "/dashboard", name: "Home", exact: true, component: Home },
   { path: "/coin-desc/:coinId", name: "CoinDesc", exact: true, component: CoinDesc },
   { path: "/indexes", name: "Indexes", exact: true, component: Indexes },
   { path: "/coinList", name: "CoinList", exact: true, component: CoinList },

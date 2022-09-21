@@ -19,9 +19,12 @@ const Modal = (props) => {
 
   return (
     <div
+    style={{
+      backgroundImage: `url('/images/rightSectionbg.png')`,
+    }}
       className={`flex flex-col transitionClass items-center justify-around fixed top-0 right-0 h-[100vh] w-[30vw] ${
         props.modalOpen ? "translate-x-[0px]" : "translate-x-[27vw]"
-      }  bg-bgl2 z-[100]`}
+      } bg-bg bg-no-repeat bg-cover bg-center  z-[100]`}
     >
       <div
         className="w-[50px] h-[100vh] absolute top-0 left-0 cursor-pointer"

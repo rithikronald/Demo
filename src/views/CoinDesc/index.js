@@ -5,7 +5,7 @@ import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Modal from "./modal";
-
+import { numFormatter } from "../../utility/kFormatter";
 import axios from "axios";
 import moment from "moment";
 
@@ -225,7 +225,7 @@ const CoinDesc = (props) => {
 
   return (
     <div
-      className={`p-5 px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-bgl1 justify-between flex flex-col ${
+      className={`p-5 px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-gradient-to-tl from-bg via-bgl1 to-darkPurple justify-between flex flex-col ${
         fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
@@ -290,32 +290,32 @@ const CoinDesc = (props) => {
               {
                 title: "Market Cap",
                 logo: require("../../assets/marketCapIcon.png"),
-                value: numberWithCommas(marketCap),
+                value: numFormatter(marketCap),
               },
               {
                 title: "Transaction Volume",
                 logo: require("../../assets/transactionVolumeIcon.png"),
-                value: `${numberWithCommas(transactionVolumePerct)}`,
+                value: numFormatter(transactionVolumePerct),
               },
               {
                 title: "NVT Ratio",
                 logo: require("../../assets/nvtRatioIcon.png"),
-                value: numberWithCommas(nvtRatioPerct),
+                value: numFormatter(nvtRatioPerct),
               },
               {
                 title: "Trading Volume",
                 logo: require("../../assets/tradingVolumeIcon.png"),
-                value: numberWithCommas(tradingVolume),
+                value: numFormatter(tradingVolume),
               },
               {
                 title: "Active Wallet Addresses",
                 logo: require("../../assets/activeWalletAddressIcon.png"),
-                value: numberWithCommas(activeAddressPerct),
+                value: numFormatter(activeAddressPerct),
               },
               {
                 title: "Daily Active Addresses",
                 logo: require("../../assets/dailyActiveAddressIcon.png"),
-                value: numberWithCommas(dailyActivePerct),
+                value: numFormatter(dailyActivePerct),
               },
             ].map((ele) => (
               <div className="flex items-center">
@@ -486,32 +486,32 @@ const CoinDesc = (props) => {
                 {
                   title: "Market Cap",
                   logo: require("../../assets/marketCapIcon.png"),
-                  value: numberWithCommas(marketCap),
+                  value: numFormatter(marketCap),
                 },
                 {
                   title: "Transaction Volume",
                   logo: require("../../assets/transactionVolumeIcon.png"),
-                  value: `${numberWithCommas(transactionVolumePerct)}`,
+                  value: `${numFormatter(transactionVolumePerct)}`,
                 },
                 {
                   title: "NVT Ratio",
                   logo: require("../../assets/nvtRatioIcon.png"),
-                  value: numberWithCommas(nvtRatioPerct),
+                  value: numFormatter(nvtRatioPerct),
                 },
                 {
                   title: "Trading Volume",
                   logo: require("../../assets/tradingVolumeIcon.png"),
-                  value: numberWithCommas(tradingVolume),
+                  value: numFormatter(tradingVolume),
                 },
                 {
                   title: "Active Wallet Addresses",
                   logo: require("../../assets/activeWalletAddressIcon.png"),
-                  value: numberWithCommas(activeAddressPerct),
+                  value: numFormatter(activeAddressPerct),
                 },
                 {
                   title: "Daily Active Addresses",
                   logo: require("../../assets/dailyActiveAddressIcon.png"),
-                  value: numberWithCommas(dailyActivePerct),
+                  value: numFormatter(dailyActivePerct),
                 },
               ].map((ele) => (
                 <div className="flex items-center">

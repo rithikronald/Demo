@@ -14,7 +14,7 @@ import { IndexDetails } from "../../components/RightComponent/indexDetails";
 import { useEffect, useState } from "react";
 import SetupSIP from "../../components/RightComponent/setupSIP";
 import axios from "axios";
-import { kFormatter } from "../../utility/kFormatter";
+import { numFormatter } from "../../utility/kFormatter";
 import moment from "moment";
 
 const Indexes = () => {
@@ -46,7 +46,7 @@ const Indexes = () => {
 
   useEffect(() => {
     console.log("transaction volume", basketData?.transaction_volume);
-    console.log("K formatter", kFormatter(basketData?.transaction_volume));
+    console.log("K formatter", numFormatter(basketData?.transaction_volume));
   }, [basketData]);
 
   const arrGen = (arr) => {
@@ -66,7 +66,10 @@ const Indexes = () => {
     ];
     const tempArr = [];
     arr?.map((item, index) => {
-      tempArr.push({ uv: item?.value, name:moment(item?.date).format('DDMMM YYYY')});
+      tempArr.push({
+        uv: item?.value,
+        name: moment(item?.date).format("DDMMM YYYY"),
+      });
     });
     return tempArr;
   };
@@ -92,22 +95,22 @@ const Indexes = () => {
                 {
                   title: "Active Wallet Addresses",
                   logo: lg1,
-                  value: kFormatter(basketData?.active_addresses),
+                  value: numFormatter(basketData?.active_addresses),
                 },
                 {
                   title: "Daily Active Addresses",
                   logo: lg2,
-                  value: kFormatter(basketData?.daily_active_addresses),
+                  value: numFormatter(basketData?.daily_active_addresses),
                 },
                 {
                   title: "Transation Volume",
                   logo: lg3,
-                  value: kFormatter(basketData?.transaction_volume),
+                  value: numFormatter(basketData?.transaction_volume),
                 },
                 {
                   title: "NVT Ratio",
                   logo: lg4,
-                  value: kFormatter(basketData?.nvt),
+                  value: numFormatter(basketData?.nvt),
                 },
               ].map((ele) => (
                 <div className="flex items-center">
@@ -159,11 +162,12 @@ const Indexes = () => {
                   width="w-full"
                   className={"mt-3"}
                 >
-                  {console.log("ITEM",item?.data)}
+                  {console.log("ITEM", item?.data)}
                   <CustomAreaChart
                     data={item.data}
                     width={"100%"}
                     height={"100%"}
+                    isDollar={item?.name == "Price Action" ? true : false}
                   />
                 </GradientContainer>
               </div>
@@ -202,7 +206,7 @@ const Indexes = () => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-10 justify-around flex flex-col sm:hidden xl:flex"
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex"
       >
         {pageRightIndex == 0 && (
           <IndexDetails

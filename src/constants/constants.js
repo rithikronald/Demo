@@ -51,16 +51,16 @@ export const tenure = [
 ];
 export const risk = [
   {
-    title: "Bold",
-    desc: "High Returns Great Volatility",
+    title: "Basic",
+    desc: "Modest Returns Low Volatility",
   },
   {
     title: "Balance",
     desc: "Moderate Returns Fair Volatility",
   },
   {
-    title: "Basic",
-    desc: "Modest Returns Low Volatility",
+    title: "Bold",
+    desc: "High Returns Great Volatility",
   },
 ];
 export const data02 = [

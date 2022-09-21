@@ -43,7 +43,7 @@ const renderActiveShape = (props) => {
         y={cy - 10}
         dy={8}
         textAnchor="middle"
-        fill={fill}
+        fill={"#fff"}
       >
         {payload.name}
       </text>
@@ -53,7 +53,7 @@ const renderActiveShape = (props) => {
         y={cy - 5}
         dy={30}
         textAnchor="middle"
-        fill={fill}
+        fill={"#fff"}
       >
         {payload.value}%
       </text>

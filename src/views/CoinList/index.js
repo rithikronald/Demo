@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
+import { userIdContext } from "../../App";
 import { GradientContainer } from "../../components/GradientContainer";
 import { Table } from "../../components/Table";
 import { FilterComponent } from "../../components/Table/filterComponent";
 import { ThemeButton } from "../../components/themeButton";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { maximumInstance } from "../../setup";
 
 const columns = [
   {
@@ -187,14 +189,14 @@ export function Tabs({ data, innerTabs = false }) {
 
 const CoinList = () => {
   const [coinList, setCoinList] = useState();
+  var contextData = useContext(userIdContext);
   useEffect(() => {
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/coinList/`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    maximumInstance
+      .get(`/coinList`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         setCoinList(response?.data);
       })
@@ -205,7 +207,7 @@ const CoinList = () => {
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
       <div className="Left p-10 px-14 flex w-[75%] flex-col sm:flex">
         <div className="TableWithOptions">
-             {coinList && <Table title={"All Coins"} data={coinList} />} 
+          {coinList && <Table title={"All Coins"} data={coinList} />}
         </div>
       </div>
       <div
