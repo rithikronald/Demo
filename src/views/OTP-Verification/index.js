@@ -2,9 +2,13 @@ import { GradientContainer } from "../../components/GradientContainer";
 import { ThemeButton } from "../../components/themeButton";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const OTPVerification = () => {
   const [OTP, setOTP] = useState("");
+  const navigate = useNavigate();
+
   const OTPinput = ({ id }) => {
     return (
       <input
@@ -20,10 +24,8 @@ const OTPVerification = () => {
     window.confirmationResult
       .confirm(OTP)
       .then((result) => {
-        // User signed in successfully.
         const user = result.user;
         console.log("USER VERIFIED", user);
-        // navigate("/dashboard");
       })
       .catch((error) => {
         console.log("USER NOT VERIFIED", error);
