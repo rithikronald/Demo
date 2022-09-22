@@ -1,13 +1,13 @@
-import "./style.css";
-import marketCapLogo from "../../assets/marketCapLogo.png";
+import moment from "moment";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { userIdContext } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Modal from "./modal";
+import { maximumInstance } from "../../setup";
 import { numFormatter } from "../../utility/kFormatter";
-import axios from "axios";
-import moment from "moment";
+import Modal from "./modal";
+import "./style.css";
 
 const CoinDesc = (props) => {
   const [loaderOpen, setLoaderOpen] = useState(false);
@@ -30,18 +30,18 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
+  const contextData = useContext(userIdContext);
 
   const params = useParams();
 
   useEffect(() => {
     setLoaderOpen(true);
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getCoin?ticker=${params.coinId}`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    maximumInstance
+      .get(`/getCoin?ticker=${params.coinId}`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         setData(response?.data);
         setLoaderOpen(false);
@@ -83,47 +83,17 @@ const CoinDesc = (props) => {
         );
       })
       .catch((err) => console.log("error", err));
-
-    axios
-      .get("https://sandbox-api.coinmarketcap.com/v2/cryptocurrency/info", {
-        headers: {
-          "X-CMC_PRO_API_KEY": "9d13b9e1-e116-4f08-9fe7-45850d8667ab",
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      });
-    // axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/info', {
-    //   headers: {
-    //     'X-CMC_PRO_API_KEY': '9d13b9e1-e116-4f08-9fe7-45850d8667ab',
-    //   },
-    // }).then(res => {
-    //   console.log(res)
-    // })
-  }, []);
-
+  }, [contextData]);
   const arrGen = (arr) => {
-    const monthsArr = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "July",
-      "Aug",
-      "Sept",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
     const tempArr = [];
     arr?.map((item, index) => {
-      tempArr.push({ uv: item?.value, name: moment(item?.date).format('DDMMM YYYY') });
+      tempArr.push({
+        uv: item?.value,
+        name: moment(item?.date).format("DDMMM YYYY"),
+      });
     });
     return tempArr;
   };
-
   function numberWithCommas(x) {
     if (!x) {
       return x;
@@ -139,19 +109,12 @@ const CoinDesc = (props) => {
 
     return firstPart.split(",").length > 1 ? `${newFirstPart}k` : newFirstPart;
   }
-
-  useEffect(() => {
-    // const resArr = arrGen(data?.price?.change_1d);
-  }, [data]);
-
   const priceChange = (index) => {
     setPriceIndex(index);
   };
-
   const mainChange = (index) => {
     setMainIndex(index);
   };
-
   const mainSecondaryChange = (ele) => {
     if (ele == "Market Cap") {
       setMainSecondaryIndex("marketcap_usd");
@@ -173,7 +136,6 @@ const CoinDesc = (props) => {
   const sentimentChange = (index) => {
     setSentimentIndex(index);
   };
-
   const calculatePercentage = (value, days) => {
     let num1 = value;
     let num2 = days[days.length - 1]?.value;
@@ -182,12 +144,10 @@ const CoinDesc = (props) => {
     let percentage = div * 100;
     return percentage;
   };
-
   const nullValues = (value) => {
     if (value == null) return "Coming Soon";
     else return Number(value).toFixed(3);
   };
-
   const oneDayPercentage = (value, days) => {
     let num1 = value;
     let num2 = days[days.length - 2]?.value;
@@ -201,7 +161,6 @@ const CoinDesc = (props) => {
     // }
     return Math.floor(value);
   };
-
   const colorChange = (value) => {
     const str = value.toString();
     const changeSymbol = str[0];
@@ -210,7 +169,6 @@ const CoinDesc = (props) => {
     }
     return "lightGreen";
   };
-
   const getAfterDecimalValue = (num) => {
     if (!num) {
       return;
@@ -220,8 +178,7 @@ const CoinDesc = (props) => {
     return newStr.slice(0, 2);
   };
 
-  const fakeModalOpen = false
-
+  const fakeModalOpen = false;
 
   return (
     <div
@@ -402,7 +359,7 @@ const CoinDesc = (props) => {
         ))}
       </div>
       <div className="grid grid-cols-2 gap-10 items-stretch">
-        <div className="h-full" >
+        <div className="h-full">
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
@@ -435,7 +392,11 @@ const CoinDesc = (props) => {
               </div>
             ))}
           </div>
-          <div className={`flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl ${fakeModalOpen ? "h-[350px]" : "h-[226px]"} items-center p-[1px] mt-4 w-full`}>
+          <div
+            className={`flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl ${
+              fakeModalOpen ? "h-[350px]" : "h-[226px]"
+            } items-center p-[1px] mt-4 w-full`}
+          >
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
               {firstBoxAnnotation === "marketcap" && (
                 <CustomAreaChart
@@ -481,48 +442,48 @@ const CoinDesc = (props) => {
         ) : (
           <div className="flex  rounded-2xl items-center p-[1px] mt-[38px] w-full">
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
-            <div className="grid grid-cols-2 w-[100%]">
-              {[
-                {
-                  title: "Market Cap",
-                  logo: require("../../assets/marketCapIcon.png"),
-                  value: numFormatter(marketCap),
-                },
-                {
-                  title: "Transaction Volume",
-                  logo: require("../../assets/transactionVolumeIcon.png"),
-                  value: `${numFormatter(transactionVolumePerct)}`,
-                },
-                {
-                  title: "NVT Ratio",
-                  logo: require("../../assets/nvtRatioIcon.png"),
-                  value: numFormatter(nvtRatioPerct),
-                },
-                {
-                  title: "Trading Volume",
-                  logo: require("../../assets/tradingVolumeIcon.png"),
-                  value: numFormatter(tradingVolume),
-                },
-                {
-                  title: "Active Wallet Addresses",
-                  logo: require("../../assets/activeWalletAddressIcon.png"),
-                  value: numFormatter(activeAddressPerct),
-                },
-                {
-                  title: "Daily Active Addresses",
-                  logo: require("../../assets/dailyActiveAddressIcon.png"),
-                  value: numFormatter(dailyActivePerct),
-                },
-              ].map((ele) => (
-                <div className="flex items-center">
-                  <img src={ele.logo} />
-                  <div className="ml-[-15px] font-mont text-white">
-                    <p className="text-[9px]">{ele.title}</p>
-                    <p className="text-[22px] font-bold">{ele.value}</p>
+              <div className="grid grid-cols-2 w-[100%]">
+                {[
+                  {
+                    title: "Market Cap",
+                    logo: require("../../assets/marketCapIcon.png"),
+                    value: numFormatter(marketCap),
+                  },
+                  {
+                    title: "Transaction Volume",
+                    logo: require("../../assets/transactionVolumeIcon.png"),
+                    value: `${numFormatter(transactionVolumePerct)}`,
+                  },
+                  {
+                    title: "NVT Ratio",
+                    logo: require("../../assets/nvtRatioIcon.png"),
+                    value: numFormatter(nvtRatioPerct),
+                  },
+                  {
+                    title: "Trading Volume",
+                    logo: require("../../assets/tradingVolumeIcon.png"),
+                    value: numFormatter(tradingVolume),
+                  },
+                  {
+                    title: "Active Wallet Addresses",
+                    logo: require("../../assets/activeWalletAddressIcon.png"),
+                    value: numFormatter(activeAddressPerct),
+                  },
+                  {
+                    title: "Daily Active Addresses",
+                    logo: require("../../assets/dailyActiveAddressIcon.png"),
+                    value: numFormatter(dailyActivePerct),
+                  },
+                ].map((ele) => (
+                  <div className="flex items-center">
+                    <img src={ele.logo} />
+                    <div className="ml-[-15px] font-mont text-white">
+                      <p className="text-[9px]">{ele.title}</p>
+                      <p className="text-[22px] font-bold">{ele.value}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
