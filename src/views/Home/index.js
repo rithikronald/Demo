@@ -78,6 +78,10 @@ const Home = () => {
       .catch((err) => console.log("error", err));
   };
 
+  useEffect(() => {
+    console.log("TERM", tenureIndex, riskIndex);
+  }, [tenureIndex, riskIndex]);
+
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
       <div
@@ -293,7 +297,7 @@ const Home = () => {
             </button>
           </>
         )}
-        {pageRightIndex == 1 && (
+        {/* {pageRightIndex == 1 && (
           <div className="flex flex-col justify-around w-full h-full">
             <div>
               <p className="text-white font-semibold text-center mt-5 text-3xl 3xl:text-5xl">
@@ -349,14 +353,14 @@ const Home = () => {
               </button>
             </div>
           </div>
-        )}
-        {pageRightIndex == 2 && (
+        )} */}
+        {pageRightIndex == 1 && (
           <>
             <div>
               <button
                 type="button"
                 class="text-white bg-primaryButton font-medium rounded-lg text-sm py-1 px-3 text-center items-center"
-                onClick={() => setPageRightIndex(1)}
+                onClick={() => setPageRightIndex(0)}
               >
                 <svg
                   class="w-6 h-6"
@@ -464,7 +468,7 @@ const Home = () => {
             </div>
             <button
               onClick={() => {
-                setPageRightIndex(3);
+                setPageRightIndex(2);
                 const duration =
                   tenureIndex == 0 ? "s" : tenureIndex == 1 ? "m" : "l";
                 getSmartSuggestList(duration + riskIndex);
@@ -475,7 +479,7 @@ const Home = () => {
             </button>
           </>
         )}
-        {pageRightIndex == 3 && (
+        {pageRightIndex == 2 && (
           <>
             <div>
               {/* <button
@@ -507,31 +511,31 @@ const Home = () => {
               height="h-[72%]"
               className={"my-5 2xl:h-[60%]"}
               children={
-                <div className="w-full h-full rounded-2xl flex flex-col justify-around pt-4">
+                <div className="w-full h-full rounded-2xl flex flex-col justify-around ">
                   {smartSuggestList && (
                     <CustomPieChart
                       data={smartSuggestList}
                       width={"100%"}
-                      height={"50%"}
+                      height={"40%"}
                     />
                   )}
                   <div className="flex flex-row w-full justify-center items-center gap-2 text-sm font-semibold">
                     <p className="p-1 px-2 bg-white rounded-xl">
-                      {tenureIndex == "s"
+                      {tenureIndex == 0
                         ? "short-term"
-                        : tenureIndex == "m"
+                        : tenureIndex == 1
                         ? "mid-term"
                         : "long-term"}
                     </p>
                     <p className="p-1 px-2 bg-white rounded-xl">
                       {riskIndex == 1
-                        ? "bold"
+                        ? "basic"
                         : riskIndex == 2
                         ? "balance"
-                        : "basic"}
+                        : "bold"}
                     </p>
                   </div>
-                  <div className="coinList grid grid-cols-2 p-[10px_10px_40px_20px] overflow-scroll ml-1">
+                  <div className="coinList grid grid-cols-2 p-[10px_10px_40px_20px] overflow-scroll mt-2 ml-1 h-[40%]">
                     {smartSuggestList?.coins?.map((item, index) => {
                       const data = getCoinMeta(item);
                       return (
@@ -570,7 +574,7 @@ const Home = () => {
             />
             <div className="flex space-x-2">
               <button
-                onClick={() => setPageRightIndex(2)}
+                onClick={() => setPageRightIndex(1)}
                 className="bg-gradient-to-r from-purple-300 bg-purple-400 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg 2xl:text-xl"
               >
                 Go Back

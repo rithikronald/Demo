@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import { auth } from "./firebas-config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { maximumInstance } from "./setup";
 
 const makeRoutes = () => {
   return (
@@ -39,16 +40,8 @@ function App() {
       window.accessToken = user.accessToken;
       console.log("userToken", window.uid);
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {
-        axios
-          .get(
-            `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/setRole/${user.uid}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.accessToken}`,
-              },
-            }
-          )
+        maximumInstance(user.accessToken)
+          .get(`/setRole/${user.uid}`)
           .then((response) => {
             console.log("CUSTOM ROLE SET", response?.data);
             navigate("/dashboard");
