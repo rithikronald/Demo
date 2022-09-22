@@ -16,9 +16,12 @@ import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import "./style.css";
+import { userIdContext } from "../../App";
+import types from "../../store/types";
+import {connect} from 'react-redux'
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
-const Home = () => {
+const Home = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
   const contextData = useContext(userIdContext);
@@ -51,6 +54,7 @@ const Home = () => {
   }, [contextData]);
 
   useEffect(() => {
+    props.openLoader()
     maximumInstance
       .get(`/dashboard`, {
         headers: {
@@ -60,9 +64,13 @@ const Home = () => {
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
-  }, [contextData]);
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
+      });
+  }, []);
 
   const getSmartSuggestList = (val) => {
     maximumInstance
@@ -589,4 +597,11 @@ const Home = () => {
   );
 };
 
-export default Home;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Home);

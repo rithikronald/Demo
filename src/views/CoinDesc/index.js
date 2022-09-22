@@ -6,11 +6,12 @@ import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { maximumInstance } from "../../setup";
 import { numFormatter } from "../../utility/kFormatter";
-import Modal from "./modal";
-import "./style.css";
+import axios from "axios";
+import moment from "moment";
+import types from "../../store/types";
+import {connect} from 'react-redux'
 
 const CoinDesc = (props) => {
-  const [loaderOpen, setLoaderOpen] = useState(false);
   const [data, setData] = useState();
   const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
@@ -35,16 +36,16 @@ const CoinDesc = (props) => {
   const params = useParams();
 
   useEffect(() => {
-    setLoaderOpen(true);
-    maximumInstance
-      .get(`/getCoin?ticker=${params.coinId}`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+    props.openLoader()
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getCoin?ticker=${params.coinId}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
       .then((response) => {
         setData(response?.data);
-        setLoaderOpen(false);
         setActiveAddressPerct(
           oneDayPercentage(
             response?.data?.active_addresses?.value,
@@ -81,9 +82,14 @@ const CoinDesc = (props) => {
             response?.data?.tradingVolume?.change_1d
           )
         );
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
-  }, [contextData]);
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
+      });
+  }, []);
+
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
@@ -564,4 +570,11 @@ const CoinDesc = (props) => {
   );
 };
 
-export default CoinDesc;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(CoinDesc);

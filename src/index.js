@@ -5,13 +5,20 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
+import {createStore} from 'redux'
+import {Provider} from 'react-redux'
+import allReducers from './store/index'
+
+const store = createStore(allReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
+        <Provider store={store}>
         <App />
+        </Provider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
