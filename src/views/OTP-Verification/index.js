@@ -9,17 +9,6 @@ const OTPVerification = () => {
   const [OTP, setOTP] = useState("");
   const navigate = useNavigate();
 
-  const OTPinput = ({ id }) => {
-    return (
-      <input
-        id={id}
-        maxlength="1"
-        type="text"
-        className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-      />
-    );
-  };
-
   const verifyOTP = () => {
     window.confirmationResult
       .confirm(OTP)
@@ -37,7 +26,7 @@ const OTPVerification = () => {
   }, [OTP]);
 
   return (
-    <div className="App bg-bgl1 flex h-screen w-full">
+    <div className="App bg-bgl1 flex h-screen w-full font-mont">
       {/* Left Banner */}
       <div className="Left w-1/2 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 px-15 flex flex-col justify-around">
         <div className="innerConttainer  w-full h-full  flex  flex-col py-20 items-center justify-center">
@@ -82,9 +71,17 @@ const OTPVerification = () => {
             />
           </div>
           <div className="checkboxRow w-full justify-between  flex flex-col m-1">
-            <p className="text-base text-center text-white font-normal 4xl:text-2xl mb-4">
-              Didn’t get the code?
-            </p>
+            <div className="flex items-center mb-4">
+              <p className="text-base text-center text-white font-normal 4xl:text-2xl">
+                Didn’t get the code?
+              </p>
+              <button
+                onClick={() => {}}
+                className="text-purple-600 ml-2 text-sm font-semibold"
+              >
+                Resend OTP
+              </button>
+            </div>
             <ThemeButton text="Verify" onClick={verifyOTP} />
           </div>
         </div>

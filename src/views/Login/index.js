@@ -5,12 +5,14 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../../src/firebas-config";
 import { useEffect, useState } from "react";
 import { GradientContainer } from "../../components/GradientContainer";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [phoneNumber, setPhoneNumber] = useState(); //9500130361
-  const [verificationID, setVerificationID] = useState();
-
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isPolicyChecked, setIsPolicyChecked] = useState(false);
+  const [isTermsChecked, setIsTermsChecked] = useState(false);
   const generateRecaptcha = () => {
     return (window.recaptchaVerifier = new RecaptchaVerifier(
       "sign-in-button",
@@ -32,12 +34,26 @@ const Login = () => {
     signInWithPhoneNumber(auth, "+91 " + phoneNumber, appVerifier)
       .then((confirmationResult) => {
         console.log("RES", confirmationResult);
-        setVerificationID(confirmationResult);
         window.confirmationResult = confirmationResult;
       })
       .catch((err) => {
         console.log("ERROR", err);
       });
+  };
+
+  useEffect(() => {
+    console.log("Policy Checked", isPolicyChecked);
+    console.log("Terms Checked", isTermsChecked);
+  }, [isPolicyChecked, isTermsChecked]);
+
+  const validation = () => {
+    if (phoneNumber.length == 10 && isPolicyChecked && isTermsChecked) {
+      requestOTP();
+    } else {
+      toast.warning("Invalid input fields", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
   };
 
   return (
@@ -63,6 +79,7 @@ const Login = () => {
       </div>
       {/* Right Banner */}
       <div className="Right bg-gradient-to-tl from-bg via-bgl1 to-darkPurple w-1/2  p-20  flex flex-col items-center px-40">
+        <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
         <div className="innerContaner w-full h-full flex  flex-col py-10 items-center justify-center 2.5xl:w-[80%] 3xl:w-[60%]">
           <p className="text-white text-center text-2xl font-semibold 3xl:text-4xl ">
             Your Phone Number
@@ -124,7 +141,17 @@ const Login = () => {
                 </a>
                 and agree that my personal data will be processed.
               </p>
-              <input type="checkbox" class="checked:bg-purple-800" />
+              <input
+                checked={isPolicyChecked}
+                id="remember"
+                type="checkbox"
+                value=""
+                onChange={() =>
+                  setIsPolicyChecked((prev) => (prev ? false : true))
+                }
+                class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+                required
+              />
             </div>
             <div className="checkboxRow justify-between flex m-1 mt-3">
               <p className="font-light text-base  text-white 3xl:text-2xl w-3/4">
@@ -133,10 +160,20 @@ const Login = () => {
                   Terms of Use.
                 </a>
               </p>
-              <input type="checkbox" class="checked:bg-bg" />
+              <input
+                checked={isTermsChecked}
+                onChange={() =>
+                  setIsTermsChecked((prev) => (prev ? false : true))
+                }
+                id="remember"
+                type="checkbox"
+                value=""
+                class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+                required
+              />
             </div>
           </div>
-          <ThemeButton text="Next" className={"mt-16"} onClick={requestOTP} />
+          <ThemeButton text="Next" className={"mt-16"} onClick={validation} />
         </div>
         <div id="sign-in-button"></div>
       </div>

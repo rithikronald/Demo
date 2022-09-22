@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./kyc.css";
-import { getAuth, signOut } from "firebase/auth";
 const stages = {
   INTRO: "INTRO",
   DETAILS: "DETAILS",
@@ -9,17 +8,7 @@ const stages = {
 };
 
 const Kyc1 = (props) => {
-  const auth = getAuth();
-  const logout = () => {
-    signOut(auth)
-      .then((res) => {
-        console.log("USER LOGGED OUT", res);
-        // setPageRightIndex(1);
-      })
-      .catch((error) => {
-        console.log("Error", error);
-      });
-  };
+
   return (
     <>
       <p className="text-white opacity-40 font-mont text-[24px]">KYC</p>
@@ -29,8 +18,7 @@ const Kyc1 = (props) => {
         </p>
         <button
           onClick={() => {
-            // props.setStage(stages.DETAILS)
-            logout();
+            props.setStage(stages.DETAILS);
           }}
           className="bg-primaryButton w-[330px] text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px]  mt-[20px]"
         >
