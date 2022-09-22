@@ -12,7 +12,6 @@ import {connect} from 'react-redux'
 import Modal from './modal'
 
 const CoinDesc = (props) => {
-  const [loaderOpen, setLoaderOpen] = useState(false);
   const [data, setData] = useState();
   const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
@@ -83,6 +82,7 @@ const CoinDesc = (props) => {
             response?.data?.tradingVolume?.change_1d
           )
         );
+        props.closeLoader()
       })
       .catch((err) => {
         console.log("error", err)
