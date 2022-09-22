@@ -1,4 +1,3 @@
-import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { userIdContext } from "../../App";
@@ -6,11 +5,13 @@ import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { maximumInstance } from "../../setup";
 import { numFormatter } from "../../utility/kFormatter";
-import Modal from "./modal";
-import "./style.css";
+import axios from "axios";
+import moment from "moment";
+import types from "../../store/types";
+import {connect} from 'react-redux'
+import Modal from './modal'
 
 const CoinDesc = (props) => {
-  const [loaderOpen, setLoaderOpen] = useState(false);
   const [data, setData] = useState();
   const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
@@ -30,21 +31,16 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
-  const contextData = useContext(userIdContext);
 
   const params = useParams();
 
   useEffect(() => {
-    setLoaderOpen(true);
+    props.openLoader()
     maximumInstance
-      .get(`/getCoin?ticker=${params.coinId}`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+      .get(`/getCoin?ticker=${params.coinId}`)
       .then((response) => {
         setData(response?.data);
-        setLoaderOpen(false);
+        props.closeLoader()
         setActiveAddressPerct(
           oneDayPercentage(
             response?.data?.active_addresses?.value,
@@ -81,9 +77,14 @@ const CoinDesc = (props) => {
             response?.data?.tradingVolume?.change_1d
           )
         );
+        props.closeLoader()
       })
-      .catch((err) => console.log("error", err));
-  }, [contextData]);
+      .catch((err) => {
+        console.log("error", err)
+        props.closeLoader()
+      });
+  }, []);
+
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
@@ -564,4 +565,11 @@ const CoinDesc = (props) => {
   );
 };
 
-export default CoinDesc;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
+    openLoader: () => dispatch({type: types.OPEN_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(CoinDesc);

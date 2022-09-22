@@ -29,7 +29,6 @@ const Login = () => {
     console.log("OTP REQUESTED");
     generateRecaptcha();
     let appVerifier = window.recaptchaVerifier;
-
     signInWithPhoneNumber(auth, "+91 " + phoneNumber, appVerifier)
       .then((confirmationResult) => {
         console.log("RES", confirmationResult);
