@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import './kyc.css'
-
+import "./kyc.css";
+import { getAuth, signOut } from "firebase/auth";
 const stages = {
   INTRO: "INTRO",
   DETAILS: "DETAILS",
@@ -9,6 +9,17 @@ const stages = {
 };
 
 const Kyc1 = (props) => {
+  const auth = getAuth();
+  const logout = () => {
+    signOut(auth)
+      .then((res) => {
+        console.log("USER LOGGED OUT", res);
+        // setPageRightIndex(1);
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
+  };
   return (
     <>
       <p className="text-white opacity-40 font-mont text-[24px]">KYC</p>
@@ -17,7 +28,10 @@ const Kyc1 = (props) => {
           Help us confirm your identity
         </p>
         <button
-          onClick={() => props.setStage(stages.DETAILS)}
+          onClick={() => {
+            // props.setStage(stages.DETAILS)
+            logout();
+          }}
           className="bg-primaryButton w-[330px] text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px]  mt-[20px]"
         >
           Begin KYC
@@ -145,44 +159,69 @@ const Kyc3 = (props) => {
         >
           {"<"} KYC
         </p>
-        <p className="mr-[10px] text-[#fff500] font-mont text-[16px]">Pending</p>
-        <button onClick={() => props.setStage(stages.VERIFIED)} className="w-[80px] h-[45px] font-mont text-white bg-bgl2">
+        <p className="mr-[10px] text-[#fff500] font-mont text-[16px]">
+          Pending
+        </p>
+        <button
+          onClick={() => props.setStage(stages.VERIFIED)}
+          className="w-[80px] h-[45px] font-mont text-white bg-bgl2"
+        >
           Next {">"}
         </button>
       </div>
       <div className="absolute top-1/2 -translate-y-[120px] flex">
         <div className="w-[400px] h-[300px] mr-[20px] yellowBackground pt-[50px]">
           <div className="w-full flex items-center justify-center">
-            <img className="h-[70px] mr-2" src={require('../../../assets/idCardIcon.png')} />
-            <p className="font-mont text-white text-[20px]">ID Card</p> 
+            <img
+              className="h-[70px] mr-2"
+              src={require("../../../assets/idCardIcon.png")}
+            />
+            <p className="font-mont text-white text-[20px]">ID Card</p>
           </div>
           <div className="px-[120px] w-full flex items-center justify-between pt-[50px]">
-            <div className="flex flex-col items-center" >
-              <img className="h-[55px]" src={require('../../../assets/scanIcon.png')} />
-              <p className="font-mont text-white text-[16px] mt-[20px]">Scan</p> 
+            <div className="flex flex-col items-center">
+              <img
+                className="h-[55px]"
+                src={require("../../../assets/scanIcon.png")}
+              />
+              <p className="font-mont text-white text-[16px] mt-[20px]">Scan</p>
             </div>
-            <div className="flex flex-col items-center" >
-              <img className="h-[55px]" src={require('../../../assets/uploadIcon.png')} />
-              <p className="font-mont text-white text-[16px] mt-[20px]">Upload</p> 
+            <div className="flex flex-col items-center">
+              <img
+                className="h-[55px]"
+                src={require("../../../assets/uploadIcon.png")}
+              />
+              <p className="font-mont text-white text-[16px] mt-[20px]">
+                Upload
+              </p>
             </div>
-            
           </div>
         </div>
         <div className="w-[400px] h-[300px] mr-[20px] yellowBackground pt-[50px]">
           <div className="w-full flex items-center justify-center">
-            <img className="h-[70px] mr-2" src={require('../../../assets/panCardIcon.png')} />
-            <p className="font-mont text-white text-[20px]">PAN Card</p> 
+            <img
+              className="h-[70px] mr-2"
+              src={require("../../../assets/panCardIcon.png")}
+            />
+            <p className="font-mont text-white text-[20px]">PAN Card</p>
           </div>
           <div className="px-[120px] w-full flex items-center justify-between pt-[50px]">
-            <div className="flex flex-col items-center" >
-              <img className="h-[55px]" src={require('../../../assets/scanIcon.png')} />
-              <p className="font-mont text-white text-[16px] mt-[20px]">Scan</p> 
+            <div className="flex flex-col items-center">
+              <img
+                className="h-[55px]"
+                src={require("../../../assets/scanIcon.png")}
+              />
+              <p className="font-mont text-white text-[16px] mt-[20px]">Scan</p>
             </div>
-            <div className="flex flex-col items-center" >
-              <img className="h-[55px]" src={require('../../../assets/uploadIcon.png')} />
-              <p className="font-mont text-white text-[16px] mt-[20px]">Upload</p> 
+            <div className="flex flex-col items-center">
+              <img
+                className="h-[55px]"
+                src={require("../../../assets/uploadIcon.png")}
+              />
+              <p className="font-mont text-white text-[16px] mt-[20px]">
+                Upload
+              </p>
             </div>
-            
           </div>
         </div>
       </div>
@@ -202,8 +241,10 @@ const Kyc4 = (props) => {
         </p>
       </div>
       <div className="absolute top-1/2 -translate-y-[120px] flex justify-center items-center flex-col w-full box-border ">
-        <img src={require('../../../assets/verificationSuccess.png')} />
-        <p className="font-mont text-white text-[16px] mt-[20px]">Verified Successfully</p> 
+        <img src={require("../../../assets/verificationSuccess.png")} />
+        <p className="font-mont text-white text-[16px] mt-[20px]">
+          Verified Successfully
+        </p>
       </div>
     </>
   );
