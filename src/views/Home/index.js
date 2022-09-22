@@ -1,27 +1,28 @@
-import "./style.css";
-import { useEffect, useState } from "react";
-import { Cell, Pie, PieChart } from "recharts";
-import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { getCoinMeta } from "../../hooks/getcoinMetaData";
-import {
-  indBgImgList,
-  categoryList,
-  risk,
-  tenure,
-  data02,
-  pieColors,
-} from "../../constants/constants";
-import { CustomLineChart } from "../../components/Charts/CustomLineChart";
-import { GradientContainer } from "../../components/GradientContainer";
+import { userIdContext } from "../../App";
+import pimg from "../../assets/usdc.png";
 import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
-import pimg  from "../../assets/usdc.png";
+import { GradientContainer } from "../../components/GradientContainer";
+import {
+  categoryList,
+  indBgImgList,
+  pieColors,
+  risk,
+  tenure,
+} from "../../constants/constants";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import { maximumInstance } from "../../setup";
+import "./style.css";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = () => {
   const { height, width } = useWindowDimensions();
+  const navigate = useNavigate();
+  const contextData = useContext(userIdContext);
+
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
   const [pageRightIndex, setPageRightIndex] = useState(0);
@@ -31,7 +32,7 @@ const Home = () => {
   const [tenureIndex, setTenureIndex] = useState("s");
   const [riskIndex, setRiskIndex] = useState("0");
   const [smartSuggestList, setSmartSuggestList] = useState();
-  const navigate = useNavigate();
+
   useEffect(() => {
     if (width >= 2500) {
       setMaxPicksList(12);
@@ -46,39 +47,36 @@ const Home = () => {
   }, [width, height]);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/dashboard`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    console.log("CONTEXT DATA", contextData);
+  }, [contextData]);
+
+  useEffect(() => {
+    maximumInstance
+      .get(`/dashboard`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
       })
       .catch((err) => console.log("error", err));
-  }, []);
+  }, [contextData]);
 
   const getSmartSuggestList = (val) => {
-    console.log("Value", val);
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/smartSuggest/${val}`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    maximumInstance
+      .get(`/smartSuggest/${val}`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         console.log("RESPONSE", response?.data);
         setSmartSuggestList(response?.data);
       })
       .catch((err) => console.log("error", err));
   };
-
-  useEffect(() => {
-    console.log("sss", tenureIndex, riskIndex);
-  }, [tenureIndex, riskIndex]);
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">

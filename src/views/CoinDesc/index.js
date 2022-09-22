@@ -1,12 +1,13 @@
-import "./style.css";
-import marketCapLogo from "../../assets/marketCapLogo.png";
+import moment from "moment";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { userIdContext } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { maximumInstance } from "../../setup";
 import { numFormatter } from "../../utility/kFormatter";
-import axios from "axios";
-import moment from "moment";
+import Modal from "./modal";
+import "./style.css";
 
 const CoinDesc = (props) => {
   const [loaderOpen, setLoaderOpen] = useState(false);
@@ -28,18 +29,19 @@ const CoinDesc = (props) => {
   const [marketCap, setMarketCap] = useState(0);
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
+  const [modalOpen, setModalOpen] = useState(false);
+  const contextData = useContext(userIdContext);
 
   const params = useParams();
 
   useEffect(() => {
     setLoaderOpen(true);
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getCoin?ticker=${params.coinId}`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    maximumInstance
+      .get(`/getCoin?ticker=${params.coinId}`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         setData(response?.data);
         setLoaderOpen(false);
@@ -81,30 +83,17 @@ const CoinDesc = (props) => {
         );
       })
       .catch((err) => console.log("error", err));
-  }, []);
-
+  }, [contextData]);
   const arrGen = (arr) => {
-    const monthsArr = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "July",
-      "Aug",
-      "Sept",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
     const tempArr = [];
     arr?.map((item, index) => {
-      tempArr.push({ uv: item?.value, name: moment(item?.date).format('DDMMM YYYY') });
+      tempArr.push({
+        uv: item?.value,
+        name: moment(item?.date).format("DDMMM YYYY"),
+      });
     });
     return tempArr;
   };
-
   function numberWithCommas(x) {
     if (!x) {
       return x;
@@ -120,19 +109,12 @@ const CoinDesc = (props) => {
 
     return firstPart.split(",").length > 1 ? `${newFirstPart}k` : newFirstPart;
   }
-
-  useEffect(() => {
-    // const resArr = arrGen(data?.price?.change_1d);
-  }, [data]);
-
   const priceChange = (index) => {
     setPriceIndex(index);
   };
-
   const mainChange = (index) => {
     setMainIndex(index);
   };
-
   const mainSecondaryChange = (ele) => {
     if (ele == "Market Cap") {
       setMainSecondaryIndex("marketcap_usd");
@@ -154,7 +136,6 @@ const CoinDesc = (props) => {
   const sentimentChange = (index) => {
     setSentimentIndex(index);
   };
-
   const calculatePercentage = (value, days) => {
     let num1 = value;
     let num2 = days[days.length - 1]?.value;
@@ -163,12 +144,10 @@ const CoinDesc = (props) => {
     let percentage = div * 100;
     return percentage;
   };
-
   const nullValues = (value) => {
     if (value == null) return "Coming Soon";
     else return Number(value).toFixed(3);
   };
-
   const oneDayPercentage = (value, days) => {
     let num1 = value;
     let num2 = days[days.length - 2]?.value;
@@ -182,7 +161,6 @@ const CoinDesc = (props) => {
     // }
     return Math.floor(value);
   };
-
   const colorChange = (value) => {
     const str = value.toString();
     const changeSymbol = str[0];
@@ -191,7 +169,6 @@ const CoinDesc = (props) => {
     }
     return "lightGreen";
   };
-
   const getAfterDecimalValue = (num) => {
     if (!num) {
       return;
@@ -201,99 +178,175 @@ const CoinDesc = (props) => {
     return newStr.slice(0, 2);
   };
 
+  const fakeModalOpen = false;
+
   return (
-    <div className="p-5 px-10 overflow-hidden w-screen h-screen bg-bgl1 justify-between flex flex-col">
-      <div className="flex  h-[30%]">
-        <div className="flex basis-1/2 mt-5">
-          <div style={{ flex: 1 }}>
-            <div className="flex items-center">
-              <p className="text-3xl font-mont text-white font-bold">
-                {data?.slug}
-              </p>
-              <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
-                {data?.ticker}
-              </p>
-            </div>
-            <p className="font-mont text-white text-sm mt-8 pr-[40px]">
-              {data?.description}
-            </p>
-          </div>
-          <div className="flex-col justify-between text-white flex justify-">
-            <div className="priceBorder p-[1px]">
-              <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                <p className="text-[12px] ">Price</p>
-                <p className="text-[18px] ml-[5px]">$</p>
-                <p className="text-[25px] font-bold">
-                  {Math.floor(data?.price?.value)}
+    <div
+      className={`p-5 px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-gradient-to-tl from-bg via-bgl1 to-darkPurple justify-between flex flex-col ${
+        fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
+      }`}
+    >
+      <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      {!fakeModalOpen ? (
+        <div
+          className={`grid ${
+            fakeModalOpen ? "grid-cols-1" : "grid-cols-2 h-[30%]"
+          }`}
+        >
+          <div className={`flex basis-1/2 mt-5`}>
+            <div style={{ flex: 1 }}>
+              <div className="flex items-center">
+                <p className="text-3xl font-mont text-white font-bold">
+                  {data?.slug}
                 </p>
-                <p className="text-[15px] font-bold">
-                  .{getAfterDecimalValue(data?.price?.value)}
+                <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
+                  {data?.ticker}
                 </p>
               </div>
+              <p className="font-mont text-white text-sm mt-8 pr-[40px]">
+                {data?.description}
+              </p>
             </div>
-            <div className="flex">
+            <div className="flex-col justify-between text-white flex justify-">
               <div className="priceBorder p-[1px]">
                 <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                  <p className="text-[12px] ">Deposit</p>
+                  <p className="text-[12px] ">Price</p>
+                  <p className="text-[18px] ml-[5px]">$</p>
+                  <p className="text-[25px] font-bold">
+                    {Math.floor(data?.price?.value)}
+                  </p>
+                  <p className="text-[15px] font-bold">
+                    .{getAfterDecimalValue(data?.price?.value)}
+                  </p>
                 </div>
               </div>
-              <div className="priceBorder p-[1px] ml-[10px]">
-                <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                  <p className="text-[12px] ">Withdraw</p>
+              <div className="flex">
+                <div className="priceBorder p-[1px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Deposit</p>
+                  </div>
                 </div>
+                <div className="priceBorder p-[1px] ml-[10px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Withdraw</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-center items-end">
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]"
+                >
+                  Trade Now
+                </button>
               </div>
             </div>
-            <div className="flex justify-center items-end">
-              <button className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]">
-                Trade Now
-              </button>
+          </div>
+          <div className="grid grid-cols-3 grid-rows-2 w-[100%] ml-5">
+            {[
+              {
+                title: "Market Cap",
+                logo: require("../../assets/marketCapIcon.png"),
+                value: numFormatter(marketCap),
+              },
+              {
+                title: "Transaction Volume",
+                logo: require("../../assets/transactionVolumeIcon.png"),
+                value: numFormatter(transactionVolumePerct),
+              },
+              {
+                title: "NVT Ratio",
+                logo: require("../../assets/nvtRatioIcon.png"),
+                value: numFormatter(nvtRatioPerct),
+              },
+              {
+                title: "Trading Volume",
+                logo: require("../../assets/tradingVolumeIcon.png"),
+                value: numFormatter(tradingVolume),
+              },
+              {
+                title: "Active Wallet Addresses",
+                logo: require("../../assets/activeWalletAddressIcon.png"),
+                value: numFormatter(activeAddressPerct),
+              },
+              {
+                title: "Daily Active Addresses",
+                logo: require("../../assets/dailyActiveAddressIcon.png"),
+                value: numFormatter(dailyActivePerct),
+              },
+            ].map((ele) => (
+              <div className="flex items-center">
+                <img src={ele.logo} />
+                <div className="ml-[-15px] font-mont text-white">
+                  <p className="text-[9px]">{ele.title}</p>
+                  <p className="text-[22px] font-bold">{ele.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`grid ${
+            fakeModalOpen ? "grid-cols-1 h-auto" : "grid-cols-2 h-[30%]"
+          }`}
+        >
+          <div className={`flex basis-1/2 mt-5`}>
+            <div style={{ flex: 1 }}>
+              <div className="flex items-center">
+                <p className="text-3xl font-mont text-white font-bold">
+                  {data?.slug}
+                </p>
+                <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
+                  {data?.ticker}
+                </p>
+              </div>
+              <p className="font-mont text-white text-sm mt-8 pr-[40px]">
+                {data?.description}
+              </p>
+            </div>
+            <div className="flex-col justify-between text-white flex justify-">
+              <div className="priceBorder p-[1px]">
+                <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                  <p className="text-[12px] ">Price</p>
+                  <p className="text-[18px] ml-[5px]">$</p>
+                  <p className="text-[25px] font-bold">
+                    {Math.floor(data?.price?.value)}
+                  </p>
+                  <p className="text-[15px] font-bold">
+                    .{getAfterDecimalValue(data?.price?.value)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex mt-2">
+                <div className="priceBorder p-[1px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Deposit</p>
+                  </div>
+                </div>
+                <div className="priceBorder p-[1px] ml-[10px]">
+                  <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
+                    <p className="text-[12px] ">Withdraw</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-center items-end mt-2">
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]"
+                >
+                  Trade Now
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 grid-rows-2 w-[50%] ml-5">
-          {[
-            {
-              title: "Market Cap",
-              logo: require("../../assets/marketCapIcon.png"),
-              value: numFormatter(marketCap),
-            },
-            {
-              title: "Transaction Volume",
-              logo: require("../../assets/transactionVolumeIcon.png"),
-              value: numFormatter(transactionVolumePerct),
-            },
-            {
-              title: "NVT Ratio",
-              logo: require("../../assets/nvtRatioIcon.png"),
-              value: numFormatter(nvtRatioPerct),
-            },
-            {
-              title: "Trading Volume",
-              logo: require("../../assets/tradingVolumeIcon.png"),
-              value: numFormatter(tradingVolume),
-            },
-            {
-              title: "Active Wallet Addresses",
-              logo: require("../../assets/activeWalletAddressIcon.png"),
-              value: numFormatter(activeAddressPerct),
-            },
-            {
-              title: "Daily Active Addresses",
-              logo: require("../../assets/dailyActiveAddressIcon.png"),
-              value: numFormatter(dailyActivePerct),
-            },
-          ].map((ele) => (
-            <div className="flex items-center">
-              <img src={ele.logo} />
-              <div className="ml-[-15px] font-mont text-white">
-                <p className="text-[9px]">{ele.title}</p>
-                <p className="text-[22px] font-bold">{ele.value}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex justify-end space-x-8">
+      )}
+      <div
+        className={`flex ${
+          fakeModalOpen ? "pt-[20px] pb-[20px]" : "justify-end"
+        } space-x-8`}
+      >
         {["1d", "7d", "30d"].map((ele) => (
           <div
             className={`cursor-pointer text-[12px] text-white font-mont w-[70px] flex justify-center items-center ${
@@ -305,8 +358,8 @@ const CoinDesc = (props) => {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-10">
-        <div>
+      <div className="grid grid-cols-2 gap-10 items-stretch">
+        <div className="h-full">
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
@@ -339,7 +392,11 @@ const CoinDesc = (props) => {
               </div>
             ))}
           </div>
-          <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
+          <div
+            className={`flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl ${
+              fakeModalOpen ? "h-[350px]" : "h-[226px]"
+            } items-center p-[1px] mt-4 w-full`}
+          >
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
               {firstBoxAnnotation === "marketcap" && (
                 <CustomAreaChart
@@ -365,25 +422,77 @@ const CoinDesc = (props) => {
             </div>
           </div>
         </div>
-        <div>
-          <div
-            className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
-          >
-            <p style={{ transform: "translateX(20px)" }}>Price Action</p>
-          </div>
-          <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
-            <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
-              <CustomAreaChart
-                width={"100%"}
-                height={"98%"}
-                data={arrGen(data?.price[`change_${priceIndex}`])}
-                isDollar={true}
-              />
+        {!fakeModalOpen ? (
+          <div>
+            <div
+              className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
+            >
+              <p style={{ transform: "translateX(20px)" }}>Price Action</p>
+            </div>
+            <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
+              <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
+                <CustomAreaChart
+                  width={"100%"}
+                  height={"98%"}
+                  data={arrGen(data?.price[`change_${priceIndex}`])}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex  rounded-2xl items-center p-[1px] mt-[38px] w-full">
+            <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
+              <div className="grid grid-cols-2 w-[100%]">
+                {[
+                  {
+                    title: "Market Cap",
+                    logo: require("../../assets/marketCapIcon.png"),
+                    value: numFormatter(marketCap),
+                  },
+                  {
+                    title: "Transaction Volume",
+                    logo: require("../../assets/transactionVolumeIcon.png"),
+                    value: `${numFormatter(transactionVolumePerct)}`,
+                  },
+                  {
+                    title: "NVT Ratio",
+                    logo: require("../../assets/nvtRatioIcon.png"),
+                    value: numFormatter(nvtRatioPerct),
+                  },
+                  {
+                    title: "Trading Volume",
+                    logo: require("../../assets/tradingVolumeIcon.png"),
+                    value: numFormatter(tradingVolume),
+                  },
+                  {
+                    title: "Active Wallet Addresses",
+                    logo: require("../../assets/activeWalletAddressIcon.png"),
+                    value: numFormatter(activeAddressPerct),
+                  },
+                  {
+                    title: "Daily Active Addresses",
+                    logo: require("../../assets/dailyActiveAddressIcon.png"),
+                    value: numFormatter(dailyActivePerct),
+                  },
+                ].map((ele) => (
+                  <div className="flex items-center">
+                    <img src={ele.logo} />
+                    <div className="ml-[-15px] font-mont text-white">
+                      <p className="text-[9px]">{ele.title}</p>
+                      <p className="text-[22px] font-bold">{ele.value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      <div className="grid grid-cols-4 gap-8 mt-4">
+      <div
+        className={`grid ${
+          fakeModalOpen ? "grid-cols-2" : "grid-cols-4"
+        } gap-8 mt-4`}
+      >
         <div>
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}

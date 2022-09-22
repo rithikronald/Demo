@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Cell, Pie, PieChart } from "recharts";
+import { userIdContext } from "../../App";
 import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
@@ -10,23 +11,25 @@ import SetupSIP from "../../components/RightComponent/setupSIP";
 import { indBgImgList } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import { maximumInstance } from "../../setup";
 import "./style.css";
 
 const Indexes = () => {
   const navigate = useNavigate();
+  const contextData = useContext(userIdContext);
   const { height, width } = useWindowDimensions();
   const [basketData, setBasketData] = useState();
   const [indexData, setIndexData] = useState();
   const [pageRightIndex, setPageRightIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  
   useEffect(() => {
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/indexes`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    maximumInstance
+      .get(`/indexes`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         setBasketData(response?.data);
       })
@@ -117,9 +120,12 @@ const Indexes = () => {
             ))}
         </div>
       </div>
-      <div  style={{
+      <div
+        style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
-        }} className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex">
+        }}
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex"
+      >
         {pageRightIndex == 0 && (
           <IndexDetails
             indexData={indexData}

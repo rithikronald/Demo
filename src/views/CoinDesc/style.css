@@ -22,6 +22,9 @@
 .newGraphBorderInner2 {
   border-radius: 19px;
 }
+.transitionClass {
+  transition: all 1s;
+}
 /* 
 .priceBorder::after {
     position: absolute;

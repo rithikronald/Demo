@@ -11,14 +11,17 @@ import { useLocation } from "react-router-dom";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { IndexDetails } from "../../components/RightComponent/indexDetails";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SetupSIP from "../../components/RightComponent/setupSIP";
 import axios from "axios";
 import { numFormatter } from "../../utility/kFormatter";
 import moment from "moment";
+import { maximumInstance } from "../../setup";
+import { userIdContext } from "../../App";
 
 const Indexes = () => {
   const { height, width } = useWindowDimensions();
+  const contextData = useContext(userIdContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [activeWalletAddress, setActiveWalletAddress] = useState();
@@ -30,13 +33,12 @@ const Indexes = () => {
   const [priceIndex, setPriceIndex] = useState("1d");
 
   useEffect(() => {
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getIndex/${location?.state?.indexData?.basketName}`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    maximumInstance
+      .get(`/getIndex/${location?.state?.indexData?.basketName}`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         console.log("Response", response?.data);
         setBasketData(response?.data?.basketData);
@@ -50,20 +52,6 @@ const Indexes = () => {
   }, [basketData]);
 
   const arrGen = (arr) => {
-    const monthsArr = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "July",
-      "Aug",
-      "Sept",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
     const tempArr = [];
     arr?.map((item, index) => {
       tempArr.push({
