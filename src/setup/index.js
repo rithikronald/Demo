@@ -1,6 +1,4 @@
 import axios from "axios";
-import { useContext } from "react";
-import { userIdContext } from "../App";
 const MAXIMUM_BASE_URL =
   "https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api";
 
@@ -12,7 +10,7 @@ export const maximumInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    // Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
   },
 });
 

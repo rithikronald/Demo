@@ -1,10 +1,7 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { connect } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { Cell, Pie, PieChart } from "recharts";
-import { userIdContext } from "../../App";
 import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
-import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
 import { IndexDetails } from "../../components/RightComponent/indexDetails";
 import SetupSIP from "../../components/RightComponent/setupSIP";
@@ -12,13 +9,11 @@ import { indBgImgList } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
-import "./style.css";
-import {connect} from 'react-redux'
 import types from "../../store/types";
+import "./style.css";
 
 const Indexes = (props) => {
   const navigate = useNavigate();
-  const contextData = useContext(userIdContext);
   const { height, width } = useWindowDimensions();
   const [basketData, setBasketData] = useState();
   const [indexData, setIndexData] = useState();
@@ -28,11 +23,7 @@ const Indexes = (props) => {
   useEffect(() => {
     props.openLoader()
     maximumInstance
-      .get(`/indexes`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+      .get(`/indexes`)
       .then((response) => {
         setBasketData(response?.data);
         props.closeLoader()

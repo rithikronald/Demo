@@ -7,7 +7,7 @@ import { auth } from "./firebas-config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { maximumInstance } from "./setup";
-import Loader from './components/Loader'
+import Loader from "./components/Loader";
 
 const makeRoutes = () => {
   return (
@@ -33,15 +33,13 @@ export const userIdContext = React.createContext();
 
 function App() {
   const navigate = useNavigate();
-  const [userDetails, setUserDetails] = useState();
 
   function onAuthStateChanged(user) {
     if (user) {
-      setUserDetails({ uid: user.uid, accessToken: user.accessToken });
-      window.accessToken = user.accessToken;
-      console.log("userToken", window.uid);
+      localStorage.setItem("accessToken", user.accessToken);
+      localStorage.setItem("uid", user.uid);
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {
-        maximumInstance(user.accessToken)
+        maximumInstance
           .get(`/setRole/${user.uid}`)
           .then((response) => {
             console.log("CUSTOM ROLE SET", response?.data);
@@ -50,24 +48,21 @@ function App() {
           .catch((err) => console.log("Error", err));
       }
       navigate("/dashboard");
-      // User is signed in.
     } else {
       navigate("/login");
     }
   }
 
   useEffect(() => {
-    const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
+    auth.onAuthStateChanged(onAuthStateChanged);
   }, []);
+
   return (
-    <userIdContext.Provider value={userDetails}>
     <div className="App flex">
       <Loader />
       <Sidebar />
       {makeRoutes()}
     </div>
-    </userIdContext.Provider>
   );
 }
 

@@ -37,11 +37,7 @@ const Indexes = (props) => {
   useEffect(() => {
     props.openLoader()
     maximumInstance
-      .get(`/getIndex/${location?.state?.indexData?.basketName}`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+      .get(`/getIndex/${location?.state?.indexData?.basketName}`)
       .then((response) => {
         console.log("Response", response?.data);
         setBasketData(response?.data?.basketData);

@@ -31,18 +31,13 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
-  const contextData = useContext(userIdContext);
 
   const params = useParams();
 
   useEffect(() => {
     props.openLoader()
     maximumInstance
-      .get(`/getCoin?ticker=${params.coinId}`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+      .get(`/getCoin?ticker=${params.coinId}`)
       .then((response) => {
         setData(response?.data);
         props.closeLoader()
@@ -88,7 +83,7 @@ const CoinDesc = (props) => {
         console.log("error", err)
         props.closeLoader()
       });
-  }, [contextData]);
+  }, []);
 
   const arrGen = (arr) => {
     const tempArr = [];

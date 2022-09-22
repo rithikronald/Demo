@@ -1,29 +1,26 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userIdContext } from "../../App";
 import pimg from "../../assets/usdc.png";
 import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
 import { GradientContainer } from "../../components/GradientContainer";
 import {
-  categoryList,
   indBgImgList,
   pieColors,
   risk,
-  tenure,
+  tenure
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
-import "./style.css";
 import types from "../../store/types";
-import {connect} from 'react-redux'
+import "./style.css";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
-  const contextData = useContext(userIdContext);
 
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
@@ -49,35 +46,23 @@ const Home = (props) => {
   }, [width, height]);
 
   useEffect(() => {
-    console.log("CONTEXT DATA", contextData);
-  }, [contextData]);
-
-  useEffect(() => {
-    props.openLoader()
+    props.openLoader();
     maximumInstance
-      .get(`/dashboard`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+      .get(`/dashboard`)
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
-        props.closeLoader()
+        props.closeLoader();
       })
       .catch((err) => {
-        console.log("error", err)
-        props.closeLoader()
+        console.log("error", err);
+        props.closeLoader();
       });
   }, []);
 
   const getSmartSuggestList = (val) => {
     maximumInstance
-      .get(`/smartSuggest/${val}`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+      .get(`/smartSuggest/${val}`)
       .then((response) => {
         console.log("RESPONSE", response?.data);
         setSmartSuggestList(response?.data);
@@ -602,9 +587,9 @@ const Home = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
-    openLoader: () => dispatch({type: types.OPEN_LOADER})
-  }
-}
+    closeLoader: () => dispatch({ type: types.CLOSE_LOADER }),
+    openLoader: () => dispatch({ type: types.OPEN_LOADER }),
+  };
+};
 
 export default connect(null, mapDispatchToProps)(Home);

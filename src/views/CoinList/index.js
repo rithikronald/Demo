@@ -1,15 +1,10 @@
-import { propTypesSelected } from "@material-tailwind/react/types/components/select";
-import axios from "axios";
-import { useContext, useEffect, useRef, useState } from "react";
-import DataTable from "react-data-table-component";
-import { userIdContext } from "../../App";
+import { useEffect, useRef, useState } from "react";
+import { connect } from 'react-redux';
 import { GradientContainer } from "../../components/GradientContainer";
 import { Table } from "../../components/Table";
-import { FilterComponent } from "../../components/Table/filterComponent";
 import { ThemeButton } from "../../components/themeButton";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { maximumInstance } from "../../setup";
-import {connect} from 'react-redux'
 import types from "../../store/types";
 
 const columns = [
@@ -192,15 +187,10 @@ export function Tabs({ data, innerTabs = false }) {
 
 const CoinList = (props) => {
   const [coinList, setCoinList] = useState();
-  var contextData = useContext(userIdContext);
   useEffect(() => {
     props.openLoader()
     maximumInstance
-      .get(`/coinList`, {
-        headers: {
-          Authorization: `Bearer ${contextData?.accessToken}`,
-        },
-      })
+      .get(`/coinList`)
       .then((response) => {
         setCoinList(response?.data);
         props.closeLoader()
