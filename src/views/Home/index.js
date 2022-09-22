@@ -16,7 +16,6 @@ import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import "./style.css";
-import { userIdContext } from "../../App";
 import types from "../../store/types";
 import {connect} from 'react-redux'
 // 15-w-1536 14-w-1440 15-h-714 14-h-768

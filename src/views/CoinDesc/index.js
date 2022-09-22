@@ -1,4 +1,3 @@
-import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { userIdContext } from "../../App";
@@ -10,8 +9,10 @@ import axios from "axios";
 import moment from "moment";
 import types from "../../store/types";
 import {connect} from 'react-redux'
+import Modal from './modal'
 
 const CoinDesc = (props) => {
+  const [loaderOpen, setLoaderOpen] = useState(false);
   const [data, setData] = useState();
   const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
@@ -37,15 +38,15 @@ const CoinDesc = (props) => {
 
   useEffect(() => {
     props.openLoader()
-    axios
-      .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/getCoin?ticker=${params.coinId}`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+    maximumInstance
+      .get(`/getCoin?ticker=${params.coinId}`, {
+        headers: {
+          Authorization: `Bearer ${contextData?.accessToken}`,
+        },
+      })
       .then((response) => {
         setData(response?.data);
+        props.closeLoader()
         setActiveAddressPerct(
           oneDayPercentage(
             response?.data?.active_addresses?.value,
@@ -82,13 +83,12 @@ const CoinDesc = (props) => {
             response?.data?.tradingVolume?.change_1d
           )
         );
-        props.closeLoader()
       })
       .catch((err) => {
         console.log("error", err)
         props.closeLoader()
       });
-  }, []);
+  }, [contextData]);
 
   const arrGen = (arr) => {
     const tempArr = [];
