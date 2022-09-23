@@ -2,7 +2,7 @@ import "./style.css";
 
 const Splash = () => {
   return (
-    <div className="App flex flex-col w-full bg-gradient-to-tr from-slate-900 to-purple-800  items-center justify-center">
+    <div className="App flex flex-col h-screen w-full bg-gradient-to-tr from-slate-900 to-purple-800  items-center justify-center">
         <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
           AI Powered financial manager
         </p>

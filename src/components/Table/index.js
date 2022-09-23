@@ -8,7 +8,6 @@ import { numFormatter } from "../../utility/kFormatter";
 
 export const Table = (props) => {
   const navigate = useNavigate();
-
   const columns = [
     {
       name: "NAME",
@@ -35,12 +34,27 @@ export const Table = (props) => {
     },
     {
       name: "CHANGE",
-      selector: (row) => row.percent_change_24h + "%",
+      selector: (row) => {
+        return row.percent_change_24h + "%";
+      },
       sortable: true,
       style: {
-        color: "#3fa34d",
         fontWeight: "500",
       },
+      conditionalCellStyles: [
+        {
+          when: (row) => row.percent_change_24h > 0,
+          style: {
+            color: "#3fa34d",
+          },
+        },
+        {
+          when: (row) => row.percent_change_24h < 0,
+          style: {
+            color: "red",
+          },
+        }
+      ],
     },
     {
       name: "MARKET CAP",
@@ -160,8 +174,8 @@ export const Table = (props) => {
               noData: {
                 style: {
                   backgroundColor: "#100E35",
-                  color:"#fff",
-                  fontWeight:600
+                  color: "#fff",
+                  fontWeight: 600,
                 },
               },
             }}

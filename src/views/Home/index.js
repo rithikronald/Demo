@@ -16,7 +16,9 @@ import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
-import moment from 'moment'
+import moment from "moment";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = (props) => {
@@ -29,8 +31,8 @@ const Home = (props) => {
   const [coinMetaData, setcoinMetaData] = useState();
   const [coinBasket, setCoinBasket] = useState();
   const [amount, setAmount] = useState("");
-  const [tenureIndex, setTenureIndex] = useState("s");
-  const [riskIndex, setRiskIndex] = useState("0");
+  const [tenureIndex, setTenureIndex] = useState();
+  const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
 
   useEffect(() => {
@@ -62,13 +64,20 @@ const Home = (props) => {
   }, []);
 
   const getSmartSuggestList = (val) => {
-    maximumInstance(localStorage.getItem("accessToken"))
-      .get(`/smartSuggest/${val}`)
-      .then((response) => {
-        console.log("RESPONSE", response?.data);
-        setSmartSuggestList(response?.data);
-      })
-      .catch((err) => console.log("error", err));
+    if (tenureIndex != null && riskIndex !=null) {
+      maximumInstance(localStorage.getItem("accessToken"))
+        .get(`/smartSuggest/${val}`)
+        .then((response) => {
+          console.log("RESPONSE", response?.data);
+          setSmartSuggestList(response?.data);
+          setPageRightIndex(2);
+        })
+        .catch((err) => console.log("error", err));
+    } else {
+      toast.warning("Select Tenure and Profile to continue", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
   };
 
   useEffect(() => {
@@ -226,7 +235,13 @@ const Home = (props) => {
                             {item?.basketName}
                           </p>
                           <div className="flex w-full h-[90%]">
-                            <CustomIndexChart width={"100%"} height={"100%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
+                            <CustomIndexChart
+                              width={"100%"}
+                              height={"100%"}
+                              data={arrGen(
+                                item.basketData?.price[`change_${"1d"}`]
+                              )}
+                            />
                           </div>
                         </div>
                         <div className="flex w-full justify-between items-center mt-1">
@@ -359,6 +374,7 @@ const Home = (props) => {
         )} */}
         {pageRightIndex == 1 && (
           <>
+            <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
             <div>
               <button
                 type="button"
@@ -471,7 +487,6 @@ const Home = (props) => {
             </div>
             <button
               onClick={() => {
-                setPageRightIndex(2);
                 const duration =
                   tenureIndex == 0 ? "s" : tenureIndex == 1 ? "m" : "l";
                 getSmartSuggestList(duration + riskIndex);
