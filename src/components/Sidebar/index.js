@@ -6,11 +6,18 @@ import Dashboard from "../../assets/dashboard.png";
 import Indexes from "../../assets/indexes.png";
 import MaxPicks from "../../assets/max picks.png";
 import Settings from "../../assets/settings.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
+const noSidebar = [
+  '/',
+  '/login',
+  '/otpVerification'
+]
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation()
 
   const Menus = [
     { title: "Dashboard", src: Dashboard, onClick: "/dashboard" },
@@ -19,7 +26,7 @@ const Sidebar = () => {
     { title: "Trending", src: MaxPicks, onClick: "/coinList" },
     { title: "Settings", src: Settings, onClick: "/settings" },
   ];
-  return (
+  return ( noSidebar.includes(location.pathname) ? "" :
     <div className="bg-bgl1" >
     <div
       className={` ${

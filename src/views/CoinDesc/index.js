@@ -8,8 +8,9 @@ import { numFormatter } from "../../utility/kFormatter";
 import axios from "axios";
 import moment from "moment";
 import types from "../../store/types";
-import {connect} from 'react-redux'
-import Modal from './modal'
+import { connect } from "react-redux";
+import Modal from "./modal";
+import { GradientContainer } from "../../components/GradientContainer";
 
 const CoinDesc = (props) => {
   const [data, setData] = useState();
@@ -40,7 +41,7 @@ const CoinDesc = (props) => {
       .get(`/getCoin?ticker=${params.coinId}`)
       .then((response) => {
         setData(response?.data);
-        props.closeLoader()
+        props.closeLoader();
         setActiveAddressPerct(
           oneDayPercentage(
             response?.data?.active_addresses?.value,
@@ -77,11 +78,11 @@ const CoinDesc = (props) => {
             response?.data?.tradingVolume?.change_1d
           )
         );
-        props.closeLoader()
+        props.closeLoader();
       })
       .catch((err) => {
-        console.log("error", err)
-        props.closeLoader()
+        console.log("error", err);
+        props.closeLoader();
       });
   }, []);
 
@@ -393,35 +394,38 @@ const CoinDesc = (props) => {
               </div>
             ))}
           </div>
-          <div
-            className={`flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl ${
-              fakeModalOpen ? "h-[350px]" : "h-[226px]"
-            } items-center p-[1px] mt-4 w-full`}
+          <GradientContainer
+            height={fakeModalOpen ? "h-[350px]" : "h-[226px]"}
+            width="w-full"
+            className={`flex items-center mt-4 `}
           >
+            {firstBoxAnnotation === "marketcap" && (
+              <CustomAreaChart
+                width={"100%"}
+                height={"98%"}
+                data={arrGen(data?.marketcap_usd[`change_${priceIndex}`])}
+              />
+            )}
+            {firstBoxAnnotation === "socialvolume" && (
+              <CustomAreaChart
+                width={"100%"}
+                height={"98%"}
+                data={arrGen(data?.sociaVolume[`change_${priceIndex}`])}
+              />
+            )}
+            {firstBoxAnnotation === "activeaddresses" && (
+              <CustomAreaChart
+                width={"100%"}
+                height={"98%"}
+                data={arrGen(data?.active_addresses[`change_${priceIndex}`])}
+              />
+            )}
+          </GradientContainer>
+          {/* <div>
             <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
-              {firstBoxAnnotation === "marketcap" && (
-                <CustomAreaChart
-                  width={"100%"}
-                  height={"98%"}
-                  data={arrGen(data?.marketcap_usd[`change_${priceIndex}`])}
-                />
-              )}
-              {firstBoxAnnotation === "socialvolume" && (
-                <CustomAreaChart
-                  width={"100%"}
-                  height={"98%"}
-                  data={arrGen(data?.sociaVolume[`change_${priceIndex}`])}
-                />
-              )}
-              {firstBoxAnnotation === "activeaddresses" && (
-                <CustomAreaChart
-                  width={"100%"}
-                  height={"98%"}
-                  data={arrGen(data?.active_addresses[`change_${priceIndex}`])}
-                />
-              )}
+              
             </div>
-          </div>
+          </div> */}
         </div>
         {!fakeModalOpen ? (
           <div>
@@ -430,15 +434,17 @@ const CoinDesc = (props) => {
             >
               <p style={{ transform: "translateX(20px)" }}>Price Action</p>
             </div>
-            <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 rounded-2xl items-center h-[230px] p-[1px] mt-4 w-full">
-              <div className="rounded-2xl flex items-center bg-bgl1 h-full w-full">
-                <CustomAreaChart
-                  width={"100%"}
-                  height={"98%"}
-                  data={arrGen(data?.price[`change_${priceIndex}`])}
-                />
-              </div>
-            </div>
+            <GradientContainer
+              height={"h-[226px]"}
+              width="w-full"
+              className={`flex items-center mt-4 `}
+            >
+              <CustomAreaChart
+                width={"100%"}
+                height={"98%"}
+                data={arrGen(data?.price[`change_${priceIndex}`])}
+              />
+            </GradientContainer>
           </div>
         ) : (
           <div className="flex  rounded-2xl items-center p-[1px] mt-[38px] w-full">
@@ -500,15 +506,17 @@ const CoinDesc = (props) => {
           >
             <p style={{ transform: "translateX(20px)" }}>Social Dominance</p>
           </div>
-          <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
-              <CustomAreaChart
-                data={arrGen(data?.socialDominance[`change_${priceIndex}`])}
-                width={"100%"}
-                height={"98%"}
-              />
-            </div>
-          </div>
+          <GradientContainer
+            height={"h-[130px]"}
+            width="w-full"
+            className={`flex items-center mt-2 `}
+          >
+            <CustomAreaChart
+              data={arrGen(data?.socialDominance[`change_${priceIndex}`])}
+              width={"100%"}
+              height={"98%"}
+            />
+          </GradientContainer>
         </div>
         <div>
           <div
@@ -516,15 +524,17 @@ const CoinDesc = (props) => {
           >
             <p style={{ transform: "translateX(20px)" }}>Network Growth</p>
           </div>
-          <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px] bg-bgl1">
-              <CustomAreaChart
-                data={arrGen(data?.networkGrowth[`change_${priceIndex}`])}
-                width={"100%"}
-                height={"98%"}
-              />
-            </div>
-          </div>
+          <GradientContainer
+            height={"h-[130px]"}
+            width="w-full"
+            className={`flex items-center mt-2 `}
+          >
+            <CustomAreaChart
+              data={arrGen(data?.networkGrowth[`change_${priceIndex}`])}
+              width={"100%"}
+              height={"98%"}
+            />
+          </GradientContainer>
         </div>
         <div>
           <div
@@ -532,17 +542,19 @@ const CoinDesc = (props) => {
           >
             <p style={{ transform: "translateX(20px)" }}>Market Sentiment</p>
           </div>
-          <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
-              <CustomLineChart
-                data={arrGen(
-                  data?.sentiment_positive_total[`change_${priceIndex}`]
-                )}
-                width={"100%"}
-                height={"100%"}
-              />
-            </div>
-          </div>
+          <GradientContainer
+            height={"h-[130px]"}
+            width="w-full"
+            className={`flex items-center mt-2 `}
+          >
+            <CustomLineChart
+              data={arrGen(
+                data?.sentiment_positive_total[`change_${priceIndex}`]
+              )}
+              width={"100%"}
+              height={"100%"}
+            />
+          </GradientContainer>
         </div>
         <div>
           <div
@@ -550,15 +562,17 @@ const CoinDesc = (props) => {
           >
             <p style={{ transform: "translateX(20px)" }}>Dev Activity</p>
           </div>
-          <div className="h-[130px] mt-2 p-[1px] newGraphBorder">
-            <div className="flex items-center newGraphBorderInner h-[128px]  bg-bgl1">
-              <CustomLineChart
-                data={arrGen(data?.dev_activity[`change_${priceIndex}`])}
-                width={"100%"}
-                height={"100%"}
-              />
-            </div>
-          </div>
+          <GradientContainer
+            height={"h-[130px]"}
+            width="w-full"
+            className={`flex items-center mt-2 `}
+          >
+            <CustomLineChart
+              data={arrGen(data?.dev_activity[`change_${priceIndex}`])}
+              width={"100%"}
+              height={"100%"}
+            />
+          </GradientContainer>
         </div>
       </div>
     </div>
@@ -567,9 +581,9 @@ const CoinDesc = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
-    openLoader: () => dispatch({type: types.OPEN_LOADER})
-  }
-}
+    closeLoader: () => dispatch({ type: types.CLOSE_LOADER }),
+    openLoader: () => dispatch({ type: types.OPEN_LOADER }),
+  };
+};
 
 export default connect(null, mapDispatchToProps)(CoinDesc);
