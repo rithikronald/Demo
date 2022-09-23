@@ -83,13 +83,15 @@ export const CustomLineChart = (props) => {
         data={props.data || data}
         margin={{ top: 15, right: 18, left: 10, bottom: 10 }}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="#282929" />
+        {
+          props.grid && <CartesianGrid strokeDasharray="3 3" stroke="#282929" />
+        }
         <Line
           type="monotone"
           dataKey="uv"
           dot={true}
           strokeWidth={2}
-          stroke="#805DE3"
+          stroke="#341E63"
         />
         <YAxis
           axisLine={false}

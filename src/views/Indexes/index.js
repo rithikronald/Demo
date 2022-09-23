@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
+import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
 import { IndexDetails } from "../../components/RightComponent/indexDetails";
 import SetupSIP from "../../components/RightComponent/setupSIP";
@@ -11,6 +12,7 @@ import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
+import moment from 'moment'
 
 const Indexes = (props) => {
   const navigate = useNavigate();
@@ -37,6 +39,17 @@ const Indexes = (props) => {
   useEffect(() => {
     setIndexData(basketData?.[currentIndex]);
   }, [basketData, currentIndex]);
+
+  const arrGen = (arr) => {
+    const tempArr = [];
+    arr?.map((item, index) => {
+      tempArr.push({
+        uv: item?.value,
+        name: moment(item?.date).format("DDMMM YYYY"),
+      });
+    });
+    return tempArr;
+  };
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
@@ -69,7 +82,7 @@ const Indexes = (props) => {
                         {item?.basketName}
                       </p>
                       <div className="flex w-full h-[90%]">
-                        <CustomIndexChart width={"100%"} height={"100%"} />
+                      <CustomLineChart grid={false} width={"100%"} height={"100%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
                       </div>
                     </div>
                     <div className="flex w-full justify-between items-center mt-1">

@@ -16,9 +16,10 @@ import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
-import moment from "moment";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import moment from 'moment'
+import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = (props) => {
@@ -235,13 +236,7 @@ const Home = (props) => {
                             {item?.basketName}
                           </p>
                           <div className="flex w-full h-[90%]">
-                            <CustomIndexChart
-                              width={"100%"}
-                              height={"100%"}
-                              data={arrGen(
-                                item.basketData?.price[`change_${"1d"}`]
-                              )}
-                            />
+                            <CustomLineChart grid={false} width={"100%"} height={"100%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
                           </div>
                         </div>
                         <div className="flex w-full justify-between items-center mt-1">
