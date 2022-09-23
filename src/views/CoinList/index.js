@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import { GradientContainer } from "../../components/GradientContainer";
 import { Table } from "../../components/Table";
 import { ThemeButton } from "../../components/themeButton";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
-
+import "./style.css";
 const columns = [
   {
     name: "NAME",
@@ -187,23 +188,25 @@ export function Tabs({ data, innerTabs = false }) {
 
 const CoinList = (props) => {
   const [coinList, setCoinList] = useState();
+  const { height, width } = useWindowDimensions();
+
   useEffect(() => {
-    props.openLoader()
+    props.openLoader();
     maximumInstance(localStorage.getItem("accessToken"))
       .get(`/coinList`)
       .then((response) => {
         setCoinList(response?.data);
-        props.closeLoader()
+        props.closeLoader();
       })
       .catch((err) => {
-        console.log("error", err)
-        props.closeLoader()
+        console.log("error", err);
+        props.closeLoader();
       });
   }, []);
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
-      <div className="Left p-10 px-14 flex w-[75%] flex-col sm:flex">
+      <div className="Left p-10 px-14 flex w-[75%] flex-col sm:flex overflow-y-scroll">
         <div className="TableWithOptions">
           {coinList && <Table title={"All Coins"} data={coinList} />}
         </div>
@@ -212,26 +215,25 @@ const CoinList = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around items-center flex flex-col"
+        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 p-8 justify-center items-center flex flex-col"
       >
         <Tabs data={tabsData} />
         <GradientContainer
-          height="h-[65%]"
-          className={"w-[95%]"}
+          height={` ${height > 800 ? "h-[60%]" : "h-[65%]"}`}
+          className={"w-full mt-16"}
           children={<RightContainer />}
         />
-        <ThemeButton text="Trade" className="w-[90%] mt-4" />
+        <ThemeButton text="Trade" className="w-[90%] mt-10" />
       </div>
     </div>
   );
 };
 
-
 const mapDispatchToProps = (dispatch) => {
   return {
-    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
-    openLoader: () => dispatch({type: types.OPEN_LOADER})
-  }
-}
+    closeLoader: () => dispatch({ type: types.CLOSE_LOADER }),
+    openLoader: () => dispatch({ type: types.OPEN_LOADER }),
+  };
+};
 
 export default connect(null, mapDispatchToProps)(CoinList);
