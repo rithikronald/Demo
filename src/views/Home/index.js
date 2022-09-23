@@ -22,6 +22,7 @@ import moment from 'moment'
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
+
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
