@@ -234,12 +234,12 @@ const WalletOverView = () => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-around items-center flex flex-col"
+        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 p-8 justify-center items-center flex flex-col"
       >
         <Tabs data={tabsData} />
         <GradientContainer
           height={` ${height > 800 ? "h-[60%]" : "h-[65%]"}`}
-          className={"w-[95%]"}
+          className={"w-full mt-16"}
           children={
             <div className="flex flex-col p-4 justify-center w-full">
               <div className="mt-4">
@@ -350,7 +350,7 @@ const WalletOverView = () => {
             </div>
           }
         />
-        <button className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg">
+        <button className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg">
           Deposit Now
         </button>
       </div>

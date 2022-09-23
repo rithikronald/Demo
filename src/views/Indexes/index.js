@@ -22,7 +22,7 @@ const Indexes = (props) => {
   
   useEffect(() => {
     props.openLoader()
-    maximumInstance
+    maximumInstance(localStorage.getItem("accessToken"))
       .get(`/indexes`)
       .then((response) => {
         setBasketData(response?.data);

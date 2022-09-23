@@ -9,13 +9,14 @@ import {
   indBgImgList,
   pieColors,
   risk,
-  tenure
+  tenure,
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
+import moment from 'moment'
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = (props) => {
@@ -47,7 +48,7 @@ const Home = (props) => {
 
   useEffect(() => {
     props.openLoader();
-    maximumInstance
+    maximumInstance(localStorage.getItem("accessToken"))
       .get(`/dashboard`)
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
@@ -61,7 +62,7 @@ const Home = (props) => {
   }, []);
 
   const getSmartSuggestList = (val) => {
-    maximumInstance
+    maximumInstance(localStorage.getItem("accessToken"))
       .get(`/smartSuggest/${val}`)
       .then((response) => {
         console.log("RESPONSE", response?.data);
@@ -73,6 +74,16 @@ const Home = (props) => {
   useEffect(() => {
     console.log("TERM", tenureIndex, riskIndex);
   }, [tenureIndex, riskIndex]);
+  const arrGen = (arr) => {
+    const tempArr = [];
+    arr?.map((item, index) => {
+      tempArr.push({
+        uv: item?.value,
+        name: moment(item?.date).format("DDMMM YYYY"),
+      });
+    });
+    return tempArr;
+  };
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
@@ -215,7 +226,7 @@ const Home = (props) => {
                             {item?.basketName}
                           </p>
                           <div className="flex w-full h-[90%]">
-                            <CustomIndexChart width={"100%"} height={"100%"} />
+                            <CustomIndexChart width={"100%"} height={"100%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
                           </div>
                         </div>
                         <div className="flex w-full justify-between items-center mt-1">
