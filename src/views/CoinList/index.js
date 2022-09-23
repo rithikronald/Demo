@@ -189,7 +189,7 @@ const CoinList = (props) => {
   const [coinList, setCoinList] = useState();
   useEffect(() => {
     props.openLoader()
-    maximumInstance
+    maximumInstance(localStorage.getItem("accessToken"))
       .get(`/coinList`)
       .then((response) => {
         setCoinList(response?.data);

@@ -9,7 +9,7 @@ import {
   indBgImgList,
   pieColors,
   risk,
-  tenure
+  tenure,
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
@@ -47,7 +47,7 @@ const Home = (props) => {
 
   useEffect(() => {
     props.openLoader();
-    maximumInstance
+    maximumInstance(localStorage.getItem("accessToken"))
       .get(`/dashboard`)
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
@@ -61,7 +61,7 @@ const Home = (props) => {
   }, []);
 
   const getSmartSuggestList = (val) => {
-    maximumInstance
+    maximumInstance(localStorage.getItem("accessToken"))
       .get(`/smartSuggest/${val}`)
       .then((response) => {
         console.log("RESPONSE", response?.data);
