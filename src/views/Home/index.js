@@ -18,15 +18,15 @@ import types from "../../store/types";
 import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import moment from 'moment'
+import moment from "moment";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
+import { io } from "socket.io-client";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
-
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
-
+  const socket = io("wss://api.gateio.ws/ws/v4/");
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
   const [pageRightIndex, setPageRightIndex] = useState(0);
@@ -36,6 +36,10 @@ const Home = (props) => {
   const [tenureIndex, setTenureIndex] = useState();
   const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
+
+  socket.on("connection", (res) => {
+    console.log("Response", res);
+  });
 
   useEffect(() => {
     if (width >= 2500) {
@@ -66,7 +70,7 @@ const Home = (props) => {
   }, []);
 
   const getSmartSuggestList = (val) => {
-    if (tenureIndex != null && riskIndex !=null) {
+    if (tenureIndex != null && riskIndex != null) {
       maximumInstance(localStorage.getItem("accessToken"))
         .get(`/smartSuggest/${val}`)
         .then((response) => {
@@ -237,7 +241,14 @@ const Home = (props) => {
                             {item?.basketName}
                           </p>
                           <div className="flex w-full h-[90%]">
-                            <CustomLineChart grid={false} width={"100%"} height={"100%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
+                            <CustomLineChart
+                              grid={false}
+                              width={"100%"}
+                              height={"100%"}
+                              data={arrGen(
+                                item.basketData?.price[`change_${"1d"}`]
+                              )}
+                            />
                           </div>
                         </div>
                         <div className="flex w-full justify-between items-center mt-1">
