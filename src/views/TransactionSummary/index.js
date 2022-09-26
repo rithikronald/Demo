@@ -7,12 +7,13 @@ import { GradientContainer } from "../../components/GradientContainer";
 import { Tooltip } from "flowbite-react";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
 import { pieColors } from "../../constants/constants";
+import { Table } from "../../components/TransactionsHistoryTable";
 
 const TransactionSummary = () => {
   const location = useLocation();
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center sm:flex xl:basis-3/4">
+      <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
         <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
           Transaction Summary
         </p>
@@ -105,6 +106,35 @@ const TransactionSummary = () => {
             </div>
           </div>
         </div>
+        <div className="w-[80%] mt-[50px]">
+        <Table title={"Transactions"} data={[
+          {transactionId: '3343443433434',
+          type: 'Buy', 
+          coin: 'Gaming Index', 
+          date: 'June 22, 2022',
+          amount: '$15', 
+          status: 'Pending'},
+          {transactionId: '3343443433434',
+          type: 'Buy', 
+          coin: 'Gaming Index', 
+          date: 'June 22, 2022',
+          amount: '$15', 
+          status: 'Pending'},
+          {transactionId: '3343443433434',
+          type: 'Buy', 
+          coin: 'Gaming Index', 
+          date: 'June 22, 2022',
+          amount: '$15', 
+          status: 'Pending'},
+          {transactionId: '3343443433434',
+          type: 'Buy', 
+          coin: 'Gaming Index', 
+          date: 'June 22, 2022',
+          amount: '$15', 
+          status: 'Pending'},
+        ]} />
+        </div>
+
       </div>
       <div
         style={{
