@@ -20,13 +20,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
-import { io } from "socket.io-client";
+import { wsGet } from "../../utility/webSocket";
 // 15-w-1536 14-w-1440 15-h-714 14-h-768
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
-  const socket = io("wss://api.gateio.ws/ws/v4/");
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
   const [pageRightIndex, setPageRightIndex] = useState(0);
@@ -36,10 +35,18 @@ const Home = (props) => {
   const [tenureIndex, setTenureIndex] = useState();
   const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
+  const [currentPrice, setCurrentPrice] = useState();
+  // const socket = io("wss://api.gateio.ws/ws/v4/");
 
-  socket.on("connection", (res) => {
-    console.log("Response", res);
-  });
+  // useEffect(() => {
+
+  wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+    "ETH_USDT",
+    "SOL_USDT",
+    "DOT_USDT",
+    "XRP_USDT",
+    "BTC_USDT",
+  ]);
 
   useEffect(() => {
     if (width >= 2500) {
@@ -150,6 +157,7 @@ const Home = (props) => {
                 return index < maxPicksList ? (
                   <GradientContainer
                     className="mt-4"
+                    key={index}
                     width="w-[24%]"
                     height="h-16"
                     children={
@@ -218,6 +226,7 @@ const Home = (props) => {
                 index < indexesList && (
                   <GradientContainer
                     width="w-[24%]"
+                    key={index}
                     height="h-56"
                     className={"mt-4"}
                     children={
@@ -257,7 +266,10 @@ const Home = (props) => {
                               const data = getCoinMeta(item);
                               return (
                                 index < 3 && (
-                                  <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                                  <div
+                                    key={index}
+                                    className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full"
+                                  >
                                     <div className="flex w-full h-full justify-center items-center">
                                       <img
                                         className="w-6 rounded-full bg-white"
@@ -431,6 +443,7 @@ const Home = (props) => {
                   <GradientContainer
                     width="w-[30%]"
                     height="h-[150px]"
+                    key={index}
                     className={"3xl:h-[250px]"}
                     children={
                       <button
@@ -465,6 +478,7 @@ const Home = (props) => {
                 {risk.map((item, index) => (
                   <GradientContainer
                     width="w-[30%]"
+                    key={index}
                     height="h-[150px]"
                     className={"3xl:h-[250px]"}
                     children={
@@ -564,7 +578,10 @@ const Home = (props) => {
                     {smartSuggestList?.coins?.map((item, index) => {
                       const data = getCoinMeta(item);
                       return (
-                        <div className="flex items-center mt-[20px] w-[100%] px-3">
+                        <div
+                          key={index}
+                          className="flex items-center mt-[20px] w-[100%] px-3"
+                        >
                           <img
                             alt="btc"
                             className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"

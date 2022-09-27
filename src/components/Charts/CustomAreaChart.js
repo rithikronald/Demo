@@ -15,7 +15,9 @@ export const CustomTooltip = ({ active, payload, label, isDollar }) => {
     return (
       <div className="custom-tooltip bg-black text-white font-mont rounded-lg p-2 text-xs font-semibold">
         <p className="underline">{payload[0]?.payload?.name}</p>
-        <p className="label mt-2">{`${isDollar?"$":""}${Number(payload[0].value).toFixed(2)}`}</p>
+        <p className="label mt-2">{`${isDollar ? "$" : ""}${numFormatter(
+          Number(payload[0].value).toFixed(2)
+        )}`}</p>
       </div>
     );
   }
