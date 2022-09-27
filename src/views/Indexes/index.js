@@ -81,8 +81,8 @@ const Indexes = (props) => {
                       <p className="text-white text-md font-semibold">
                         {item?.basketName}
                       </p>
-                      <div className="flex w-full h-[90%]">
-                      <CustomLineChart grid={false} width={"100%"} height={"100%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
+                      <div className="flex w-full h-[90%] items-end">
+                      <CustomIndexChart grid={false} width={"100%"} height={"70%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
                       </div>
                     </div>
                     <div className="flex w-full justify-between items-center mt-1">
