@@ -72,14 +72,18 @@ const Home = (props) => {
     };
   };
 
-  const socketTicker = (str) => {
-    return coinMetaData?.map((d) => {
-      console.log("D", d);
-      let s = d.ticker
-      return s.join("_USDT");
-    });
-  };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+      "BTC_USDT",
+      "ETH_USDT",
+      "BNB_USDT",
+      "XRP_USDT",
+      "ADA_USDT",
+      "SOL_USDT",
+      "DOGE_USDT",
+      "DOT_USDT",
+    ]);
+  }, []);
 
   // useEffect(() => {
   //   console.log("SOCKET DATA", currentPrice);
@@ -105,11 +109,6 @@ const Home = (props) => {
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
-        wsGet(
-          Math.round(Math.random() * 1000),
-          "ticker.subscribe",
-          socketTicker()
-        );
         props.closeLoader();
       })
       .catch((err) => {
