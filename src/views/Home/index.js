@@ -1,3 +1,4 @@
+// 15-w-1536 14-w-1440 15-h-714 14-h-768
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,9 +20,10 @@ import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import { CustomLineChart } from "../../components/Charts/CustomLineChart";
-import { wsGet } from "../../utility/webSocket";
-// 15-w-1536 14-w-1440 15-h-714 14-h-768
+
+var WebSocketClient = require("websocket").w3cwebsocket;
+const WS_URL = "wss://ws.gate.io/v3/";
+var ws = new WebSocketClient(WS_URL);
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
@@ -35,18 +37,53 @@ const Home = (props) => {
   const [tenureIndex, setTenureIndex] = useState();
   const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
-  const [currentPrice, setCurrentPrice] = useState();
-  // const socket = io("wss://api.gateio.ws/ws/v4/");
+  const [currentPrice, setCurrentPrice] = useState({});
+
+  const wsGet = (id, method, params) => {
+    ws.onopen = function () {
+      console.log("open");
+      var array = JSON.stringify({
+        id: id,
+        method: method,
+        params: params,
+      });
+      ws.send(array);
+    };
+    ws.onmessage = function (evt) {
+      const data = JSON.parse(evt?.data);
+      const coinName = data?.params?.[0].toString().split("_")[0];
+      if (coinName) {
+        setCurrentPrice((prev) => {
+          return {
+            ...prev,
+            [`${coinName}`]: data?.params?.[1]?.last,
+          };
+        });
+      }
+      // console.log(data?.params?.[0], data?.params?.[1]?.last);
+      // if(methods != 'server.sign')
+      // ws.close();
+    };
+    ws.onclose = function () {
+      console.log("close");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
+  };
+
+  const socketTicker = (str) => {
+    return coinMetaData?.map((d) => {
+      console.log("D", d);
+      let s = d.ticker
+      return s.join("_USDT");
+    });
+  };
+  useEffect(() => {}, []);
 
   // useEffect(() => {
-
-  wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-    "ETH_USDT",
-    "SOL_USDT",
-    "DOT_USDT",
-    "XRP_USDT",
-    "BTC_USDT",
-  ]);
+  //   console.log("SOCKET DATA", currentPrice);
+  // }, [currentPrice]);
 
   useEffect(() => {
     if (width >= 2500) {
@@ -68,6 +105,11 @@ const Home = (props) => {
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
+        wsGet(
+          Math.round(Math.random() * 1000),
+          "ticker.subscribe",
+          socketTicker()
+        );
         props.closeLoader();
       })
       .catch((err) => {
@@ -162,7 +204,11 @@ const Home = (props) => {
                     height="h-16"
                     children={
                       <button
-                        onClick={() => navigate(`/coin-desc/${data?.ticker}`)}
+                        onClick={() =>
+                          navigate(`/coin-desc/${data?.ticker}`, {
+                            state: { price: currentPrice },
+                          })
+                        }
                         className="flex justify-between items-center p-4 px-4 w-full h-full"
                       >
                         <div className="flex flex-row items-center">
@@ -182,7 +228,8 @@ const Home = (props) => {
                         </div>
                         <div className="flex flex-col items-end">
                           <p className="text-white font-semibold text-sm">
-                            ${item?.price?.value.toFixed(2)}
+                            {/* ${item?.price?.value.toFixed(2)} */}
+                            {currentPrice[data?.ticker]}
                           </p>
                           <p
                             className={`${

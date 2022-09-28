@@ -14,7 +14,7 @@ function getSign(str) {
     .toString("base64");
 }
 
-var gateio = {
+export const gateio = {
   gateGet: function (id, method, params) {
     var array = JSON.stringify({
       id: id,
@@ -31,51 +31,59 @@ var gateio = {
       method: method,
       params: params,
     });
-    console.log("PARAMS", params);
     ws.send(array);
   },
 };
 
-var methods;
+// const wsGet = (id, method, params) => {
+//   var methods;
+//   ws.onopen = function () {
+//     console.log("open");
+//     methods = method;
+//     if (method == "server.sign") gateio.gateRequest(id, method, params);
+//     else if (
+//       method == "order.query" ||
+//       method == "order.subscribe" ||
+//       method == "order.update" ||
+//       method == "order.unsubscribe" ||
+//       method == "balance.query" ||
+//       method == "balance.subscribe" ||
+//       method == "balance.update" ||
+//       method == "balance.unsubscribe"
+//     ) {
+//       gateio.gateRequest(id, "server.sign", []);
+//       methods = "server.sign";
+//       setTimeout(() => {
+//         gateio.gateGet(id, method, params);
+//         methods = "";
+//       }, 1000);
+//     } else gateio.gateGet(id, method, params);
+//   };
 
-module.exports = {
-  wsGet: function (id, method, params) {
-    ws.onopen = function () {
-      console.log("open");
-      methods = method;
-      if (method == "server.sign") gateio.gateRequest(id, method, params);
-      else if (
-        method == "order.query" ||
-        method == "order.subscribe" ||
-        method == "order.update" ||
-        method == "order.unsubscribe" ||
-        method == "balance.query" ||
-        method == "balance.subscribe" ||
-        method == "balance.update" ||
-        method == "balance.unsubscribe"
-      ) {
-        gateio.gateRequest(id, "server.sign", []);
-        methods = "server.sign";
-        setTimeout(() => {
-          gateio.gateGet(id, method, params);
-          methods = "";
-        }, 1000);
-      } else gateio.gateGet(id, method, params);
-    };
+//   ws.onmessage = function (evt) {
+//     const data = JSON.parse(evt?.data);
+//     console.log(data?.params?.[0], data?.params?.[1]?.last);
+//     // window.socketData = data;
+//     // if(methods != 'server.sign')
+//     // ws.close();
+//   };
 
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
+//   ws.onclose = function () {
+//     console.log("close");
+//   };
 
-    ws.onclose = function () {
-      console.log("close");
-    };
+//   ws.onerror = function (err) {
+//     console.log("error", err);
+//   };
+// };
 
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  },
-};
+// wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+//   "BTC_USDT",
+//   "ETH_USDT",
+//   "BNB_USDT",
+//   "XRP_USDT",
+//   "ADA_USDT",
+//   "SOL_USDT",
+//   "DOGE_USDT",
+//   "DOT_USDT",
+// ]);

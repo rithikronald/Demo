@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { userIdContext } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
@@ -32,11 +32,66 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState({});
+
+  var WebSocketClient = require("websocket").w3cwebsocket;
+  const WS_URL = "wss://ws.gate.io/v3/";
+  var ws = new WebSocketClient(WS_URL);
 
   const params = useParams();
 
+  const wsGet = (id, method, params) => {
+    ws.onopen = function () {
+      console.log("open");
+      var array = JSON.stringify({
+        id: id,
+        method: method,
+        params: params,
+      });
+      ws.send(array);
+    };
+    ws.onmessage = function (evt) {
+      const data = JSON.parse(evt?.data);
+      const coinName = data?.params?.[0].toString().split("_")[0];
+      if (coinName) {
+        setCurrentPrice((prev) => {
+          return {
+            ...prev,
+            [`${coinName}`]: data?.params?.[1]?.last,
+          };
+        });
+      }
+      // console.log(data?.params?.[0], data?.params?.[1]?.last);
+      // if(methods != 'server.sign')
+      // ws.close();
+    };
+    ws.onclose = function () {
+      console.log("close");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
+  };
+
   useEffect(() => {
-    props.openLoader()
+    console.log("PRICE", currentPrice);
+  }, [currentPrice]);
+
+  useEffect(() => {
+    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+      "BTC_USDT",
+      "ETH_USDT",
+      "BNB_USDT",
+      "XRP_USDT",
+      "ADA_USDT",
+      "SOL_USDT",
+      "DOGE_USDT",
+      "DOT_USDT",
+    ]);
+  }, []);
+
+  useEffect(() => {
+    props.openLoader();
     maximumInstance(localStorage.getItem("accessToken"))
       .get(`/getCoin?ticker=${params.coinId}`)
       .then((response) => {
@@ -215,7 +270,7 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(data?.price?.value)}
+                    {Math.floor(currentPrice[data?.ticker])}
                   </p>
                   <p className="text-[15px] font-bold">
                     .{getAfterDecimalValue(data?.price?.value)}
@@ -313,7 +368,7 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(data?.price?.value)}
+                    {Math.floor(currentPrice[data?.ticker])}
                   </p>
                   <p className="text-[15px] font-bold">
                     .{getAfterDecimalValue(data?.price?.value)}
