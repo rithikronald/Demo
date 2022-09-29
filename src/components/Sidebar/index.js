@@ -50,7 +50,7 @@ const Sidebar = () => {
             Maximum Protocol
           </h1>
         </div>
-        <ul className="pt-6">
+        <ul className="ml-1 absolute top-1/2 -translate-y-1/2">
           {Menus.map((Menu, index) => (
             <button
               onClick={() => navigate(Menu.onClick)}

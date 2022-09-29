@@ -157,27 +157,9 @@ const Home = (props) => {
         className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4"
       >
         {/* Banner */}
-        <div className="flex w-full h-1/3">
-          <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-r from-purple-700 ... flex 2xl:pl-10">
-            <div className="cardLeft w-1/2 h-full p-6 pl-[10%] flex flex-col  justify-around 3xl:py-20">
-              <p className="text-sm text-white font-bold 3xl:text-3xl ">
-                Welcome Ram!
-              </p>
-              <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-bold text-white">
-                Enhance your financial life with Maximum Protocol
-              </p>
-              <button className="bg-purple-500 text-white font-bold text-sm rounded-lg md:w-40 h-14 shadow-lg mt-3">
-                <i class="fa-solid fa-play text-white" /> Watch Now
-              </button>
-            </div>
-            <div className="cardLeft w-1/2  h-full flex justify-center">
-              <img
-                alt="welcomeImg"
-                className="h-full"
-                src={require("../../assets/welcomeImg.png")}
-              />
-            </div>
-          </div>
+        <div className="flex w-full h-1/3 relative">
+          <img src={require('../../assets/smartSuggestFlowBackground.png')} className="w-full" />
+          <img src={require('../../assets/smartSuggestFlow.png')} className="absolute top-1/2 left-1/2" style={{transform: 'translate(-55%, -90px)'}} />
         </div>
         {/* Coins */}
         <div className="flex flex-col mt-4">
