@@ -8,6 +8,7 @@ import { numFormatter } from "../../utility/kFormatter";
 
 export const Table = (props) => {
   const navigate = useNavigate();
+
   useEffect(() => {
     console.log("PROPS", props?.currentPrice);
   }, [props?.currentPrice]);
@@ -37,7 +38,7 @@ export const Table = (props) => {
       grow: 1.5,
     },
     {
-      name: "CHANGE",
+      name: "24h CHANGE",
       selector: (row) => {
         return row.percent_change_24h + "%";
       },
@@ -91,16 +92,14 @@ export const Table = (props) => {
       name: "PRICE",
       selector: (row) => {
         const coinData = getCoinMeta(row.ticker);
-
-        return (
-          "$"+props?.currentPrice[coinData?.ticker]
-        );
+        return "$"+ Number(row?.price?.value).toFixed(10)
       },
       sortable: true,
       style: {
         color: "#fff",
         fontWeight: "500",
       },
+      grow:1.5
     },
   ];
 
