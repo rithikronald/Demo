@@ -20,6 +20,8 @@ import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import Stepper from 'react-stepper-horizontal'
+import Slider from '../../components/Slider'
 
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
@@ -151,15 +153,39 @@ const Home = (props) => {
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
       <div
-        // style={{
-        //   backgroundImage: `url('/images/mainbg.png')`,
-        // }}
+        style={{
+          backgroundImage: `url('/images/mainbg.png')`,
+        }}
         className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4"
       >
         {/* Banner */}
         <div className="flex w-full h-1/3 relative">
           <img src={require('../../assets/smartSuggestFlowBackground.png')} className="w-full" />
-          <img src={require('../../assets/smartSuggestFlow.png')} className="absolute top-1/2 left-1/2" style={{transform: 'translate(-55%, -90px)'}} />
+          {/* <img src={require('../../assets/smartSuggestFlow.png')} className="absolute top-1/2 left-1/2" style={{transform: 'translate(-55%, -90px)'}} /> */}
+          <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
+            <Stepper steps={[
+              {title: ''},
+              {title: ''},
+              {title: ''},
+            ]} activeStep={1} />
+            <div className="px-[15%] flex justify-between">
+              <p className="font-mont text-white text-[13px]">Step 1</p>
+              <p className="font-mont text-white text-[13px]">Step 2</p>
+              <p className="font-mont text-white text-[13px]">Step 3</p>
+            </div>
+            <div className="px-[15%] flex justify-between">
+              <p className="font-mont text-white font-bold text-[16px]">KYC Completed</p>
+              <p className="font-mont text-white font-bold text-[16px]">Smart Suggest</p>
+              <p className="font-mont text-white font-bold text-[16px]">Secure Account</p>
+            </div>
+            <div className="px-[15%] pt-[20px]">
+
+            <Slider />
+            </div>
+            <div className="px-[15%]">
+              <p className="font-mont text-white font-bold text-[14px] pt-[10px]">36% Completed</p>
+            </div>
+          </div>
         </div>
         {/* Coins */}
         <div className="flex flex-col mt-4">
