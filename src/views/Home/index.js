@@ -159,6 +159,41 @@ const Home = (props) => {
         className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4"
       >
         {/* Banner */}
+        {/* <div className="flex w-full h-1/3">
+          <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-r from-purple-700 ... flex 2xl:pl-10">
+            <div className="cardLeft w-1/2 h-full p-6 pl-[10%] flex flex-col  justify-around 3xl:py-20">
+            <Stepper steps={[
+              {title: ''},
+              {title: ''},
+              {title: ''},
+            ]} activeStep={1} />
+            <div className="px-[15%] flex justify-between">
+              <p className="font-mont text-white text-[13px]">Step 1</p>
+              <p className="font-mont text-white text-[13px]">Step 2</p>
+              <p className="font-mont text-white text-[13px]">Step 3</p>
+            </div>
+            <div className="px-[15%] flex justify-between">
+              <p className="font-mont text-white font-bold text-[16px]">KYC Completed</p>
+              <p className="font-mont text-white font-bold text-[16px]">Smart Suggest</p>
+              <p className="font-mont text-white font-bold text-[16px]">Secure Account</p>
+            </div>
+            <div className="px-[15%] pt-[20px]">
+
+            <Slider />
+            </div>
+            <div className="px-[15%]">
+              <p className="font-mont text-white font-bold text-[14px] pt-[10px]">36% Completed</p>
+            </div>
+            </div>
+            <div className="cardLeft w-1/2  h-full flex justify-center">
+              <img
+                alt="welcomeImg"
+                className="h-full"
+                src={require("../../assets/welcomeImg.png")}
+              />
+            </div>
+          </div>
+        </div> */}
         <div className="flex w-full h-1/3 relative">
           <img src={require('../../assets/smartSuggestFlowBackground.png')} className="w-full" />
           {/* <img src={require('../../assets/smartSuggestFlow.png')} className="absolute top-1/2 left-1/2" style={{transform: 'translate(-55%, -90px)'}} /> */}
