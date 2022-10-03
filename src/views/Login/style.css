@@ -15,3 +15,5 @@
 .gradient-border-3 {
   border: 3px solid transparent;
 }
+
+.dropdown .dropdown-menu{ max-height:250px; overflow:auto; } 

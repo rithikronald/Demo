@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { GradientContainer } from "../../components/GradientContainer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import countries from "../../constants/countries.json";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Login = () => {
   const [isTermsChecked, setIsTermsChecked] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [OTP, setOTP] = useState("");
+  const [countryCode, setCountryCode] = useState("🇮🇳 (+91) India");
 
   const generateRecaptcha = () => {
     return (window.recaptchaVerifier = new RecaptchaVerifier(
@@ -52,10 +54,14 @@ const Login = () => {
   }, [isPolicyChecked, isTermsChecked]);
 
   const validation = () => {
-    if (phoneNumber.length == 10 && isPolicyChecked && isTermsChecked) {
+    if (phoneNumber && isPolicyChecked && isTermsChecked) {
       requestOTP();
-    } else {
-      toast.warning("Invalid input fields", {
+    } else if (!phoneNumber) {
+      toast.warning("Invalid phone number", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (!isPolicyChecked || !isTermsChecked) {
+      toast.warning("Please check all fields", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
@@ -67,15 +73,27 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log("USER VERIFIED", user);
+        toast.success("Logged in successfully !!", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       })
       .catch((error) => {
         console.log("USER NOT VERIFIED", error);
+        toast.error("Please enter correct OTP", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       });
   };
 
   const resendOTP = () => {
     let appVerifier = window.recaptchaVerifier;
-    signInWithPhoneNumber(auth, "+91 " + phoneNumber, appVerifier)
+    signInWithPhoneNumber(
+      auth,
+      `+${countryCode
+        .split(" ")[1]
+        .replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "")} ` + phoneNumber,
+      appVerifier
+    )
       .then((confirmationResult) => {
         console.log("RES", confirmationResult);
         window.confirmationResult = confirmationResult;
@@ -84,6 +102,10 @@ const Login = () => {
         console.log("ERROR", err);
       });
   };
+
+  useEffect(()=>{
+    OTP.length === 6 && verifyOTP()
+  },[OTP])
 
   return (
     <div className="App flex h-screen w-full font-mont">
@@ -122,15 +144,20 @@ const Login = () => {
                   <div className="rounded-2xl w-full  h-full flex flex-col  justify-between p-3">
                     <select
                       id="countries"
+                      value={countryCode}
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setCountryCode(e.target.value);
+                      }}
                       className="focus:outline-none font-semibold h-full w-full bg-transparent text-white text-xl rounded-2xl focus:ring-bg focus:border-bg"
                     >
-                      <option selected value="+91">
-                        India (+91)
-                      </option>
-                      <option value="+1">United States (+1)</option>
-
-                      <option value="+33">France (+33)</option>
-                      <option value="+49">Germany (+49)</option>
+                      {countries.map((item) => {
+                        return (
+                          <option>
+                            {item?.flag} ({item?.dial_code}) {item?.name}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 }
@@ -206,7 +233,7 @@ const Login = () => {
           </div>
         )}
         {pageIndex == 1 && (
-          <div className="innerContaner w-full h-full flex  flex-col py-10 items-center justify-between ">
+          <div className="innerContaner w-full h-full flex  flex-col py-10 gap-16 items-center justify-center 2.5xl:w-[80%] 3xl:w-[60%]">
             <p className="text-white text-center text-2xl font-bold ">
               Fill the code
             </p>
@@ -214,15 +241,17 @@ const Login = () => {
               Code is sent. If you still didn’t get the code, please make sure
               you’ve filled your phone number correctly
             </p>
-            <div className="inputContainer w-full justify-around">
+            <div className="inputContainer w-full flex items-center justify-center">
               <OTPInput
                 value={OTP}
-                onChange={setOTP}
+                onChange={(val) => {
+                  console.log(val);
+                  setOTP(val);
+                }}
                 autoFocus
                 OTPLength={6}
                 otpType="number"
                 disabled={false}
-                secure
                 inputStyles={{
                   backgroundColor: "#00000000",
                   color: "#fff",
@@ -231,22 +260,23 @@ const Login = () => {
                   borderRadius: 10,
                   width: "50px",
                   height: "50px",
+                  fontWeight:600
                 }}
               />
             </div>
-            <div className="checkboxRow w-full justify-between  flex flex-col m-1">
-              <div className="flex items-center mb-4">
+            <div className="checkboxRow w-full items-center flex flex-col m-1">
+              <div className="flex items-center">
                 <p className="text-base text-center text-white font-normal 4xl:text-2xl">
                   Didn’t get the code?
                 </p>
-                <button
+              </div>
+              <button
                   onClick={resendOTP}
-                  className="text-purple-600 ml-2 text-sm font-semibold"
+                  className="text-white bg-primaryButton rounded-xl px-4 py-2 mt-2 ml-2 text-sm font-semibold"
                 >
                   Resend OTP
                 </button>
-              </div>
-              <ThemeButton text="Verify" onClick={verifyOTP} />
+              {/* <ThemeButton text="Verify" onClick={verifyOTP} /> */}
             </div>
           </div>
         )}
