@@ -715,4 +715,5 @@ function getCoinMeta(ticker) {
 
 module.exports = {
   getCoinMeta,
+  arr
 };
