@@ -39,7 +39,7 @@ const Modal = (props) => {
         className={"w-[75%]"}
         children={<BuySellModal ticker={props?.ticker} />}
       />
-      <ThemeButton text="Trade" className="w-[75%] mt-4" />
+      
     </div>
   );
 };
