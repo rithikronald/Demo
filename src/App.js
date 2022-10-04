@@ -36,6 +36,7 @@ function App() {
 
   function onAuthStateChanged(user) {
     if (user) {
+      console.log("userDetails",user)
       localStorage.setItem("accessToken", user.accessToken);
       localStorage.setItem("uid", user.uid);
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {

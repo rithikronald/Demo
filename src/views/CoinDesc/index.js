@@ -73,9 +73,9 @@ const CoinDesc = (props) => {
     };
   };
 
-  useEffect(() => {
-    console.log("PRICE", currentPrice);
-  }, [currentPrice]);
+  // useEffect(() => {
+  //   console.log("PRICE", currentPrice);
+  // }, [currentPrice]);
 
   useEffect(() => {
     wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
@@ -243,7 +243,7 @@ const CoinDesc = (props) => {
         fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
-      <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <Modal ticker={data?.ticker}  modalOpen={modalOpen} setModalOpen={setModalOpen} />
       {!fakeModalOpen ? (
         <div
           className={`grid ${
@@ -273,7 +273,7 @@ const CoinDesc = (props) => {
                     {Math.floor(currentPrice[data?.ticker])}
                   </p>
                   <p className="text-[15px] font-bold">
-                    .{getAfterDecimalValue(data?.price?.value)}
+                    .{currentPrice[data?.ticker]?.split(".")[1]}
                   </p>
                 </div>
               </div>
