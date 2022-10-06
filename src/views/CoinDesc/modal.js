@@ -3,6 +3,7 @@ import "./style.css";
 import { ThemeButton } from "../../components/themeButton";
 import { GradientContainer } from "../../components/GradientContainer";
 import { RightContainer, Tabs } from "../CoinList";
+import { BuySellModal } from "../../components/BuySellModal";
 
 const tabsData = [
   {
@@ -36,9 +37,9 @@ const Modal = (props) => {
       <GradientContainer
         height="h-[65%]"
         className={"w-[75%]"}
-        children={<RightContainer />}
+        children={<BuySellModal ticker={props?.ticker} />}
       />
-      <ThemeButton text="Trade" className="w-[75%] mt-4" />
+      
     </div>
   );
 };

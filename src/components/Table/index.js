@@ -22,7 +22,11 @@ export const Table = (props) => {
         return (
           <div
             className="flex items-center cursor-pointer"
-            onClick={() => navigate(`/coin-desc/${row.ticker}`)}
+            onClick={() =>
+              navigate(`/coin-desc/${row.ticker}`, {
+                state: { coin: row?.ticker },
+              })
+            }
           >
             <img
               className="w-6 h-6 rounded-full bg-white"
@@ -63,7 +67,7 @@ export const Table = (props) => {
     },
     {
       name: "MARKET CAP",
-      selector: (row) => numFormatter(row.marketcap_usd.value),
+      selector: (row) => numFormatter(row.marketcap_usd?.value),
       sortable: true,
       style: {
         color: "#fff",
@@ -72,7 +76,7 @@ export const Table = (props) => {
     },
     {
       name: "SUPPLY",
-      selector: (row) => numFormatter(row.total_supply.value),
+      selector: (row) => numFormatter(row.total_supply?.value),
       sortable: true,
       style: {
         color: "#7d8597",
@@ -81,7 +85,7 @@ export const Table = (props) => {
     },
     {
       name: "VOLUME",
-      selector: (row) => numFormatter(row.transaction_volume.value),
+      selector: (row) => numFormatter(row.tradingVolume?.value),
       sortable: true,
       style: {
         color: "#7d8597",
@@ -92,14 +96,14 @@ export const Table = (props) => {
       name: "PRICE",
       selector: (row) => {
         const coinData = getCoinMeta(row.ticker);
-        return "$"+ Number(row?.price?.value).toFixed(10)
+        return "$" + Number(row?.price?.value).toFixed(10);
       },
       sortable: true,
       style: {
         color: "#fff",
         fontWeight: "500",
       },
-      grow:1.5
+      grow: 1.5,
     },
   ];
 
