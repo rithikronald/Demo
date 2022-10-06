@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { GradientContainer } from "../../components/GradientContainer";
-import { Table } from "../../components/Table";
+// import { Table } from "../../components/Table";
 import {
   data02,
   dummyChartData,
@@ -14,6 +14,7 @@ import { RightContainer, Tabs } from "../CoinList";
 import "./style.css";
 import { arr } from "../../hooks/getcoinMetaData";
 import { maximumInstance } from "../../setup";
+import { Table } from "../../components/TransactionsHistoryTable";
 
 const tabsData = [
   {
@@ -27,23 +28,24 @@ const tabsData = [
 const WalletOverView = () => {
   const [coinList, setCoinList] = useState();
   const { height, width } = useWindowDimensions();
-  const [ticker, setTicker] = useState(arr[0].ticker)
-  const [currentCurrencyChain, setCurrentCurrencyChain] = useState([])
+  const [ticker, setTicker] = useState(arr[0].ticker);
+  const [currentCurrencyChain, setCurrentCurrencyChain] = useState([]);
 
   useEffect(() => {
     axios({
-      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/getCurrencyChains/${ticker}`, 
-      method: 'get', 
-
-    }).then(res => {
-      setCurrentCurrencyChain(res?.data)
-    }).catch(err => {
-      console.log(err)
+      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/getCurrencyChains/${ticker}`,
+      method: "get",
     })
-  }, [ticker])
+      .then((res) => {
+        setCurrentCurrencyChain(res?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [ticker]);
 
   useEffect(() => {
-    setTicker(arr[0].ticker)
+    setTicker(arr[0].ticker);
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/coinList/`,
@@ -58,7 +60,7 @@ const WalletOverView = () => {
   }, []);
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-y-scroll h-[100%]">
+      <div className="Left p-10 pt-[300px] px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-y-scroll h-[100%]">
         <div className="flex flex-col w-full">
           <p className="text-2xl 2xl:text-3xl 3xl:text-4xl font-semibold text-white">
             Wallet Overview
@@ -243,10 +245,47 @@ const WalletOverView = () => {
             }
           />
         </div>
-        {/* <div className="TableWithOptions w-full mt-8">
-          {coinList && <Table title={"Transactions"} data={coinList} />}
-        </div> */}
+        <div className="w-[100%] mt-[50px]">
+          <Table
+            title={"Transactions"}
+            data={[
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+            ]}
+          />
+        </div>
       </div>
+
       <div
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
@@ -348,10 +387,8 @@ const WalletOverView = () => {
                     id="countries"
                     className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-2xl focus:ring-bg focus:border-bg"
                   >
-                    {currentCurrencyChain?.map(item => {
-                      return (
-                        <option value={item.chain}>{item.chain}</option>
-                      )
+                    {currentCurrencyChain?.map((item) => {
+                      return <option value={item.chain}>{item.chain}</option>;
                     })}
                   </select>
                 </div>
@@ -374,7 +411,10 @@ const WalletOverView = () => {
             </div>
           }
         />
-        <button onClick={() => console.log(ticker)} className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg">
+        <button
+          onClick={() => console.log(ticker)}
+          className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
+        >
           Deposit Now
         </button>
       </div>
