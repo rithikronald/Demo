@@ -14,7 +14,7 @@ export const GradientContainer = ({
         `${width !== "" ? `${width}` : "w-auto"}
         ${
           height !== "" ? `${height}` : "h-auto"
-        }  rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500  p-[1px] ${className}`
+        }  rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500  p-[0.5px] ${className}`
       )}
     >
       <div className={`flex w-full h-full bg-bgl2 rounded-2xl ${classNamel1}`}>

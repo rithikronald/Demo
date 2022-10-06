@@ -1,5 +1,5 @@
 import React from "react";
-import { Line, LineChart, ResponsiveContainer } from "recharts";
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 const data = [
   {
@@ -74,9 +74,9 @@ export const CustomIndexChart = (props) => {
         data={props.data || data}
         // margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        {/* <XAxis style={{fontSize:12}} axisLine={false} /> */}
+        {/* <XAxis style={{fontSize:5}} tickCount={20} axisLine={false} /> */}
         {/* <CartesianGrid strokeDasharray="3 3" stroke="#282929" /> */}
-        {/* <YAxis style={{fontSize:12}} axisLine={false} /> */}
+        {/* <YAxis style={{fontSize:6}} tickCount={500} axisLine={false} /> */}
         {/* <Line
           type="monotone"
           dataKey="pv"

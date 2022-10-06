@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { userIdContext } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
@@ -32,11 +32,58 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState({});
+  const location = useLocation();
+
+  var WebSocketClient = require("websocket").w3cwebsocket;
+  const WS_URL = "wss://ws.gate.io/v3/";
+  var ws = new WebSocketClient(WS_URL);
 
   const params = useParams();
 
+  const wsGet = (id, method, params) => {
+    ws.onopen = function () {
+      console.log("open");
+      var array = JSON.stringify({
+        id: id,
+        method: method,
+        params: params,
+      });
+      ws.send(array);
+    };
+    ws.onmessage = function (evt) {
+      const data = JSON.parse(evt?.data);
+      const coinName = data?.params?.[0].toString().split("_")[0];
+      if (coinName) {
+        setCurrentPrice((prev) => {
+          return {
+            ...prev,
+            [`${coinName}`]: data?.params?.[1]?.last,
+          };
+        });
+      }
+      // console.log(data?.params?.[0], data?.params?.[1]?.last);
+      // if(methods != 'server.sign')
+      // ws.close();
+    };
+    ws.onclose = function () {
+      console.log("close");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
+  };
+
+
   useEffect(() => {
-    props.openLoader()
+    console.log("COINNAME", `${location?.state?.coin}_USDT`);
+    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+      `${location?.state?.coin}_USDT`,
+    ]);
+  }, [location?.state]);
+
+  useEffect(() => {
+    props.openLoader();
     maximumInstance(localStorage.getItem("accessToken"))
       .get(`/getCoin?ticker=${params.coinId}`)
       .then((response) => {
@@ -188,7 +235,11 @@ const CoinDesc = (props) => {
         fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
-      <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <Modal
+        ticker={data?.ticker}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+      />
       {!fakeModalOpen ? (
         <div
           className={`grid ${
@@ -215,10 +266,10 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(data?.price?.value)}
+                    {Math.floor(currentPrice[data?.ticker])}
                   </p>
                   <p className="text-[15px] font-bold">
-                    .{getAfterDecimalValue(data?.price?.value)}
+                    .{currentPrice[data?.ticker]?.split(".")[1]}
                   </p>
                 </div>
               </div>
@@ -313,7 +364,7 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(data?.price?.value)}
+                    {Math.floor(currentPrice[data?.ticker])}
                   </p>
                   <p className="text-[15px] font-bold">
                     .{getAfterDecimalValue(data?.price?.value)}

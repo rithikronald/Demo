@@ -8,72 +8,9 @@ import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
-const columns = [
-  {
-    name: "NAME",
-    selector: (row) => {
-      const coinData = getCoinMeta(row.ticker);
-      return (
-        <div className="flex items-center">
-          <img
-            className="w-6 h-6 rounded-full bg-white"
-            src={coinData?.logoUrl}
-            alt="logo"
-          />
-          <p className="text- font-bold ml-2">{coinData?.ticker}</p>
-          <p className="text-white ml-2">{coinData?.slug}</p>
-        </div>
-      );
-    },
-    sortable: true,
-    grow: 1.5,
-  },
-  {
-    name: "PRICE",
-    selector: (row) => row.price.value,
-    sortable: true,
-    style: {
-      color: "#fff",
-      fontWeight: "500",
-    },
-  },
-  {
-    name: "CHANGE",
-    selector: (row) => row.percent_change_24h + "%",
-    sortable: true,
-    style: {
-      color: "#3fa34d",
-      fontWeight: "500",
-    },
-  },
-  {
-    name: "MARKET CAP",
-    selector: (row) => row.marketcap_usd.value,
-    sortable: true,
-    style: {
-      color: "#fff",
-      fontWeight: "500",
-    },
-  },
-  {
-    name: "VOLUME",
-    selector: (row) => row.transaction_volume.value,
-    sortable: true,
-    style: {
-      color: "#7d8597",
-      fontWeight: "500",
-    },
-  },
-  {
-    name: "SUPPLY",
-    selector: (row) => row.total_supply.value,
-    sortable: true,
-    style: {
-      color: "#7d8597",
-      fontWeight: "500",
-    },
-  },
-];
+var WebSocketClient = require("websocket").w3cwebsocket;
+const WS_URL = "wss://ws.gate.io/v3/";
+var ws = new WebSocketClient(WS_URL);
 const tabsData = [
   {
     label: "Buy",
@@ -189,6 +126,8 @@ export function Tabs({ data, innerTabs = false }) {
 const CoinList = (props) => {
   const [coinList, setCoinList] = useState();
   const { height, width } = useWindowDimensions();
+  const [tickerList, setTickerList] = useState([]);
+  const [currentPrice, setCurrentPrice] = useState({});
 
   useEffect(() => {
     props.openLoader();
@@ -196,6 +135,10 @@ const CoinList = (props) => {
       .get(`/coinList`)
       .then((response) => {
         setCoinList(response?.data);
+        setTickerList([
+          ...tickerList,
+          response?.data?.map((item) => item?.ticker + "_USDT"),
+        ]);
         props.closeLoader();
       })
       .catch((err) => {
@@ -204,11 +147,65 @@ const CoinList = (props) => {
       });
   }, []);
 
+  const wsGet = (id, method, params) => {
+    ws.onopen = function () {
+      console.log("open");
+      var array = JSON.stringify({
+        id: id,
+        method: method,
+        params: params,
+      });
+      ws.send(array);
+    };
+    ws.onmessage = function (evt) {
+      const data = JSON.parse(evt?.data);
+      const coinName = data?.params?.[0].toString().split("_")[0];
+      if (coinName) {
+        setCurrentPrice((prev) => {
+          return {
+            ...prev,
+            [`${coinName}`]: data?.params?.[1]?.last,
+          };
+        });
+      }
+      // console.log(data?.params?.[0], data?.params?.[1]?.last);
+      // if(methods != 'server.sign')
+      // ws.close();
+    };
+    ws.onclose = function () {
+      console.log("close");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
+  };
+
+  useEffect(() => {
+    // console.log("TICKER LIST", tickerList[0]);
+    if (tickerList[0]?.length > 0)
+      wsGet(
+        Math.round(Math.random() * 1000),
+        "ticker.subscribe",
+        tickerList[0]
+      );
+  }, [tickerList]);
+
+  // useEffect(() => {
+  //   // console.log("CURRENT PRICE", currentPrice);
+  // }, [currentPrice]);
+
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
       <div className="Left p-10 px-14 flex w-[75%] flex-col sm:flex overflow-y-scroll">
         <div className="TableWithOptions">
-          {coinList && <Table title={"All Coins"} data={coinList} />}
+          {coinList && (
+            currentPrice != {} &&
+            <Table
+              title={"All Coins"}
+              data={coinList}
+              currentPrice={currentPrice}
+            />
+          )}
         </div>
       </div>
       <div

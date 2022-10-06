@@ -1,3 +1,4 @@
+// 15-w-1536 14-w-1440 15-h-714 14-h-768
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,14 +20,14 @@ import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import { CustomLineChart } from "../../components/Charts/CustomLineChart";
-import { io } from "socket.io-client";
-// 15-w-1536 14-w-1440 15-h-714 14-h-768
+
+var WebSocketClient = require("websocket").w3cwebsocket;
+const WS_URL = "wss://ws.gate.io/v3/";
+var ws = new WebSocketClient(WS_URL);
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
-  const socket = io("wss://api.gateio.ws/ws/v4/");
   const [maxPicksList, setMaxPicksList] = useState(6);
   const [indexesList, setIndexesList] = useState(4);
   const [pageRightIndex, setPageRightIndex] = useState(0);
@@ -36,10 +37,57 @@ const Home = (props) => {
   const [tenureIndex, setTenureIndex] = useState();
   const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
+  const [currentPrice, setCurrentPrice] = useState({});
 
-  socket.on("connection", (res) => {
-    console.log("Response", res);
-  });
+  const wsGet = (id, method, params) => {
+    ws.onopen = function () {
+      console.log("open");
+      var array = JSON.stringify({
+        id: id,
+        method: method,
+        params: params,
+      });
+      ws.send(array);
+    };
+    ws.onmessage = function (evt) {
+      const data = JSON.parse(evt?.data);
+      const coinName = data?.params?.[0].toString().split("_")[0];
+      if (coinName) {
+        setCurrentPrice((prev) => {
+          return {
+            ...prev,
+            [`${coinName}`]: data?.params?.[1]?.last,
+          };
+        });
+      }
+      // console.log(data?.params?.[0], data?.params?.[1]?.last);
+      // if(methods != 'server.sign')
+      // ws.close();
+    };
+    ws.onclose = function () {
+      console.log("close");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
+  };
+
+  useEffect(() => {
+    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+      "BTC_USDT",
+      "ETH_USDT",
+      "BNB_USDT",
+      "XRP_USDT",
+      "ADA_USDT",
+      "SOL_USDT",
+      "DOGE_USDT",
+      "DOT_USDT",
+    ]);
+  }, []);
+
+  // useEffect(() => {
+  //   console.log("SOCKET DATA", currentPrice);
+  // }, [currentPrice]);
 
   useEffect(() => {
     if (width >= 2500) {
@@ -89,6 +137,7 @@ const Home = (props) => {
   useEffect(() => {
     console.log("TERM", tenureIndex, riskIndex);
   }, [tenureIndex, riskIndex]);
+
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
@@ -147,14 +196,19 @@ const Home = (props) => {
             {coinMetaData &&
               coinMetaData.map((item, index) => {
                 const data = getCoinMeta(item?.ticker);
-                return index < maxPicksList ? (
+                return index < 8 ? (
                   <GradientContainer
                     className="mt-4"
+                    key={index}
                     width="w-[24%]"
                     height="h-16"
                     children={
                       <button
-                        onClick={() => navigate(`/coin-desc/${data?.ticker}`)}
+                        onClick={() =>
+                          navigate(`/coin-desc/${data?.ticker}`, {
+                            state: { coin: item?.ticker },
+                          })
+                        }
                         className="flex justify-between items-center p-4 px-4 w-full h-full"
                       >
                         <div className="flex flex-row items-center">
@@ -174,7 +228,8 @@ const Home = (props) => {
                         </div>
                         <div className="flex flex-col items-end">
                           <p className="text-white font-semibold text-sm">
-                            ${item?.price?.value.toFixed(2)}
+                            {/* ${item?.price?.value.toFixed(2)} */}
+                            {currentPrice[data?.ticker]}
                           </p>
                           <p
                             className={`${
@@ -215,9 +270,10 @@ const Home = (props) => {
             {/* xl-3 2xl-4 3xl-4(or)5 */}
             {coinBasket?.map(
               (item, index) =>
-                index < indexesList && (
+                index < 4 && (
                   <GradientContainer
                     width="w-[24%]"
+                    key={index}
                     height="h-56"
                     className={"mt-4"}
                     children={
@@ -240,11 +296,11 @@ const Home = (props) => {
                           <p className="text-white text-md font-semibold">
                             {item?.basketName}
                           </p>
-                          <div className="flex w-full h-[90%]">
-                            <CustomLineChart
+                          <div className="flex w-full h-[90%] items-end">
+                            <CustomIndexChart
                               grid={false}
                               width={"100%"}
-                              height={"100%"}
+                              height={"70%"}
                               data={arrGen(
                                 item.basketData?.price[`change_${"1d"}`]
                               )}
@@ -257,7 +313,10 @@ const Home = (props) => {
                               const data = getCoinMeta(item);
                               return (
                                 index < 3 && (
-                                  <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                                  <div
+                                    key={index}
+                                    className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full"
+                                  >
                                     <div className="flex w-full h-full justify-center items-center">
                                       <img
                                         className="w-6 rounded-full bg-white"
@@ -431,6 +490,7 @@ const Home = (props) => {
                   <GradientContainer
                     width="w-[30%]"
                     height="h-[150px]"
+                    key={index}
                     className={"3xl:h-[250px]"}
                     children={
                       <button
@@ -465,6 +525,7 @@ const Home = (props) => {
                 {risk.map((item, index) => (
                   <GradientContainer
                     width="w-[30%]"
+                    key={index}
                     height="h-[150px]"
                     className={"3xl:h-[250px]"}
                     children={
@@ -564,7 +625,10 @@ const Home = (props) => {
                     {smartSuggestList?.coins?.map((item, index) => {
                       const data = getCoinMeta(item);
                       return (
-                        <div className="flex items-center mt-[20px] w-[100%] px-3">
+                        <div
+                          key={index}
+                          className="flex items-center mt-[20px] w-[100%] px-3"
+                        >
                           <img
                             alt="btc"
                             className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"

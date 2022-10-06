@@ -8,33 +8,15 @@ import { numFormatter } from "../../utility/kFormatter";
 
 export const Table = (props) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("PROPS", props?.currentPrice);
-  }, [props?.currentPrice]);
-
   const columns = [
     {
-      name: "NAME",
+      name: "TRANSACTION ID",
       selector: (row) => {
-        const coinData = getCoinMeta(row.ticker);
-
         return (
           <div
             className="flex items-center cursor-pointer"
-            onClick={() =>
-              navigate(`/coin-desc/${row.ticker}`, {
-                state: { coin: row?.ticker },
-              })
-            }
           >
-            <img
-              className="w-6 h-6 rounded-full bg-white"
-              src={coinData?.logoUrl}
-              alt="logo"
-            />
-            <p className="text- font-bold ml-2">{coinData?.ticker}</p>
-            <p className="text-white ml-2">{coinData?.slug}</p>
+            <p className="text- font-bold ml-2">{row.transactionId}</p>
           </div>
         );
       },
@@ -42,32 +24,34 @@ export const Table = (props) => {
       grow: 1.5,
     },
     {
-      name: "24h CHANGE",
+      name: "TYPE",
       selector: (row) => {
-        return row.percent_change_24h + "%";
+        return row.type;
       },
       sortable: true,
       style: {
         fontWeight: "500",
       },
-      conditionalCellStyles: [
-        {
-          when: (row) => row.percent_change_24h > 0,
-          style: {
-            color: "#3fa34d",
-          },
-        },
-        {
-          when: (row) => row.percent_change_24h < 0,
-          style: {
-            color: "red",
-          },
-        },
-      ],
+      // conditionalCellStyles: [
+      //   {
+      //     when: (row) => row.percent_change_24h > 0,
+      //     style: {
+      //       color: "#3fa34d",
+      //     },
+      //   },
+      //   {
+      //     when: (row) => row.percent_change_24h < 0,
+      //     style: {
+      //       color: "red",
+      //     },
+      //   }
+      // ],
     },
     {
-      name: "MARKET CAP",
-      selector: (row) => numFormatter(row.marketcap_usd?.value),
+      name: "COIN/INDEX",
+      selector: (row) => {
+        return row.coin
+      },
       sortable: true,
       style: {
         color: "#fff",
@@ -75,8 +59,8 @@ export const Table = (props) => {
       },
     },
     {
-      name: "SUPPLY",
-      selector: (row) => numFormatter(row.total_supply?.value),
+      name: "DATE",
+      selector: (row) => {return row.date},
       sortable: true,
       style: {
         color: "#7d8597",
@@ -84,8 +68,8 @@ export const Table = (props) => {
       },
     },
     {
-      name: "VOLUME",
-      selector: (row) => numFormatter(row.tradingVolume?.value),
+      name: "AMOUNT",
+      selector: (row) => {return row.amount},
       sortable: true,
       style: {
         color: "#7d8597",
@@ -93,31 +77,33 @@ export const Table = (props) => {
       },
     },
     {
-      name: "PRICE",
-      selector: (row) => {
-        const coinData = getCoinMeta(row.ticker);
-        return "$" + Number(row?.price?.value).toFixed(10);
-      },
+      name: "STATUS",
+      selector: (row) => {return (
+        <>
+          <div className="p-1 rounded-sm bg-[rgba(201,153, 32, 0.15)] text-[#C99920]">{row.status}</div>
+        </>
+      )},
       sortable: true,
       style: {
         color: "#fff",
         fontWeight: "500",
       },
-      grow: 1.5,
     },
   ];
 
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
-  const filteredItems = props?.data.filter((item) => {
-    const coinData = getCoinMeta(item?.ticker);
-    return (
-      JSON.stringify(coinData?.slug + coinData?.ticker)
-        .toLowerCase()
-        .indexOf(filterText.toLowerCase()) !== -1
-    );
-  });
+  // const filteredItems = props?.data.filter((item) => {
+  //   const coinData = getCoinMeta(item?.ticker);
+  //   return (
+  //     JSON.stringify(coinData?.slug + coinData?.ticker)
+  //       .toLowerCase()
+  //       .indexOf(filterText.toLowerCase()) !== -1
+  //   );
+  // });
+
+  const filteredItems = props?.data
 
   const handleClear = () => {
     if (filterText) {
@@ -127,7 +113,7 @@ export const Table = (props) => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="w-full flex justify-between self-end">
         <p className="text-white text-2xl font-semibold">{props?.title}</p>
         <FilterComponent
