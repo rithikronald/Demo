@@ -137,6 +137,7 @@ const Home = (props) => {
   useEffect(() => {
     console.log("TERM", tenureIndex, riskIndex);
   }, [tenureIndex, riskIndex]);
+
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
@@ -195,7 +196,7 @@ const Home = (props) => {
             {coinMetaData &&
               coinMetaData.map((item, index) => {
                 const data = getCoinMeta(item?.ticker);
-                return index < maxPicksList ? (
+                return index < 8 ? (
                   <GradientContainer
                     className="mt-4"
                     key={index}
@@ -205,7 +206,7 @@ const Home = (props) => {
                       <button
                         onClick={() =>
                           navigate(`/coin-desc/${data?.ticker}`, {
-                            state: { price: currentPrice },
+                            state: { coin: item?.ticker },
                           })
                         }
                         className="flex justify-between items-center p-4 px-4 w-full h-full"
@@ -269,7 +270,7 @@ const Home = (props) => {
             {/* xl-3 2xl-4 3xl-4(or)5 */}
             {coinBasket?.map(
               (item, index) =>
-                index < indexesList && (
+                index < 4 && (
                   <GradientContainer
                     width="w-[24%]"
                     key={index}

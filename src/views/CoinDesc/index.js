@@ -33,6 +33,7 @@ const CoinDesc = (props) => {
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
   const [currentPrice, setCurrentPrice] = useState({});
+  const location = useLocation();
 
   var WebSocketClient = require("websocket").w3cwebsocket;
   const WS_URL = "wss://ws.gate.io/v3/";
@@ -73,22 +74,13 @@ const CoinDesc = (props) => {
     };
   };
 
-  // useEffect(() => {
-  //   console.log("PRICE", currentPrice);
-  // }, [currentPrice]);
 
   useEffect(() => {
+    console.log("COINNAME", `${location?.state?.coin}_USDT`);
     wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      "BTC_USDT",
-      "ETH_USDT",
-      "BNB_USDT",
-      "XRP_USDT",
-      "ADA_USDT",
-      "SOL_USDT",
-      "DOGE_USDT",
-      "DOT_USDT",
+      `${location?.state?.coin}_USDT`,
     ]);
-  }, []);
+  }, [location?.state]);
 
   useEffect(() => {
     props.openLoader();
@@ -243,7 +235,11 @@ const CoinDesc = (props) => {
         fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
-      <Modal ticker={data?.ticker}  modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <Modal
+        ticker={data?.ticker}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+      />
       {!fakeModalOpen ? (
         <div
           className={`grid ${
