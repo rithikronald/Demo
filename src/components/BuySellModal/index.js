@@ -15,7 +15,7 @@ const innertabsData = [
 ];
 
 export const BuySellModal = (props) => {
-  const [currentPrice, setCurrentPrice] = useState();
+  const [currentPrice, setCurrentPrice] = useState("");
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
   var WebSocketClient = require("websocket").w3cwebsocket;
@@ -36,12 +36,7 @@ export const BuySellModal = (props) => {
       const data = JSON.parse(evt?.data);
       const coinName = data?.params?.[0].toString().split("_")[0];
       if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
+        setCurrentPrice(data?.params?.[1]?.last);
       }
     };
     ws.onclose = function () {
@@ -51,6 +46,8 @@ export const BuySellModal = (props) => {
       console.log("error", err);
     };
   };
+  const getBidPrice = (type) => {};
+
   useEffect(() => {
     if (props?.ticker) {
       console.log("Ticker", props?.ticker);
@@ -61,28 +58,32 @@ export const BuySellModal = (props) => {
   }, [props?.ticker]);
 
   useEffect(() => {
-    // console.log("Current Price", currentPrice);
+    console.log("Current Price", currentPrice);
   }, [currentPrice]);
 
   useEffect(() => {
     // console.log("value", price, currentPrice?.[props?.ticker]);
+    console.log("getBidPrice", getBidPrice("buy"));
     if (price) {
-      const value = Number(price) / currentPrice?.[props?.ticker];
+      const value = Number(price) / currentPrice;
       setAmount(value.toFixed(3));
     }
   }, [price, currentPrice]);
 
   const createOrder = () => {
-    console.log("UID",localStorage.getItem("uid"))
-    let body={
-        text:"t-123",
-        currency_pair:`${props?.ticker}_USDT`,
-        amount:amount,
-        price:`${currentPrice?.[props?.ticker]}`,
-        side:"buy"
-      }
+    // console.log("UID", localStorage.getItem("uid"));
+    let body = {
+      text: "t-123",
+      currency_pair: `${props?.ticker}_USDT`,
+      amount: amount,
+      price: `${Number(currentPrice) - Number("0.001")}`,
+      side: "sell",
+    };
     axios
-      .post(`https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,body)
+      .post(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        body
+      )
       .then((response) => console.log("Response", response?.data))
       .catch((err) => console.log("Error", err));
   };
@@ -135,7 +136,11 @@ export const BuySellModal = (props) => {
           />
         </div>
       </div>
-      <ThemeButton onClick={createOrder} text="Trade" className="w-[75%] mt-4" />
+      <ThemeButton
+        onClick={createOrder}
+        text="Trade"
+        className="w-[75%] mt-4"
+      />
     </div>
   );
 };

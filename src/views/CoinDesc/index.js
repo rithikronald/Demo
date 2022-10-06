@@ -32,7 +32,7 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState({});
+  const [currentPrice, setCurrentPrice] = useState("");
   const location = useLocation();
 
   var WebSocketClient = require("websocket").w3cwebsocket;
@@ -55,12 +55,7 @@ const CoinDesc = (props) => {
       const data = JSON.parse(evt?.data);
       const coinName = data?.params?.[0].toString().split("_")[0];
       if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
+        setCurrentPrice(data?.params?.[1]?.last);
       }
       // console.log(data?.params?.[0], data?.params?.[1]?.last);
       // if(methods != 'server.sign')
@@ -73,7 +68,6 @@ const CoinDesc = (props) => {
       console.log("error", err);
     };
   };
-
 
   useEffect(() => {
     console.log("COINNAME", `${location?.state?.coin}_USDT`);
@@ -266,10 +260,10 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(currentPrice[data?.ticker])}
+                    {Math.floor(currentPrice)}
                   </p>
                   <p className="text-[15px] font-bold">
-                    .{currentPrice[data?.ticker]?.split(".")[1]}
+                    .{currentPrice.split(".")[1]}
                   </p>
                 </div>
               </div>
