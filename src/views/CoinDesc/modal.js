@@ -15,14 +15,12 @@ const tabsData = [
 ];
 
 const Modal = (props) => {
-  const [limit, setLimit] = useState(false);
-  const [buy, setBuy] = useState(false);
-
+  const [trade, setTrade] = useState("buy");
   return (
     <div
-    style={{
-      backgroundImage: `url('/images/rightSectionbg.png')`,
-    }}
+      style={{
+        backgroundImage: `url('/images/rightSectionbg.png')`,
+      }}
       className={`flex flex-col transitionClass items-center gap-10  justify-center fixed top-0 right-0 h-[100vh] w-[30vw] ${
         props.modalOpen ? "translate-x-[0px]" : "translate-x-[27vw]"
       } bg-bg bg-no-repeat bg-cover bg-center  z-[100]`}
@@ -33,10 +31,13 @@ const Modal = (props) => {
       >
         <div className="h-[30px] w-[4px] rounded-3xl bg-white opacity-25 absolute left-[20px] top-1/2 -translate-y-1/2"></div>
       </div>
-      <Tabs data={tabsData} />
+      <Tabs
+        onClick={(val) => setTrade(val === 0 ? "buy" : "sell")}
+        data={tabsData}
+      />
       <GradientContainer
         className={"w-[75%]"}
-        children={<BuySellModal ticker={props?.ticker} />}
+        children={<BuySellModal trade={trade} ticker={props?.ticker} />}
       />
     </div>
   );

@@ -77,7 +77,7 @@ export const RightContainer = ({ option, icon }) => {
   );
 };
 
-export function Tabs({ data, innerTabs = false }) {
+export function Tabs({ data, onClick }) {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
@@ -107,7 +107,10 @@ export function Tabs({ data, innerTabs = false }) {
                 key={idx}
                 ref={(el) => (tabsRef.current[idx] = el)}
                 className="pt-2 pb-3"
-                onClick={() => setActiveTabIndex(idx)}
+                onClick={() => {
+                  onClick(idx)
+                  setActiveTabIndex(idx)
+                }}
               >
                 {tab.label}
               </button>

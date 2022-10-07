@@ -18,9 +18,15 @@ export const BuySellModal = (props) => {
   const [currentPrice, setCurrentPrice] = useState("");
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
+  const [tradeMode, setTradeMode] = useState("limit");
   var WebSocketClient = require("websocket").w3cwebsocket;
   const WS_URL = "wss://ws.gate.io/v3/";
   var ws = new WebSocketClient(WS_URL);
+
+  useEffect(() => {
+    console.log("Trade", props?.trade);
+    console.log("TradeMode", tradeMode);
+  }, [props?.trade, tradeMode]);
 
   const wsGet = (id, method, params) => {
     ws.onopen = function () {
@@ -58,15 +64,13 @@ export const BuySellModal = (props) => {
   }, [props?.ticker]);
 
   useEffect(() => {
-    console.log("Current Price", currentPrice);
-  }, [currentPrice]);
-
-  useEffect(() => {
     // console.log("value", price, currentPrice?.[props?.ticker]);
     console.log("getBidPrice", getBidPrice("buy"));
     if (price) {
       const value = Number(price) / currentPrice;
       setAmount(value.toFixed(3));
+    }else{
+      setAmount("")
     }
   }, [price, currentPrice]);
 
@@ -76,8 +80,11 @@ export const BuySellModal = (props) => {
       text: "t-123",
       currency_pair: `${props?.ticker}_USDT`,
       amount: amount,
-      price: `${Number(currentPrice) - Number("0.001")}`,
-      side: "sell",
+      price:
+        props?.trade == "buy"
+          ? `${Number(currentPrice) + 0.001}`
+          : `${Number(currentPrice) - 0.001}`,
+      side: props?.trade,
     };
     axios
       .post(
@@ -90,7 +97,11 @@ export const BuySellModal = (props) => {
 
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
-      <Tabs data={innertabsData} />;
+      <Tabs
+        onClick={(val) => setTradeMode(val === 0 ? "limit" : "market")}
+        data={innertabsData}
+      />
+      ;
       <div className="flex flex-col h-[90%] justify-center">
         <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">Price</p>
@@ -136,7 +147,11 @@ export const BuySellModal = (props) => {
           />
         </div> */}
       </div>
-      <ThemeButton onClick={createOrder} text="Trade" className="w-[75%] mt-10" />
+      <ThemeButton
+        onClick={createOrder}
+        text="Trade"
+        className="w-[75%] mt-10"
+      />
     </div>
   );
 };
