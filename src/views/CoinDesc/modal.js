@@ -23,7 +23,7 @@ const Modal = (props) => {
     style={{
       backgroundImage: `url('/images/rightSectionbg.png')`,
     }}
-      className={`flex flex-col transitionClass items-center justify-around fixed top-0 right-0 h-[100vh] w-[30vw] ${
+      className={`flex flex-col transitionClass items-center gap-10  justify-center fixed top-0 right-0 h-[100vh] w-[30vw] ${
         props.modalOpen ? "translate-x-[0px]" : "translate-x-[27vw]"
       } bg-bg bg-no-repeat bg-cover bg-center  z-[100]`}
     >
@@ -35,11 +35,9 @@ const Modal = (props) => {
       </div>
       <Tabs data={tabsData} />
       <GradientContainer
-        height="h-[65%]"
         className={"w-[75%]"}
         children={<BuySellModal ticker={props?.ticker} />}
       />
-      
     </div>
   );
 };

@@ -85,23 +85,6 @@ const Home = (props) => {
     ]);
   }, []);
 
-  // useEffect(() => {
-  //   console.log("SOCKET DATA", currentPrice);
-  // }, [currentPrice]);
-
-  useEffect(() => {
-    if (width >= 2500) {
-      setMaxPicksList(12);
-      setIndexesList(6);
-    } else if (width >= 1600) {
-      setMaxPicksList(8);
-      setIndexesList(4);
-    } else if (width >= 1440) {
-      setMaxPicksList(8);
-      setIndexesList(4);
-    }
-  }, [width, height]);
-
   useEffect(() => {
     props.openLoader();
     maximumInstance(localStorage.getItem("accessToken"))
@@ -134,10 +117,6 @@ const Home = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log("TERM", tenureIndex, riskIndex);
-  }, [tenureIndex, riskIndex]);
-
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
@@ -151,12 +130,7 @@ const Home = (props) => {
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
-      <div
-        // style={{
-        //   backgroundImage: `url('/images/mainbg.png')`,
-        // }}
-        className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4"
-      >
+      <div className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4">
         {/* Banner */}
         <div className="flex w-full h-1/3">
           <div className="welcomeCard rounded-2xl w-full h-full bg-gradient-to-r from-purple-700 ... flex 2xl:pl-10">

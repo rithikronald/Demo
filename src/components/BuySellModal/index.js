@@ -89,9 +89,9 @@ export const BuySellModal = (props) => {
   };
 
   return (
-    <div className="flex  flex-col p-4 px-6 w-full h-full">
+    <div className="flex items-center flex-col p-4 px-6 w-full h-full">
       <Tabs data={innertabsData} />;
-      <div>
+      <div className="flex flex-col h-[90%] justify-center">
         <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">Price</p>
           <GradientContainer
@@ -122,7 +122,7 @@ export const BuySellModal = (props) => {
             }
           />
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">Total</p>
           <GradientContainer
             height="h-16"
@@ -134,13 +134,9 @@ export const BuySellModal = (props) => {
               />
             }
           />
-        </div>
+        </div> */}
       </div>
-      <ThemeButton
-        onClick={createOrder}
-        text="Trade"
-        className="w-[75%] mt-4"
-      />
+      <ThemeButton onClick={createOrder} text="Trade" className="w-[75%] mt-10" />
     </div>
   );
 };
