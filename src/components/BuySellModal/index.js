@@ -52,8 +52,32 @@ export const BuySellModal = (props) => {
       console.log("error", err);
     };
   };
-  const getBidPrice = (type) => {};
-
+  const getBidPrice = (type) => {
+    let bidQuote = []; // decimals strateg
+    let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
+    // % strategy
+    let bid = currentPrice * 0.002;
+    let finalBid;
+    // console.log(bid);
+    switch (type) {
+      case "buy":
+        finalBid = (Number(currentPrice) + Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) + Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      case "sell":
+        finalBid = (Number(currentPrice) - Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) - Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      default:
+        break;
+    }
+  };
   useEffect(() => {
     if (props?.ticker) {
       console.log("Ticker", props?.ticker);
@@ -78,10 +102,8 @@ export const BuySellModal = (props) => {
       text: "t-123",
       currency_pair: `${props?.ticker}_USDT`,
       amount: amount,
-      price:
-        props?.trade == "buy"
-          ? `${Number(currentPrice) + 0.001}`
-          : `${Number(currentPrice) - 0.001}`,
+      price: getBidPrice(props?.trade),
+
       side: props?.trade,
     };
     axios
