@@ -63,19 +63,17 @@ export const BuySellModal = (props) => {
     }
   }, [props?.ticker]);
 
-  useEffect(() => {
-    // console.log("value", price, currentPrice?.[props?.ticker]);
-    console.log("getBidPrice", getBidPrice("buy"));
-    if (price) {
-      const value = Number(price) / currentPrice;
-      setAmount(value.toFixed(3));
-    }else{
-      setAmount("")
-    }
-  }, [price, currentPrice]);
+  const calculatePrice = (val) => {
+    const value = Number(val) * currentPrice;
+    setPrice(value);
+  };
+
+  const calculateAmount = (val) => {
+    const value = Number(val) / currentPrice;
+    setAmount(value.toFixed(3));
+  };
 
   const createOrder = () => {
-    // console.log("UID", localStorage.getItem("uid"));
     let body = {
       text: "t-123",
       currency_pair: `${props?.ticker}_USDT`,
@@ -112,7 +110,10 @@ export const BuySellModal = (props) => {
               <input
                 type="text"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => {
+                  setPrice(e.target.value);
+                  calculateAmount(e.target.value);
+                }}
                 className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
               />
             }
@@ -127,7 +128,10 @@ export const BuySellModal = (props) => {
               <input
                 type="text"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => {
+                  setAmount(e.target.value);
+                  calculatePrice(e.target.value);
+                }}
                 className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
               />
             }
