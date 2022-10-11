@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { GradientContainer } from "../../components/GradientContainer";
-import { Table } from "../../components/Table";
+// import { Table } from "../../components/Table";
 import {
   data02,
   dummyChartData,
@@ -11,7 +11,14 @@ import {
 } from "../../constants/constants";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { RightContainer, Tabs } from "../CoinList";
-import './style.css'
+import "./style.css";
+import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
+import { maximumInstance } from "../../setup";
+import { Table } from "../../components/TransactionsHistoryTable";
+import { numFormatter } from "../../utility/kFormatter";
+var WebSocketClient = require("websocket").w3cwebsocket;
+const WS_URL = "wss://ws.gate.io/v3/";
+var ws = new WebSocketClient(WS_URL);
 
 const tabsData = [
   {
@@ -25,8 +32,24 @@ const tabsData = [
 const WalletOverView = () => {
   const [coinList, setCoinList] = useState();
   const { height, width } = useWindowDimensions();
+  const [ticker, setTicker] = useState(arr[0].ticker);
+  const [currentCurrencyChain, setCurrentCurrencyChain] = useState([]);
 
   useEffect(() => {
+    axios({
+      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/getCurrencyChains/${ticker}`,
+      method: "get",
+    })
+      .then((res) => {
+        setCurrentCurrencyChain(res?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [ticker]);
+
+  useEffect(() => {
+    setTicker(arr[0].ticker);
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/coinList/`,
@@ -39,9 +62,59 @@ const WalletOverView = () => {
       })
       .catch((err) => console.log("error", err));
   }, []);
+
+  const [currentPrice, setCurrentPrice] = useState({});
+
+  const wsGet = (id, method, params) => {
+    ws.onopen = function () {
+      console.log("open");
+      var array = JSON.stringify({
+        id: id,
+        method: method,
+        params: params,
+      });
+      ws.send(array);
+    };
+    ws.onmessage = function (evt) {
+      const data = JSON.parse(evt?.data);
+      console.log('EVENT DATA', data)
+      const coinName = data?.params?.[0].toString().split("_")[0];
+      if (coinName) {
+        setCurrentPrice((prev) => {
+          return {
+            ...prev,
+            [`${coinName}`]: data?.params?.[1]?.last,
+          };
+        });
+      }
+      // console.log(data?.params?.[0], data?.params?.[1]?.last);
+      // if(methods != 'server.sign')
+      // ws.close();
+    };
+    ws.onclose = function () {
+      console.log("close");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
+  };
+
+  useEffect(() => {
+    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+      "BTC_USDT",
+      "ETH_USDT",
+      "BNB_USDT",
+      "XRP_USDT",
+      "ADA_USDT",
+      "SOL_USDT",
+      "DOGE_USDT",
+      "DOT_USDT",
+    ]);
+  }, []);
+
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-y-scroll h-[100%]">
+      <div className="Left p-10 pt-[300px] px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-y-scroll h-[100%]">
         <div className="flex flex-col w-full">
           <p className="text-2xl 2xl:text-3xl 3xl:text-4xl font-semibold text-white">
             Wallet Overview
@@ -119,32 +192,32 @@ const WalletOverView = () => {
             children={
               <div className="w-full h-full rounded-2xl flex p-4 flex-col px-8">
                 <p className="text-white text-sm font-medium">Assets</p>
-                <div className="assetsContainer flex flex-col h-full justify-center overflow-y-scroll pt-8">
-                  {[1, 2, 3,4,5,6].map((ele) => (
+                <div className="assetsContainer flex flex-col h-full  overflow-y-scroll pt-8">
+                  {coinList?.map((ele) => (
                     <div className="flex mt-1 justify-between my-1">
                       <div className="flex">
                         <img
                           alt="btc"
                           className="h-8 w-8"
-                          src={require("../../assets/btcLight.png")}
+                          src={getCoinMeta(ele.ticker).logoUrl}
                         />
                         <div className="ml-2">
                           <div className="flex items-center">
                             <p className=" text-white text-sm font-semibold">
-                              BTC
+                              {ele.ticker}
                             </p>
                             <p className=" text-white font-semibold text-[10px] ml-2">
-                              bitcoin
+                              {getCoinMeta(ele.ticker).slug}
                             </p>
                           </div>
                           <div className="h-[6px] w-full rounded-lg bg-yellow-400" />
                         </div>
                       </div>
                       <div className="mr-1">
-                        <p className="text-white font-bold text-sm">2.53243</p>
+                        <p className="text-white font-bold text-sm">{numFormatter(ele.price.value)}</p>
                         <div className=" text-white text-[9px] flex items-center">
-                          <p>$232243</p>
-                          <p className="text-[7px]">(+21%)</p>
+                          <p>${numFormatter(ele.price.value)}</p>
+                          <p className="text-[7px]">({ele.percent_change_24h}%)</p>
                         </div>
                       </div>
                     </div>
@@ -226,10 +299,47 @@ const WalletOverView = () => {
             }
           />
         </div>
-        {/* <div className="TableWithOptions w-full mt-8">
-          {coinList && <Table title={"Transactions"} data={coinList} />}
-        </div> */}
+        <div className="w-[100%] mt-[50px]">
+          <Table
+            title={"Transactions"}
+            data={[
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+            ]}
+          />
+        </div>
       </div>
+
       <div
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
@@ -306,12 +416,19 @@ const WalletOverView = () => {
                   <select
                     id="countries"
                     className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-2xl focus:ring-bg focus:border-bg"
+                    value={ticker}
+                    onChange={(e) => setTicker(e.target.value)}
                   >
-                    <option selected value="+91">
+                    {arr.map((item, index) => (
+                      <option selected value={item.ticker}>
+                        ({item.ticker}) {item.slug}
+                      </option>
+                    ))}
+                    {/* <option selected value="+91">
                       BTC (Bitcoin)
                     </option>
                     <option value="+1">ETH (Ethereum)</option>
-                    <option value="+33">USDT (Tether)</option>
+                    <option value="+33">USDT (Tether)</option> */}
                   </select>
                 </div>
               </div>
@@ -324,11 +441,9 @@ const WalletOverView = () => {
                     id="countries"
                     className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-2xl focus:ring-bg focus:border-bg"
                   >
-                    <option selected value="+91">
-                      BTC (Bitcoin)
-                    </option>
-                    <option value="+1">ETH (Ethereum)</option>
-                    <option value="+33">USDT (Tether)</option>
+                    {currentCurrencyChain?.map((item) => {
+                      return <option value={item.chain}>{item.chain}</option>;
+                    })}
                   </select>
                 </div>
               </div>
@@ -350,7 +465,10 @@ const WalletOverView = () => {
             </div>
           }
         />
-        <button className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg">
+        <button
+          onClick={() => console.log(ticker)}
+          className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
+        >
           Deposit Now
         </button>
       </div>

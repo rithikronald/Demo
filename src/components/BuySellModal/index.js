@@ -7,20 +7,26 @@ import { ThemeButton } from "../themeButton";
 
 const innertabsData = [
   {
-    label: "Limit",
+    label: "Market",
   },
   {
-    label: "Market",
+    label: "Limit",
   },
 ];
 
 export const BuySellModal = (props) => {
-  const [currentPrice, setCurrentPrice] = useState();
+  const [currentPrice, setCurrentPrice] = useState("");
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
+  const [tradeMode, setTradeMode] = useState("market");
   var WebSocketClient = require("websocket").w3cwebsocket;
   const WS_URL = "wss://ws.gate.io/v3/";
   var ws = new WebSocketClient(WS_URL);
+
+  useEffect(() => {
+    console.log("Trade", props?.trade);
+    console.log("TradeMode", tradeMode);
+  }, [props?.trade, tradeMode]);
 
   const wsGet = (id, method, params) => {
     ws.onopen = function () {
@@ -36,12 +42,7 @@ export const BuySellModal = (props) => {
       const data = JSON.parse(evt?.data);
       const coinName = data?.params?.[0].toString().split("_")[0];
       if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
+        setCurrentPrice(data?.params?.[1]?.last);
       }
     };
     ws.onclose = function () {
@@ -50,6 +51,32 @@ export const BuySellModal = (props) => {
     ws.onerror = function (err) {
       console.log("error", err);
     };
+  };
+  const getBidPrice = (type) => {
+    let bidQuote = []; // decimals strateg
+    let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
+    // % strategy
+    let bid = currentPrice * 0.002;
+    let finalBid;
+    // console.log(bid);
+    switch (type) {
+      case "buy":
+        finalBid = (Number(currentPrice) + Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) + Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      case "sell":
+        finalBid = (Number(currentPrice) - Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) - Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      default:
+        break;
+    }
   };
   useEffect(() => {
     if (props?.ticker) {
@@ -60,39 +87,79 @@ export const BuySellModal = (props) => {
     }
   }, [props?.ticker]);
 
-  useEffect(() => {
-    // console.log("Current Price", currentPrice);
-  }, [currentPrice]);
+  const calculatePrice = (val) => {
+    const value = Number(val) * currentPrice;
+    setPrice(value);
+  };
 
-  useEffect(() => {
-    // console.log("value", price, currentPrice?.[props?.ticker]);
-    if (price) {
-      const value = Number(price) / currentPrice?.[props?.ticker];
-      setAmount(value.toFixed(3));
-    }
-  }, [price, currentPrice]);
+  const calculateAmount = (val) => {
+    const value = Number(val) / currentPrice;
+    setAmount(value.toFixed(3));
+  };
 
   const createOrder = () => {
-    console.log("UID",localStorage.getItem("uid"))
-    let body={
-        text:"t-123",
-        currency_pair:`${props?.ticker}_USDT`,
-        amount:amount,
-        price:`${currentPrice?.[props?.ticker]}`,
-        side:"buy"
-      }
+    let body = {
+      text: "t-123",
+      currency_pair: `${props?.ticker}_USDT`,
+      amount: amount,
+      price: tradeMode === "market" ? getBidPrice(props?.trade) : price,
+      side: props?.trade,
+      type: tradeMode,
+    };
     axios
-      .post(`https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,body)
+      .post(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        body
+      )
       .then((response) => console.log("Response", response?.data))
       .catch((err) => console.log("Error", err));
   };
 
+  const handlePriceInput = (e) => {
+    if (tradeMode === "market") {
+      setPrice(e.target.value);
+      calculateAmount(e.target.value);
+    }
+    if (tradeMode === "limit") {
+      setPrice(e.target.value);
+    }
+  };
+
+  const handleAmountInput = (e) => {
+    if (tradeMode === "market") {
+      setAmount(e.target.value);
+      calculatePrice(e.target.value);
+    }
+    if (tradeMode === "limit") {
+      setAmount(e.target.value);
+    }
+  };
+
+  const priceText = () => {
+    if (tradeMode === "market") {
+      switch (props?.trade) {
+        case "buy":
+          return "Investment price";
+        case "sell":
+          return "Withdrawal price";
+      }
+    }
+    if (tradeMode === "limit") {
+      return "Token price";
+    }
+  };
   return (
-    <div className="flex  flex-col p-4 px-6 w-full h-full">
-      <Tabs data={innertabsData} />;
-      <div>
+    <div className="flex items-center flex-col p-4 px-6 w-full h-full">
+      <Tabs
+        onClick={(val) => setTradeMode(val === 1 ? "limit" : "market")}
+        data={innertabsData}
+      />
+      ;
+      <div className="flex flex-col h-[90%] justify-center">
         <div className="mt-4">
-          <p className="text-white font-medium text-xs ml-2 mb-1">Price</p>
+          <p className="text-white font-medium text-xs ml-2 mb-1">
+            {priceText()}
+          </p>
           <GradientContainer
             height="h-16"
             width="w-full"
@@ -100,7 +167,7 @@ export const BuySellModal = (props) => {
               <input
                 type="text"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={handlePriceInput}
                 className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
               />
             }
@@ -115,13 +182,13 @@ export const BuySellModal = (props) => {
               <input
                 type="text"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={handleAmountInput}
                 className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
               />
             }
           />
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">Total</p>
           <GradientContainer
             height="h-16"
@@ -133,9 +200,13 @@ export const BuySellModal = (props) => {
               />
             }
           />
-        </div>
+        </div> */}
       </div>
-      <ThemeButton onClick={createOrder} text="Trade" className="w-[75%] mt-4" />
+      <ThemeButton
+        onClick={createOrder}
+        text="Trade"
+        className="w-[75%] mt-10"
+      />
     </div>
   );
 };
