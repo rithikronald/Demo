@@ -7,10 +7,10 @@ import { ThemeButton } from "../themeButton";
 
 const innertabsData = [
   {
-    label: "Limit",
+    label: "Market",
   },
   {
-    label: "Market",
+    label: "Limit",
   },
 ];
 
@@ -18,7 +18,7 @@ export const BuySellModal = (props) => {
   const [currentPrice, setCurrentPrice] = useState("");
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
-  const [tradeMode, setTradeMode] = useState("limit");
+  const [tradeMode, setTradeMode] = useState("market");
   var WebSocketClient = require("websocket").w3cwebsocket;
   const WS_URL = "wss://ws.gate.io/v3/";
   var ws = new WebSocketClient(WS_URL);
@@ -102,9 +102,9 @@ export const BuySellModal = (props) => {
       text: "t-123",
       currency_pair: `${props?.ticker}_USDT`,
       amount: amount,
-      price: getBidPrice(props?.trade),
-
+      price: tradeMode === "market" ? getBidPrice(props?.trade) : price,
       side: props?.trade,
+      type: tradeMode,
     };
     axios
       .post(
@@ -115,16 +115,51 @@ export const BuySellModal = (props) => {
       .catch((err) => console.log("Error", err));
   };
 
+  const handlePriceInput = (e) => {
+    if (tradeMode === "market") {
+      setPrice(e.target.value);
+      calculateAmount(e.target.value);
+    }
+    if (tradeMode === "limit") {
+      setPrice(e.target.value);
+    }
+  };
+
+  const handleAmountInput = (e) => {
+    if (tradeMode === "market") {
+      setAmount(e.target.value);
+      calculatePrice(e.target.value);
+    }
+    if (tradeMode === "limit") {
+      setAmount(e.target.value);
+    }
+  };
+
+  const priceText = () => {
+    if (tradeMode === "market") {
+      switch (props?.trade) {
+        case "buy":
+          return "Investment price";
+        case "sell":
+          return "Withdrawal price";
+      }
+    }
+    if (tradeMode === "limit") {
+      return "Token price";
+    }
+  };
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
       <Tabs
-        onClick={(val) => setTradeMode(val === 0 ? "limit" : "market")}
+        onClick={(val) => setTradeMode(val === 1 ? "limit" : "market")}
         data={innertabsData}
       />
       ;
       <div className="flex flex-col h-[90%] justify-center">
         <div className="mt-4">
-          <p className="text-white font-medium text-xs ml-2 mb-1">Price</p>
+          <p className="text-white font-medium text-xs ml-2 mb-1">
+            {priceText()}
+          </p>
           <GradientContainer
             height="h-16"
             width="w-full"
@@ -132,10 +167,7 @@ export const BuySellModal = (props) => {
               <input
                 type="text"
                 value={price}
-                onChange={(e) => {
-                  setPrice(e.target.value);
-                  calculateAmount(e.target.value);
-                }}
+                onChange={handlePriceInput}
                 className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
               />
             }
@@ -150,10 +182,7 @@ export const BuySellModal = (props) => {
               <input
                 type="text"
                 value={amount}
-                onChange={(e) => {
-                  setAmount(e.target.value);
-                  calculatePrice(e.target.value);
-                }}
+                onChange={handleAmountInput}
                 className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
               />
             }
