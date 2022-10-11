@@ -87,23 +87,6 @@ const Home = (props) => {
     ]);
   }, []);
 
-  // useEffect(() => {
-  //   console.log("SOCKET DATA", currentPrice);
-  // }, [currentPrice]);
-
-  useEffect(() => {
-    if (width >= 2500) {
-      setMaxPicksList(12);
-      setIndexesList(6);
-    } else if (width >= 1600) {
-      setMaxPicksList(8);
-      setIndexesList(4);
-    } else if (width >= 1440) {
-      setMaxPicksList(8);
-      setIndexesList(4);
-    }
-  }, [width, height]);
-
   useEffect(() => {
     props.openLoader();
     maximumInstance(localStorage.getItem("accessToken"))
@@ -135,10 +118,6 @@ const Home = (props) => {
       });
     }
   };
-
-  useEffect(() => {
-    console.log("TERM", tenureIndex, riskIndex);
-  }, [tenureIndex, riskIndex]);
 
   const arrGen = (arr) => {
     const tempArr = [];

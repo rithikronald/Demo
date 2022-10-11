@@ -15,12 +15,18 @@ const innertabsData = [
 ];
 
 export const BuySellModal = (props) => {
-  const [currentPrice, setCurrentPrice] = useState();
+  const [currentPrice, setCurrentPrice] = useState("");
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
+  const [tradeMode, setTradeMode] = useState("limit");
   var WebSocketClient = require("websocket").w3cwebsocket;
   const WS_URL = "wss://ws.gate.io/v3/";
   var ws = new WebSocketClient(WS_URL);
+
+  useEffect(() => {
+    console.log("Trade", props?.trade);
+    console.log("TradeMode", tradeMode);
+  }, [props?.trade, tradeMode]);
 
   const wsGet = (id, method, params) => {
     ws.onopen = function () {
@@ -36,12 +42,7 @@ export const BuySellModal = (props) => {
       const data = JSON.parse(evt?.data);
       const coinName = data?.params?.[0].toString().split("_")[0];
       if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
+        setCurrentPrice(data?.params?.[1]?.last);
       }
     };
     ws.onclose = function () {
@@ -51,6 +52,8 @@ export const BuySellModal = (props) => {
       console.log("error", err);
     };
   };
+  const getBidPrice = (type) => {};
+
   useEffect(() => {
     if (props?.ticker) {
       console.log("Ticker", props?.ticker);
@@ -61,36 +64,45 @@ export const BuySellModal = (props) => {
   }, [props?.ticker]);
 
   useEffect(() => {
-    // console.log("Current Price", currentPrice);
-  }, [currentPrice]);
-
-  useEffect(() => {
     // console.log("value", price, currentPrice?.[props?.ticker]);
+    console.log("getBidPrice", getBidPrice("buy"));
     if (price) {
-      const value = Number(price) / currentPrice?.[props?.ticker];
+      const value = Number(price) / currentPrice;
       setAmount(value.toFixed(3));
+    }else{
+      setAmount("")
     }
   }, [price, currentPrice]);
 
   const createOrder = () => {
-    console.log("UID",localStorage.getItem("uid"))
-    let body={
-        text:"t-123",
-        currency_pair:`${props?.ticker}_USDT`,
-        amount:amount,
-        price:`${currentPrice?.[props?.ticker]}`,
-        side:"buy"
-      }
+    // console.log("UID", localStorage.getItem("uid"));
+    let body = {
+      text: "t-123",
+      currency_pair: `${props?.ticker}_USDT`,
+      amount: amount,
+      price:
+        props?.trade == "buy"
+          ? `${Number(currentPrice) + 0.001}`
+          : `${Number(currentPrice) - 0.001}`,
+      side: props?.trade,
+    };
     axios
-      .post(`https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,body)
+      .post(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        body
+      )
       .then((response) => console.log("Response", response?.data))
       .catch((err) => console.log("Error", err));
   };
 
   return (
-    <div className="flex  flex-col p-4 px-6 w-full h-full">
-      <Tabs data={innertabsData} />;
-      <div>
+    <div className="flex items-center flex-col p-4 px-6 w-full h-full">
+      <Tabs
+        onClick={(val) => setTradeMode(val === 0 ? "limit" : "market")}
+        data={innertabsData}
+      />
+      ;
+      <div className="flex flex-col h-[90%] justify-center">
         <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">Price</p>
           <GradientContainer
@@ -121,7 +133,7 @@ export const BuySellModal = (props) => {
             }
           />
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">Total</p>
           <GradientContainer
             height="h-16"
@@ -133,9 +145,13 @@ export const BuySellModal = (props) => {
               />
             }
           />
-        </div>
+        </div> */}
       </div>
-      <ThemeButton onClick={createOrder} text="Trade" className="w-[75%] mt-4" />
+      <ThemeButton
+        onClick={createOrder}
+        text="Trade"
+        className="w-[75%] mt-10"
+      />
     </div>
   );
 };

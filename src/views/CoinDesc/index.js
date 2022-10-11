@@ -1,16 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { userIdContext } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
-import { maximumInstance } from "../../setup";
-import { numFormatter } from "../../utility/kFormatter";
-import axios from "axios";
-import moment from "moment";
-import types from "../../store/types";
-import { connect } from "react-redux";
-import Modal from "./modal";
 import { GradientContainer } from "../../components/GradientContainer";
+import { maximumInstance } from "../../setup";
+import types from "../../store/types";
+import { numFormatter } from "../../utility/kFormatter";
+import Modal from "./modal";
 
 const CoinDesc = (props) => {
   const [data, setData] = useState();
@@ -32,14 +30,14 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState({});
+  const [currentPrice, setCurrentPrice] = useState("");
   const location = useLocation();
+  const params = useParams();
 
   var WebSocketClient = require("websocket").w3cwebsocket;
   const WS_URL = "wss://ws.gate.io/v3/";
   var ws = new WebSocketClient(WS_URL);
 
-  const params = useParams();
 
   const wsGet = (id, method, params) => {
     ws.onopen = function () {
@@ -55,12 +53,7 @@ const CoinDesc = (props) => {
       const data = JSON.parse(evt?.data);
       const coinName = data?.params?.[0].toString().split("_")[0];
       if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
+        setCurrentPrice(data?.params?.[1]?.last);
       }
       // console.log(data?.params?.[0], data?.params?.[1]?.last);
       // if(methods != 'server.sign')
@@ -73,7 +66,6 @@ const CoinDesc = (props) => {
       console.log("error", err);
     };
   };
-
 
   useEffect(() => {
     console.log("COINNAME", `${location?.state?.coin}_USDT`);
@@ -143,81 +135,16 @@ const CoinDesc = (props) => {
     });
     return tempArr;
   };
-  function numberWithCommas(x) {
-    if (!x) {
-      return x;
-    }
 
-    let numbers = x.toString().split(".");
-    let firstPart = Number(parseInt(numbers[0])).toLocaleString("en");
-    let listOfTokens = firstPart.split(",");
-    if (listOfTokens.length > 1) {
-      listOfTokens.pop();
-    }
-    let newFirstPart = listOfTokens.join(",");
-
-    return firstPart.split(",").length > 1 ? `${newFirstPart}k` : newFirstPart;
-  }
-  const priceChange = (index) => {
-    setPriceIndex(index);
-  };
-  const mainChange = (index) => {
-    setMainIndex(index);
-  };
-  const mainSecondaryChange = (ele) => {
-    if (ele == "Market Cap") {
-      setMainSecondaryIndex("marketcap_usd");
-    } else if (ele == "Social Volume") {
-      setMainSecondaryIndex("sociaVolume");
-    } else if (ele == "Active Wallets") {
-      setMainSecondaryIndex("active_addresses");
-    }
-  };
-  const socialChange = (index) => {
-    setSocialIndex(index);
-  };
-  const networkChange = (index) => {
-    setNetworkIndex(index);
-  };
-  const developerChange = (index) => {
-    setDeveloperIndex(index);
-  };
-  const sentimentChange = (index) => {
-    setSentimentIndex(index);
-  };
-  const calculatePercentage = (value, days) => {
-    let num1 = value;
-    let num2 = days[days.length - 1]?.value;
-    let diff = num1 - num2;
-    let div = diff / num1;
-    let percentage = div * 100;
-    return percentage;
-  };
-  const nullValues = (value) => {
-    if (value == null) return "Coming Soon";
-    else return Number(value).toFixed(3);
-  };
   const oneDayPercentage = (value, days) => {
     let num1 = value;
     let num2 = days[days.length - 2]?.value;
     let diff = num1 - num2;
     let div = diff / num1;
     let percentage = div * 100;
-    // if(percentage) {
-    //   return `${Math.floor(percentage)}${getAfterDecimalValue(percentage)}`
-    // } else {
-    //   return 0
-    // }
     return Math.floor(value);
   };
-  const colorChange = (value) => {
-    const str = value.toString();
-    const changeSymbol = str[0];
-    if (changeSymbol == "-") {
-      return "red";
-    }
-    return "lightGreen";
-  };
+  
   const getAfterDecimalValue = (num) => {
     if (!num) {
       return;
@@ -266,10 +193,10 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(currentPrice[data?.ticker])}
+                    {Math.floor(currentPrice)}
                   </p>
                   <p className="text-[15px] font-bold">
-                    .{currentPrice[data?.ticker]?.split(".")[1]}
+                    .{currentPrice.split(".")[1]}
                   </p>
                 </div>
               </div>
