@@ -3,14 +3,13 @@ import { connect } from "react-redux";
 import { GradientContainer } from "../../components/GradientContainer";
 import { Table } from "../../components/Table";
 import { ThemeButton } from "../../components/themeButton";
+import { ws } from "../../constants/socketMetaData";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
-var WebSocketClient = require("websocket").w3cwebsocket;
-const WS_URL = "wss://ws.gate.io/v3/";
-var ws = new WebSocketClient(WS_URL);
+
 const tabsData = [
   {
     label: "Buy",

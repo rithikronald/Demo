@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { ws } from "../../constants/socketMetaData";
 import { maximumInstance } from "../../setup";
 import { Tabs } from "../../views/CoinList";
 import { GradientContainer } from "../GradientContainer";
@@ -19,9 +20,7 @@ export const BuySellModal = (props) => {
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
   const [tradeMode, setTradeMode] = useState("market");
-  var WebSocketClient = require("websocket").w3cwebsocket;
-  const WS_URL = "wss://ws.gate.io/v3/";
-  var ws = new WebSocketClient(WS_URL);
+ 
 
   useEffect(() => {
     console.log("Trade", props?.trade);

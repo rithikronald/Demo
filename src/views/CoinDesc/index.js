@@ -5,6 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
+import { ws } from "../../constants/socketMetaData";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import { numFormatter } from "../../utility/kFormatter";
@@ -33,11 +34,6 @@ const CoinDesc = (props) => {
   const [currentPrice, setCurrentPrice] = useState("");
   const location = useLocation();
   const params = useParams();
-
-  var WebSocketClient = require("websocket").w3cwebsocket;
-  const WS_URL = "wss://ws.gate.io/v3/";
-  var ws = new WebSocketClient(WS_URL);
-
 
   const wsGet = (id, method, params) => {
     ws.onopen = function () {

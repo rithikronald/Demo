@@ -16,9 +16,7 @@ import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
 import { maximumInstance } from "../../setup";
 import { Table } from "../../components/TransactionsHistoryTable";
 import { numFormatter } from "../../utility/kFormatter";
-var WebSocketClient = require("websocket").w3cwebsocket;
-const WS_URL = "wss://ws.gate.io/v3/";
-var ws = new WebSocketClient(WS_URL);
+import { ws } from "../../constants/socketMetaData";
 
 const tabsData = [
   {
@@ -77,7 +75,7 @@ const WalletOverView = () => {
     };
     ws.onmessage = function (evt) {
       const data = JSON.parse(evt?.data);
-      console.log('EVENT DATA', data)
+      console.log("EVENT DATA", data);
       const coinName = data?.params?.[0].toString().split("_")[0];
       if (coinName) {
         setCurrentPrice((prev) => {
@@ -214,10 +212,14 @@ const WalletOverView = () => {
                         </div>
                       </div>
                       <div className="mr-1">
-                        <p className="text-white font-bold text-sm">{numFormatter(ele.price.value)}</p>
+                        <p className="text-white font-bold text-sm">
+                          {numFormatter(ele.price.value)}
+                        </p>
                         <div className=" text-white text-[9px] flex items-center">
                           <p>${numFormatter(ele.price.value)}</p>
-                          <p className="text-[7px]">({ele.percent_change_24h}%)</p>
+                          <p className="text-[7px]">
+                            ({ele.percent_change_24h}%)
+                          </p>
                         </div>
                       </div>
                     </div>
