@@ -9,9 +9,9 @@ import { numFormatter } from "../../utility/kFormatter";
 export const Table = (props) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("PROPS", props?.currentPrice);
-  }, [props?.currentPrice]);
+  // useEffect(() => {
+  //   console.log("PROPS", props?.currentPrice);
+  // }, [props?.currentPrice]);
 
   const columns = [
     {
@@ -39,6 +39,19 @@ export const Table = (props) => {
         );
       },
       sortable: true,
+      grow: 1.5,
+    },
+    {
+      name: "PRICE",
+      selector: (row) => {
+        const coinData = getCoinMeta(row.ticker);
+        return "$" + Number(row?.price?.value).toFixed(10);
+      },
+      sortable: true,
+      style: {
+        color: "#fff",
+        fontWeight: "500",
+      },
       grow: 1.5,
     },
     {
@@ -75,15 +88,6 @@ export const Table = (props) => {
       },
     },
     {
-      name: "SUPPLY",
-      selector: (row) => numFormatter(row.total_supply?.value),
-      sortable: true,
-      style: {
-        color: "#7d8597",
-        fontWeight: "500",
-      },
-    },
-    {
       name: "VOLUME",
       selector: (row) => numFormatter(row.tradingVolume?.value),
       sortable: true,
@@ -93,17 +97,37 @@ export const Table = (props) => {
       },
     },
     {
-      name: "PRICE",
-      selector: (row) => {
-        const coinData = getCoinMeta(row.ticker);
-        return "$" + Number(row?.price?.value).toFixed(10);
-      },
+      name: "SUPPLY",
+      selector: (row) => numFormatter(row.total_supply?.value),
       sortable: true,
       style: {
-        color: "#fff",
+        color: "#7d8597",
         fontWeight: "500",
       },
-      grow: 1.5,
+    },
+    {
+      name: "Trade",
+      selector: (row) => (
+        <div className="flex gap-x-3">
+          <button
+            onClick={() => props?.openModal(row?.ticker)}
+            className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-green-600"
+          >
+            Buy
+          </button>
+          <button
+            onClick={() => props?.openModal(row?.ticker)}
+            className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-red-600"
+          >
+            Sell
+          </button>
+        </div>
+      ),
+      sortable: false,
+      style: {
+        color: "#7d8597",
+        fontWeight: "500",
+      },
     },
   ];
 

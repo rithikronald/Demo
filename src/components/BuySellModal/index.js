@@ -42,6 +42,8 @@ export const BuySellModal = (props) => {
       if (coinName) {
         setCurrentPrice(data?.params?.[1]?.last);
       }
+       // if(methods != 'server.sign')
+       // ws.close();
     };
     ws.onclose = function () {
       console.log("close");
