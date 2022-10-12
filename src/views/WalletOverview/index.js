@@ -52,7 +52,7 @@ const WalletOverView = () => {
     setTicker(arr[0].ticker);
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/coinList/`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -77,7 +77,6 @@ const WalletOverView = () => {
     };
     ws.onmessage = function (evt) {
       const data = JSON.parse(evt?.data);
-      console.log('EVENT DATA', data)
       const coinName = data?.params?.[0].toString().split("_")[0];
       if (coinName) {
         setCurrentPrice((prev) => {
@@ -87,6 +86,7 @@ const WalletOverView = () => {
           };
         });
       }
+      console.log('CURRENT PRICE',currentPrice)
       // console.log(data?.params?.[0], data?.params?.[1]?.last);
       // if(methods != 'server.sign')
       // ws.close();
@@ -99,18 +99,29 @@ const WalletOverView = () => {
     };
   };
 
+  const [availableBal, setAvailableBal] = useState(0)
+
   useEffect(() => {
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      "BTC_USDT",
-      "ETH_USDT",
-      "BNB_USDT",
-      "XRP_USDT",
-      "ADA_USDT",
-      "SOL_USDT",
-      "DOGE_USDT",
-      "DOT_USDT",
-    ]);
-  }, []);
+    let sum = 0
+    console.log('BALANCE', coinList)
+    coinList?.map(i => {
+      if(i.currency !== 'USDT'){
+        let first = i.available || 0
+      first = parseFloat(first)
+      let second = currentPrice[i.currency] || 0
+      second = parseFloat(second)
+      if(first && second) {
+        sum = sum + first * second
+      }
+      } 
+      
+    })
+    setAvailableBal(numFormatter(sum))
+  }, [coinList, currentPrice])
+
+  useEffect(() => {
+    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", coinList?.map(item => `${item?.currency}_USDT`));
+  }, [coinList]);
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
@@ -132,10 +143,7 @@ const WalletOverView = () => {
                     </p>
                     <p className="text-white font-semibold text-6xl mt-2">
                       <span className="text-white font-normal text-5xl">$</span>
-                      40123
-                      <span className="text-white font-semibold text-3xl">
-                        .79
-                      </span>
+                      {availableBal}
                     </p>
                   </div>
                   <div className="w-full flex flex-row gap-x-14">
@@ -199,25 +207,25 @@ const WalletOverView = () => {
                         <img
                           alt="btc"
                           className="h-8 w-8"
-                          src={getCoinMeta(ele.ticker).logoUrl}
+                          src={getCoinMeta(ele.currency)?.logoUrl}
                         />
                         <div className="ml-2">
                           <div className="flex items-center">
                             <p className=" text-white text-sm font-semibold">
-                              {ele.ticker}
+                              {ele.currency}
                             </p>
                             <p className=" text-white font-semibold text-[10px] ml-2">
-                              {getCoinMeta(ele.ticker).slug}
+                              {getCoinMeta(ele.currency)?.slug}
                             </p>
                           </div>
                           <div className="h-[6px] w-full rounded-lg bg-yellow-400" />
                         </div>
                       </div>
                       <div className="mr-1">
-                        <p className="text-white font-bold text-sm">{numFormatter(ele.price.value)}</p>
+                        <p style={{textAlign: 'right'}} className="font-bold text-sm text-white">{numFormatter(ele.available)}</p>
                         <div className=" text-white text-[9px] flex items-center">
-                          <p>${numFormatter(ele.price.value)}</p>
-                          <p className="text-[7px]">({ele.percent_change_24h}%)</p>
+                          <p>${numFormatter(currentPrice[ele.currency])}</p>
+                          <p className="text-[7px]">(+{24}%)</p>
                         </div>
                       </div>
                     </div>
