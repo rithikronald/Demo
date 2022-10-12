@@ -16,9 +16,11 @@ import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
 import { maximumInstance } from "../../setup";
 import { Table } from "../../components/TransactionsHistoryTable";
 import { numFormatter } from "../../utility/kFormatter";
+import { propTypesSelected } from "@material-tailwind/react/types/components/select";
+import types from "../../store/types";
+import { connect } from "react-redux";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
-var ws = new WebSocketClient(WS_URL);
 
 const tabsData = [
   {
@@ -29,7 +31,9 @@ const tabsData = [
   },
 ];
 
-const WalletOverView = () => {
+var ws
+
+const WalletOverView = (props) => {
   const [coinList, setCoinList] = useState();
   const { height, width } = useWindowDimensions();
   const [ticker, setTicker] = useState(arr[0].ticker);
@@ -49,7 +53,9 @@ const WalletOverView = () => {
   }, [ticker]);
 
   useEffect(() => {
+    props.openLoader()
     setTicker(arr[0].ticker);
+    
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -59,69 +65,72 @@ const WalletOverView = () => {
       )
       .then((response) => {
         setCoinList(response?.data);
+        ws = new WebSocketClient(WS_URL);
+        const wsGet = (id, method, params) => {
+          ws.onopen = function () {
+            console.log("open");
+            var array = JSON.stringify({
+              id: id,
+              method: method,
+              params: params,
+            });
+            ws.send(array);
+          };
+          ws.onmessage = function (evt) {
+            const data = JSON.parse(evt?.data);
+            const coinName = data?.params?.[0].toString().split("_")[0];
+            if (coinName) {
+              setCurrentPrice((prev) => {
+                return {
+                  ...prev,
+                  [`${coinName}`]: data?.params?.[1]?.last,
+                };
+              });
+            }
+            console.log("CURRENT PRICE", currentPrice);
+          };
+          ws.onclose = function () {
+            console.log("close");
+          };
+          ws.onerror = function (err) {
+            console.log("error", err);
+          };
+        };
+        wsGet(
+          Math.round(Math.random() * 1000),
+          "ticker.subscribe",
+          response?.data?.map((item) => `${item?.currency}_USDT`)
+        );
       })
       .catch((err) => console.log("error", err));
   }, []);
 
   const [currentPrice, setCurrentPrice] = useState({});
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
-      });
-      ws.send(array);
-    };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
-      }
-      console.log('CURRENT PRICE',currentPrice)
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
-    ws.onclose = function () {
-      console.log("close");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  };
-
-  const [availableBal, setAvailableBal] = useState(0)
+  const [availableBal, setAvailableBal] = useState(0);
 
   useEffect(() => {
-    let sum = 0
-    console.log('BALANCE', coinList)
-    coinList?.map(i => {
-      if(i.currency !== 'USDT'){
-        let first = i.available || 0
-      first = parseFloat(first)
-      let second = currentPrice[i.currency] || 0
-      second = parseFloat(second)
-      if(first && second) {
-        sum = sum + first * second
+    let sum = 0;
+    console.log("BALANCE", coinList);
+    coinList?.map((i) => {
+      if (i.currency !== "USDT") {
+        let first = i.available || 0;
+        first = parseFloat(first);
+        let second = currentPrice[i.currency] || 0;
+        second = parseFloat(second);
+        if (first && second) {
+          sum = sum + first * second;
+        }
       }
-      } 
-      
-    })
-    setAvailableBal(numFormatter(sum))
-  }, [coinList, currentPrice])
+    });
+    setAvailableBal(numFormatter(sum));
+  }, [coinList, currentPrice]);
 
   useEffect(() => {
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", coinList?.map(item => `${item?.currency}_USDT`));
-  }, [coinList]);
+    if(availableBal) {
+      props.closeLoader()
+    }
+  }, [availableBal]);
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
@@ -222,7 +231,12 @@ const WalletOverView = () => {
                         </div>
                       </div>
                       <div className="mr-1">
-                        <p style={{textAlign: 'right'}} className="font-bold text-sm text-white">{numFormatter(ele.available)}</p>
+                        <p
+                          style={{ textAlign: "right" }}
+                          className="font-bold text-sm text-white"
+                        >
+                          {numFormatter(ele.available)}
+                        </p>
                         <div className=" text-white text-[9px] flex items-center">
                           <p>${numFormatter(currentPrice[ele.currency])}</p>
                           <p className="text-[7px]">(+{24}%)</p>
@@ -484,4 +498,11 @@ const WalletOverView = () => {
   );
 };
 
-export default WalletOverView;
+const mapDispatchToProps = dispatch => {
+  return {
+    openLoader: () => dispatch({type: types.OPEN_LOADER}), 
+    closeLoader: () => dispatch({type: types.CLOSE_LOADER})
+  }
+}
+
+export default connect(null, mapDispatchToProps)(WalletOverView);
