@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { ws } from "../../constants/socketMetaData";
-import { maximumInstance } from "../../setup";
-import { Tabs } from "../../views/CoinList";
 import { GradientContainer } from "../GradientContainer";
+import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
 
 const innertabsData = [

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import "./style.css";
-import { ThemeButton } from "../../components/themeButton";
-import { GradientContainer } from "../../components/GradientContainer";
-import { RightContainer, Tabs } from "../CoinList";
 import { BuySellModal } from "../../components/BuySellModal";
+import { GradientContainer } from "../../components/GradientContainer";
+import { Tabs } from "../../components/Tabs";
+import "./style.css";
 
 const tabsData = [
   {

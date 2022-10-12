@@ -1,22 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { GradientContainer } from "../../components/GradientContainer";
+import { Tabs } from "../../components/Tabs";
 // import { Table } from "../../components/Table";
-import {
-  data02,
-  dummyChartData,
-  indBgImgList,
-} from "../../constants/constants";
-import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { RightContainer, Tabs } from "../CoinList";
-import "./style.css";
-import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
-import { maximumInstance } from "../../setup";
 import { Table } from "../../components/TransactionsHistoryTable";
-import { numFormatter } from "../../utility/kFormatter";
+import { dummyChartData, indBgImgList } from "../../constants/constants";
 import { ws } from "../../constants/socketMetaData";
+import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
+import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import { numFormatter } from "../../utility/kFormatter";
+import "./style.css";
 
 const tabsData = [
   {
