@@ -14,7 +14,7 @@ const CoinList = (props) => {
   const [tickerList, setTickerList] = useState([]);
   const [currentPrice, setCurrentPrice] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
-  const [tickerName, setTickerName] = useState()
+  const [tickerName, setTickerName] = useState();
 
   useEffect(() => {
     props.openLoader();
@@ -55,7 +55,7 @@ const CoinList = (props) => {
           };
         });
       }
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
+      console.log(data?.params?.[0], data?.params?.[1]?.last);
       // if(methods != 'server.sign')
       // ws.close();
     };
@@ -68,17 +68,38 @@ const CoinList = (props) => {
   };
 
   useEffect(() => {
+    // console.log("TICKER LIST", tickerList);
     if (tickerList[0]?.length > 0)
-      wsGet(
-        Math.round(Math.random() * 1000),
-        "ticker.subscribe",
-        tickerList[0]
-      );
+      wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+        "BTC_USDT",
+        "ETH_USDT",
+        "BNB_USDT",
+        "XRP_USDT",
+        "ADA_USDT",
+        "SOL_USDT",
+        "DOGE_USDT",
+        "DOT_USDT",
+        "MATIC_USDT",
+        "SHIB_USDT",
+        "TRX_USDT",
+        "AVAX_USDT",
+        "UNI_USDT",
+        "LEO_USDT",
+        "LTC_USDT",
+        "ETC_USDT",
+        "LINK_USDT",
+        "ATOM_USDT",
+        "FTT_USDT",
+        "XLM_USDT",
+        "CRO_USDT",
+        "NEAR_USDT",
+        "XMR_USDT",
+      ]);
   }, [tickerList]);
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
-      <div className="Left p-10 px-14 flex w-[96%] flex-col sm:flex overflow-y-scroll">
+      <div className="Left p-10 px-14 flex w-full flex-col sm:flex overflow-y-scroll">
         <div className="TableWithOptions">
           {coinList && currentPrice != {} && (
             <Table
@@ -87,16 +108,16 @@ const CoinList = (props) => {
               currentPrice={currentPrice}
               openModal={(val) => {
                 console.log("Modal", val);
-                setTickerName(val)
+                setTickerName(val);
                 setModalOpen(true);
               }}
             />
           )}
-          <Modal
+          {/* <Modal
             ticker={tickerName}
             modalOpen={modalOpen}
             setModalOpen={setModalOpen}
-          />
+          /> */}
         </div>
       </div>
     </div>

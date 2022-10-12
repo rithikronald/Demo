@@ -140,7 +140,7 @@ const CoinDesc = (props) => {
     let percentage = div * 100;
     return Math.floor(value);
   };
-  
+
   const getAfterDecimalValue = (num) => {
     if (!num) {
       return;

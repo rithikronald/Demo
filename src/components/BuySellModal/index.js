@@ -19,7 +19,6 @@ export const BuySellModal = (props) => {
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
   const [tradeMode, setTradeMode] = useState("market");
- 
 
   useEffect(() => {
     console.log("Trade", props?.trade);
@@ -42,8 +41,8 @@ export const BuySellModal = (props) => {
       if (coinName) {
         setCurrentPrice(data?.params?.[1]?.last);
       }
-       // if(methods != 'server.sign')
-       // ws.close();
+      // if(methods != 'server.sign')
+      // ws.close();
     };
     ws.onclose = function () {
       console.log("close");
@@ -78,14 +77,7 @@ export const BuySellModal = (props) => {
         break;
     }
   };
-  useEffect(() => {
-    if (props?.ticker) {
-      console.log("Ticker", props?.ticker);
-      wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-        props?.ticker + "_USDT",
-      ]);
-    }
-  }, [props?.ticker]);
+  
 
   const calculatePrice = (val) => {
     const value = Number(val) * currentPrice;
@@ -148,6 +140,24 @@ export const BuySellModal = (props) => {
       return "Token price";
     }
   };
+
+  useEffect(() => {
+    console.log("isOpen", props?.isOpen);
+    if(props?.isOpen === false){
+      setAmount("")
+      setPrice("")
+    }
+  }, [props?.isOpen]);
+
+  useEffect(() => {
+    if (props?.ticker) {
+      console.log("Ticker", props?.ticker);
+      wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
+        props?.ticker + "_USDT",
+      ]);
+    }
+  }, [props?.ticker]);
+
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
       <Tabs

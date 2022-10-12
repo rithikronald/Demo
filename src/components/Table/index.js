@@ -18,16 +18,8 @@ export const Table = (props) => {
       name: "NAME",
       selector: (row) => {
         const coinData = getCoinMeta(row.ticker);
-
         return (
-          <div
-            className="flex items-center cursor-pointer"
-            onClick={() =>
-              navigate(`/coin-desc/${row.ticker}`, {
-                state: { coin: row?.ticker },
-              })
-            }
-          >
+          <div className="flex items-center cursor-pointer">
             <img
               className="w-6 h-6 rounded-full bg-white"
               src={coinData?.logoUrl}
@@ -110,17 +102,21 @@ export const Table = (props) => {
       selector: (row) => (
         <div className="flex gap-x-3">
           <button
-            onClick={() => props?.openModal(row?.ticker)}
-            className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-green-600"
+            onClick={() =>
+              navigate(`/coin-desc/${row.ticker}`, {
+                state: { coin: row?.ticker },
+              })
+            }
+            className="p-1.5 px-5 font-semibold rounded-xl text-white font-mont bg-green-700"
           >
-            Buy
+            Trade
           </button>
-          <button
+          {/* <button
             onClick={() => props?.openModal(row?.ticker)}
             className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-red-600"
           >
             Sell
-          </button>
+          </button> */}
         </div>
       ),
       sortable: false,

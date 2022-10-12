@@ -24,19 +24,25 @@ const Modal = (props) => {
         props.modalOpen ? "translate-x-[0px]" : "translate-x-[27vw]"
       } bg-bg bg-no-repeat bg-cover bg-center  z-[100]`}
     >
-      <div
+      <button
         className="w-[50px] h-[100vh] absolute top-0 left-0 cursor-pointer"
         onClick={() => props.setModalOpen(!props.modalOpen)}
       >
         <div className="h-[30px] w-[4px] rounded-3xl bg-white opacity-25 absolute left-[20px] top-1/2 -translate-y-1/2"></div>
-      </div>
+      </button>
       <Tabs
         onClick={(val) => setTrade(val === 0 ? "buy" : "sell")}
         data={tabsData}
       />
       <GradientContainer
         className={"w-[75%]"}
-        children={<BuySellModal trade={trade} ticker={props?.ticker} />}
+        children={
+          <BuySellModal
+            isOpen={props?.modalOpen}
+            trade={trade}
+            ticker={props?.ticker}
+          />
+        }
       />
     </div>
   );
