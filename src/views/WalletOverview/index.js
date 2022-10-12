@@ -6,7 +6,7 @@ import { Tabs } from "../../components/Tabs";
 // import { Table } from "../../components/Table";
 import { Table } from "../../components/TransactionsHistoryTable";
 import { dummyChartData, indBgImgList } from "../../constants/constants";
-import { ws } from "../../constants/socketMetaData";
+import { ws } from "../../setup";
 import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { numFormatter } from "../../utility/kFormatter";

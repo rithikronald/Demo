@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ws } from "../../constants/socketMetaData";
+import { ws } from "../../setup";
 import { GradientContainer } from "../GradientContainer";
 import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
@@ -77,7 +77,6 @@ export const BuySellModal = (props) => {
         break;
     }
   };
-  
 
   const calculatePrice = (val) => {
     const value = Number(val) * currentPrice;
@@ -143,9 +142,9 @@ export const BuySellModal = (props) => {
 
   useEffect(() => {
     console.log("isOpen", props?.isOpen);
-    if(props?.isOpen === false){
-      setAmount("")
-      setPrice("")
+    if (props?.isOpen === false) {
+      setAmount("");
+      setPrice("");
     }
   }, [props?.isOpen]);
 

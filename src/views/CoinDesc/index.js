@@ -5,7 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
-import { ws } from "../../constants/socketMetaData";
+import { ws } from "../../setup";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import { numFormatter } from "../../utility/kFormatter";

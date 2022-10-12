@@ -1,7 +1,4 @@
-var WebSocketClient = require("websocket").w3cwebsocket;
-const WS_URL = "wss://ws.gate.io/v3/";
-var ws = new WebSocketClient(WS_URL);
-
+const { ws } = require("../setup");
 const KEY = "1dbcdeb0cb67b8ab5be2bfb2b2843702";
 const SECRET =
   "0c7fb151f5ca9d8e748b4e5d7fdec47c3ec16663f43fba5f75fb9c8ecc67f724";

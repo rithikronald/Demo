@@ -22,7 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import Stepper from "react-stepper-horizontal";
 import Slider from "../../components/Slider";
-import { ws } from "../../constants/socketMetaData";
+import { ws } from "../../setup";
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
