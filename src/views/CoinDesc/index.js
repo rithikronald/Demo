@@ -5,7 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
-import { ws } from "../../setup";
+import { wsGet, ws } from "../../setup";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import { numFormatter } from "../../utility/kFormatter";
@@ -13,16 +13,7 @@ import Modal from "./modal";
 
 const CoinDesc = (props) => {
   const [data, setData] = useState();
-  const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
-  const [mainIndex, setMainIndex] = useState("1d");
-  const [socialIndex, setSocialIndex] = useState("1d");
-  const [networkIndex, setNetworkIndex] = useState("1d");
-  const [developerIndex, setDeveloperIndex] = useState("1d");
-  const [sentimentIndex, setSentimentIndex] = useState("1d");
-  const [mainSecondaryIndex, setMainSecondaryIndex] = useState("marketcap_usd");
-  const [activeWalletPercentageChange, setActiveWalletPercentageChange] =
-    useState("");
   const [activeAddressPerct, setActiveAddressPerct] = useState(0);
   const [dailyActivePerct, setDailyActivePerct] = useState(0);
   const [transactionVolumePerct, setTransactionVolumePerct] = useState(0);
@@ -35,40 +26,27 @@ const CoinDesc = (props) => {
   const location = useLocation();
   const params = useParams();
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
-      });
-      ws.send(array);
-    };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice(data?.params?.[1]?.last);
-      }
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
-    ws.onclose = function () {
-      console.log("close");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  };
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    const coinName = data?.params?.[0].toString().split("_")[0];
+    if (coinName && coinName === location?.state?.coin) {
+      setCurrentPrice(data?.params?.[1]?.last);
+    }
+  }
 
   useEffect(() => {
     console.log("COINNAME", `${location?.state?.coin}_USDT`);
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      `${location?.state?.coin}_USDT`,
-    ]);
-  }, [location?.state]);
+    wsGet(
+      Math.round(Math.random() * 1000),
+      "ticker.subscribe",
+      [`${location?.state?.coin}_USDT`],
+      onmessage
+    );
+    return () => {
+      // Anything in here is fired on component unmount.
+      ws.onclose();
+    };
+  }, []);
 
   useEffect(() => {
     props.openLoader();
@@ -121,6 +99,9 @@ const CoinDesc = (props) => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(currentPrice);
+  }, [currentPrice]);
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
