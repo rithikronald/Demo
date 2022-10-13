@@ -5,7 +5,6 @@ import { useLocation, useParams } from "react-router-dom";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
-import { wsGet, ws } from "../../setup";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import { numFormatter } from "../../utility/kFormatter";
@@ -25,26 +24,34 @@ const CoinDesc = (props) => {
   const [currentPrice, setCurrentPrice] = useState("");
   const location = useLocation();
   const params = useParams();
-
+  var WebSocketClient = require("websocket").w3cwebsocket;
+  const WS_URL = "wss://api.gateio.ws/ws/v4/";
+  const ws = new WebSocketClient(WS_URL);
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    const coinName = data?.params?.[0].toString().split("_")[0];
+    const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName && coinName === location?.state?.coin) {
-      setCurrentPrice(data?.params?.[1]?.last);
+      setCurrentPrice(data?.result?.last);
     }
   }
 
   useEffect(() => {
-    console.log("COINNAME", `${location?.state?.coin}_USDT`);
-    wsGet(
-      Math.round(Math.random() * 1000),
-      "ticker.subscribe",
-      [`${location?.state?.coin}_USDT`],
-      onmessage
-    );
-    return () => {
-      // Anything in here is fired on component unmount.
-      ws.onclose();
+    ws.onopen = function () {
+      console.log("open - from coinDesc");
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "subscribe",
+        payload: [`${location?.state?.coin}_USDT`],
+      });
+      ws.send(array);
+    };
+    ws.onmessage = onmessage;
+    ws.onclose = function () {
+      console.log("close - from coinDesc");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
     };
   }, []);
 
