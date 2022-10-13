@@ -10,7 +10,7 @@ import {
   indBgImgList,
 } from "../../constants/constants";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { RightContainer} from "../CoinList";
+import { RightContainer } from "../CoinList";
 import "./style.css";
 import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
 import { maximumInstance } from "../../setup";
@@ -20,6 +20,8 @@ import { propTypesSelected } from "@material-tailwind/react/types/components/sel
 import types from "../../store/types";
 import { connect } from "react-redux";
 import { Tabs } from "../../components/Tabs";
+import { Withdraw } from "../../components/Withdraw";
+import { Deopsite } from "../../components/Deposite";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
 
@@ -32,13 +34,14 @@ const tabsData = [
   },
 ];
 
-var ws
+var ws;
 
 const WalletOverView = (props) => {
   const [coinList, setCoinList] = useState();
   const { height, width } = useWindowDimensions();
   const [ticker, setTicker] = useState(arr[0].ticker);
   const [currentCurrencyChain, setCurrentCurrencyChain] = useState([]);
+  const [transactionMode, setTransactionMode] = useState(0);
 
   useEffect(() => {
     axios({
@@ -54,9 +57,9 @@ const WalletOverView = (props) => {
   }, [ticker]);
 
   useEffect(() => {
-    props.openLoader()
+    props.openLoader();
     setTicker(arr[0].ticker);
-    
+
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -128,8 +131,8 @@ const WalletOverView = (props) => {
   }, [coinList, currentPrice]);
 
   useEffect(() => {
-    if(availableBal) {
-      props.closeLoader()
+    if (availableBal) {
+      props.closeLoader();
     }
   }, [availableBal]);
 
@@ -369,125 +372,14 @@ const WalletOverView = (props) => {
         }}
         className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 p-8 justify-center items-center flex flex-col"
       >
-        <Tabs data={tabsData} />
-        <GradientContainer
-          height={` ${height > 800 ? "h-[60%]" : "h-[65%]"}`}
-          className={"w-full mt-16"}
-          children={
-            <div className="flex flex-col p-4 justify-center w-full">
-              <div className="mt-4">
-                <div className="flex justify-between">
-                  <p className="text-white font-medium text-xs ml-2 mb-1">
-                    Enter Amount
-                  </p>
-                  <p className="text-white font-semibold text-[10px]">
-                    ₿ 0.23562
-                  </p>
-                </div>
-                <GradientContainer
-                  height="h-16"
-                  width="w-full"
-                  children={
-                    <input
-                      type="text"
-                      className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-                    />
-                  }
-                />
-              </div>
-              <div className="mt-4">
-                <div className="flex justify-between">
-                  <p className="text-white font-medium text-xs ml-2 mb-1">
-                    Wallet Address
-                  </p>
-                  <p className="text-white font-semibold text-[10px]">
-                    ₿ 0.23562
-                  </p>
-                </div>
-                <GradientContainer
-                  height="h-8"
-                  width="w-full"
-                  children={
-                    <div className="flex w-full h-full justify-around items-center">
-                      <p className="text-[#B4B4B4] text-[13px]">
-                        ijhg9h4ghi98u23u2039i
-                      </p>
-                      <svg
-                        class="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        color="#fff"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1"
-                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        ></path>
-                      </svg>
-                    </div>
-                  }
-                />
-              </div>
-              <div className="mt-4">
-                <p className="text-white font-medium text-xs ml-2 mb-1">
-                  Select Token
-                </p>
-                <div className="bg-maxPurple rounded-3xl h-8 flex items-center p-1 pl-2">
-                  <select
-                    id="countries"
-                    className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-2xl focus:ring-bg focus:border-bg"
-                    value={ticker}
-                    onChange={(e) => setTicker(e.target.value)}
-                  >
-                    {arr.map((item, index) => (
-                      <option selected value={item.ticker}>
-                        ({item.ticker}) {item.slug}
-                      </option>
-                    ))}
-                    {/* <option selected value="+91">
-                      BTC (Bitcoin)
-                    </option>
-                    <option value="+1">ETH (Ethereum)</option>
-                    <option value="+33">USDT (Tether)</option> */}
-                  </select>
-                </div>
-              </div>
-              <div className="mt-4">
-                <p className="text-white font-medium text-xs ml-2 mb-1">
-                  Select Chain
-                </p>
-                <div className="bg-maxPurple rounded-3xl h-8 flex items-center p-1 pl-2">
-                  <select
-                    id="countries"
-                    className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-2xl focus:ring-bg focus:border-bg"
-                  >
-                    {currentCurrencyChain?.map((item) => {
-                      return <option value={item.chain}>{item.chain}</option>;
-                    })}
-                  </select>
-                </div>
-              </div>
-              <div className="mt-4">
-                <p className="text-white font-medium text-[10px] ml-2 mb-1">
-                  Memo (Optional)
-                </p>
-                <GradientContainer
-                  height="h-14"
-                  width="w-full"
-                  children={
-                    <input
-                      type="text"
-                      className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-                    />
-                  }
-                />
-              </div>
-            </div>
-          }
-        />
+        <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
+        <div className="mt-[8%] h-[70%] flex flex-col justify-between">
+          {transactionMode == 0 ? (
+            <Deopsite />
+          ) : (
+            <Withdraw currencyChain={currentCurrencyChain} />
+          )}
+        </div>
         <button
           onClick={() => console.log(ticker)}
           className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
@@ -499,11 +391,11 @@ const WalletOverView = (props) => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    openLoader: () => dispatch({type: types.OPEN_LOADER}), 
-    closeLoader: () => dispatch({type: types.CLOSE_LOADER})
-  }
-}
+    openLoader: () => dispatch({ type: types.OPEN_LOADER }),
+    closeLoader: () => dispatch({ type: types.CLOSE_LOADER }),
+  };
+};
 
 export default connect(null, mapDispatchToProps)(WalletOverView);
