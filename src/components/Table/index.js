@@ -19,7 +19,14 @@ export const Table = (props) => {
       selector: (row) => {
         const coinData = getCoinMeta(row.ticker);
         return (
-          <div className="flex items-center cursor-pointer">
+          <div
+            onClick={() =>
+              navigate(`/coin-desc/${row?.ticker}`, {
+                state: { coin: row?.ticker },
+              })
+            }
+            className="flex items-center cursor-pointer"
+          >
             <img
               className="w-6 h-6 rounded-full bg-white"
               src={coinData?.logoUrl}

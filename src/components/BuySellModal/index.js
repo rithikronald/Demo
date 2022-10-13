@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ws } from "../../setup";
+import { wsGet, ws } from "../../setup";
 import { GradientContainer } from "../GradientContainer";
 import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
@@ -25,32 +25,16 @@ export const BuySellModal = (props) => {
     console.log("TradeMode", tradeMode);
   }, [props?.trade, tradeMode]);
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
-      });
-      ws.send(array);
-    };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice(data?.params?.[1]?.last);
-      }
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
-    ws.onclose = function () {
-      console.log("close");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  };
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    const coinName = data?.params?.[0].toString().split("_")[0];
+    if (coinName) {
+      setCurrentPrice(data?.params?.[1]?.last);
+    }
+    // if(methods != 'server.sign')
+    // ws.close();
+  }
+
   const getBidPrice = (type) => {
     let bidQuote = []; // decimals strateg
     let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
@@ -151,10 +135,17 @@ export const BuySellModal = (props) => {
   useEffect(() => {
     if (props?.ticker) {
       console.log("Ticker", props?.ticker);
-      wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-        props?.ticker + "_USDT",
-      ]);
+      wsGet(
+        Math.round(Math.random() * 1000),
+        "ticker.subscribe",
+        [props?.ticker + "_USDT"],
+        onmessage
+      );
     }
+    return () => {
+      // Anything in here is fired on component unmount.
+      ws.onclose();
+    };
   }, [props?.ticker]);
 
   useEffect(()=>{

@@ -14,7 +14,7 @@ import {
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { maximumInstance } from "../../setup";
+import { maximumInstance, ws, wsGet } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -22,7 +22,6 @@ import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import Stepper from "react-stepper-horizontal";
 import Slider from "../../components/Slider";
-import { ws } from "../../setup";
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
@@ -38,50 +37,42 @@ const Home = (props) => {
   const [smartSuggestList, setSmartSuggestList] = useState();
   const [currentPrice, setCurrentPrice] = useState({});
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    const coinName = data?.params?.[0].toString().split("_")[0];
+    if (coinName) {
+      setCurrentPrice((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.params?.[1]?.last,
+        };
       });
-      ws.send(array);
-    };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
-      }
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
-    ws.onclose = function () {
-      console.log("close");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  };
+    }
+    // console.log(data?.params?.[0], data?.params?.[1]?.last);
+    // if(methods != 'server.sign')
+    // ws.close();
+  }
 
   useEffect(() => {
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      "BTC_USDT",
-      "ETH_USDT",
-      "BNB_USDT",
-      "XRP_USDT",
-      "ADA_USDT",
-      "SOL_USDT",
-      "DOGE_USDT",
-      "DOT_USDT",
-    ]);
+    wsGet(
+      Math.round(Math.random() * 1000),
+      "ticker.subscribe",
+      [
+        "BTC_USDT",
+        "ETH_USDT",
+        "BNB_USDT",
+        "XRP_USDT",
+        "ADA_USDT",
+        "SOL_USDT",
+        "DOGE_USDT",
+        "DOT_USDT",
+      ],
+      onmessage
+    );
+    return () => {
+      // Anything in here is fired on component unmount.
+      ws.onclose();
+    };
   }, []);
 
   useEffect(() => {
