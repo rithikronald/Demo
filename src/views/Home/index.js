@@ -330,7 +330,7 @@ const Home = (props) => {
                               width={"100%"}
                               height={"70%"}
                               data={arrGen(
-                                item.basketData?.price[`change_${"1d"}`]
+                                item?.basketData?.price[`change_${"30d"}`]
                               )}
                             />
                           </div>
@@ -496,8 +496,13 @@ const Home = (props) => {
               <div className="text-white justify-center items-center flex font-bold text-center mt-5 text-2xl 2xl:text-4xl 3xl:text-5xl">
                 <p className="font-normal">$</p>
                 <input
-                  type="number"
+                  type="text"
                   value={amount}
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
                   onChange={(e) => {
                     console.log(
                       "comma",
@@ -630,7 +635,7 @@ const Home = (props) => {
                     <CustomPieChart
                       data={smartSuggestList}
                       width={"100%"}
-                      height={"40%"}
+                      height={"45%"}
                     />
                   )}
                   <div className="flex flex-row w-full justify-center items-center gap-2 text-sm font-semibold">
@@ -655,7 +660,7 @@ const Home = (props) => {
                       return (
                         <div
                           key={index}
-                          className="flex items-center mt-[20px] w-[100%] px-3"
+                          className="flex items-center justify-center mt-[20px] w-[100%] px-3"
                         >
                           <img
                             alt="btc"

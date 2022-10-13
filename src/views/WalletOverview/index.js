@@ -219,7 +219,7 @@ const WalletOverView = (props) => {
                       <div className="flex">
                         <img
                           alt="btc"
-                          className="h-8 w-8"
+                          className="h-8 w-8 rounded-full bg-white"
                           src={getCoinMeta(ele.currency)?.logoUrl}
                         />
                         <div className="ml-2">
@@ -263,7 +263,7 @@ const WalletOverView = (props) => {
                     width="w-1/5"
                     height="h-[90%]"
                     children={
-                      <div className="w-full h-full rounded-2xl flex p-1">
+                      <div className="w-full h-full rounded-2xl p-1">
                         <div
                           style={{
                             backgroundImage: `url('/${indBgImgList[12]}')`,
@@ -365,7 +365,6 @@ const WalletOverView = (props) => {
           />
         </div>
       </div>
-
       <div
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
