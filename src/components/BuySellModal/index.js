@@ -157,13 +157,16 @@ export const BuySellModal = (props) => {
     }
   }, [props?.ticker]);
 
+  useEffect(()=>{
+    console.log("Price",currentPrice)
+  },[currentPrice])
+
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
       <Tabs
         onClick={(val) => setTradeMode(val === 1 ? "limit" : "market")}
         data={innertabsData}
       />
-      ;
       <div className="flex flex-col h-[90%] justify-center">
         <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">
