@@ -66,7 +66,7 @@ function App() {
   }
 
   useEffect(() => {
-   auth.onAuthStateChanged(onAuthStateChanged);
+    auth.onAuthStateChanged(onAuthStateChanged);
   }, []);
 
   return (

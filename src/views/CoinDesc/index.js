@@ -51,7 +51,6 @@ const CoinDesc = (props) => {
       ws.send(array);
       ws.onmessage = onmessage;
     }
-
     return () => {
       var array = JSON.stringify({
         time: new Date().getTime,
@@ -64,7 +63,7 @@ const CoinDesc = (props) => {
         ws.send(array);
       }
     };
-  }, [ws.readyState]);
+  }, [ws.readyState,modalOpen]);
 
   useEffect(() => {
     props.openLoader();
@@ -154,11 +153,11 @@ const CoinDesc = (props) => {
         fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
-      {/* <Modal
+      <Modal
         ticker={data?.ticker}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-      /> */}
+      />
       {!fakeModalOpen ? (
         <div
           className={`grid ${

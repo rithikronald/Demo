@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ws } from "../../App";
 import { GradientContainer } from "../GradientContainer";
 import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
-var WebSocketClient = require("websocket").w3cwebsocket;
-const WS_URL = "wss://api.gateio.ws/ws/v4/";
 
 const innertabsData = [
   {
@@ -16,7 +17,6 @@ const innertabsData = [
 ];
 
 export const BuySellModal = (props) => {
-  const ws = new WebSocketClient(WS_URL);
   const [currentPrice, setCurrentPrice] = useState("");
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
@@ -26,16 +26,6 @@ export const BuySellModal = (props) => {
     console.log("Trade", props?.trade);
     console.log("TradeMode", tradeMode);
   }, [props?.trade, tradeMode]);
-
-  function onmessage(evt) {
-    const data = JSON.parse(evt?.data);
-    const coinName = data?.params?.[0].toString().split("_")[0];
-    if (coinName) {
-      setCurrentPrice(data?.params?.[1]?.last);
-    }
-    // if(methods != 'server.sign')
-    // ws.close();
-  }
 
   const getBidPrice = (type) => {
     let bidQuote = []; // decimals strateg
@@ -88,7 +78,12 @@ export const BuySellModal = (props) => {
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
         body
       )
-      .then((response) => console.log("Response", response?.data))
+      .then((response) => {
+        console.log("Response", response?.data)
+        toast.warn(response?.data?.status, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }) 
       .catch((err) => console.log("Error", err));
   };
 
@@ -134,28 +129,63 @@ export const BuySellModal = (props) => {
     }
   }, [props?.isOpen]);
 
-  useEffect(() => {
-    if (props?.ticker) {
-      console.log("Ticker", props?.ticker);
-      // wsGet(
-      //   Math.round(Math.random() * 1000),
-      //   "ticker.subscribe",
-      //   [props?.ticker + "_USDT"],
-      //   onmessage
-      // );
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    console.log("Buy/Sell", data?.result?.currency_pair);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    if (coinName && coinName == props?.ticker) {
+      setCurrentPrice(data?.result?.last);
     }
-    return () => {
-      // Anything in here is fired on component unmount.
-      ws.onclose();
-    };
-  }, [props?.ticker]);
+  }
 
   useEffect(() => {
-    console.log("Price", currentPrice);
-  }, [currentPrice]);
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [`${props?.ticker}_USDT`],
+    });
+    if (ws.readyState) {
+      console.log("Buy/Sell Sub");
+      ws.send(array);
+      ws.onmessage = onmessage;
+    }
+    return () => {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: [`${props?.ticker}_USDT`],
+      });
+      if (ws.readyState) {
+        console.log("Buy/Sell Un Sub");
+        ws.send(array);
+      }
+    };
+  }, [ws.readyState, props?.ticker,props?.isOpen]);
+
+  useEffect(() => {
+    if (props?.isOpen == false) {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: [`${props?.ticker}_USDT`],
+      });
+      if (ws.readyState) {
+        console.log("Buy/Sell Un Sub");
+        ws.send(array);
+      }
+    }
+  }, [props?.isOpen]);
+
+  // useEffect(() => {
+  //   console.log("Price", currentPrice);
+  // }, [currentPrice]);
 
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
+      <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
       <Tabs
         onClick={(val) => setTradeMode(val === 1 ? "limit" : "market")}
         data={innertabsData}

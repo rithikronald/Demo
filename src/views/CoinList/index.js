@@ -50,11 +50,11 @@ const CoinList = (props) => {
               }}
             />
           )}
-          {/* <Modal
+          <Modal
             ticker={tickerName}
             modalOpen={modalOpen}
             setModalOpen={setModalOpen}
-          /> */}
+          />
         </div>
       </div>
     </div>
