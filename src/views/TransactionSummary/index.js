@@ -1,5 +1,6 @@
 import "./style.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { ws } from "../../App";
 import { Cell, Pie, PieChart } from "recharts";
 import { useLocation } from "react-router-dom";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
@@ -9,9 +10,84 @@ import { CustomPieChart } from "../../components/Charts/CustomPieChart";
 import { pieColors } from "../../constants/constants";
 import { Table } from "../../components/TransactionsHistoryTable";
 import { Deopsite } from "../../components/Deposite";
-
+import axios from "axios";
 const TransactionSummary = () => {
   const location = useLocation();
+  const [currentPrice, setCurrentPrice] = useState({});
+  const socketPayload = location?.state?.indexData?.coins?.map(
+    (ticker) => `${ticker}_USDT`
+  );
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    // console.log(data);
+    const coinName = data?.result?.s?.split("_")[0];
+    // console.log(coinName, data?.result?.last);
+    if (coinName) {
+      setCurrentPrice((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.a,
+        };
+      });
+    }
+    // console.log(data?.params?.[0], data?.params?.[1]?.last);
+    // if(methods != 'server.sign')
+    // ws.close();
+  }
+
+  // const createOrder = () => {
+  //   let body = {
+  //     text: "t-123",
+  //     currency_pair: `${props?.ticker}_USDT`,
+  //     amount: amount,
+  //     price: "",
+  //     side: props?.trade,
+  //     type: tradeMode,
+  //   };
+  //   axios
+  //     .post(
+  //       `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+  //       body
+  //     )
+  //     .then((response) => console.log("Response", response?.data))
+  //     .catch((err) => console.log("Error", err));
+  // };
+  useEffect(() => {
+    console.log("ReadyState transSumm", ws.readyState);
+    console.log("socketPayload", socketPayload);
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.book_ticker",
+      event: "subscribe",
+      payload: socketPayload,
+      // payload: [`${location?.state?.coin}_USDT`],
+    });
+    if (ws.readyState) {
+      console.log("indexDesc Sub");
+      ws.send(array);
+      ws.onmessage = onmessage;
+    }
+
+    return () => {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: location?.state?.indexData?.coins?.map(
+          (ticker) => `${ticker}_USDT`
+        ),
+      });
+      if (ws.readyState) {
+        console.log("CoinDesc Un Sub");
+        ws.send(array);
+      }
+    };
+  }, [ws.readyState]);
+
+  useEffect(() => {
+    console.log(currentPrice);
+  }, [currentPrice]);
+
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">

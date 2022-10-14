@@ -22,104 +22,10 @@ export const BuySellModal = (props) => {
   const [amount, setAmount] = useState();
   const [tradeMode, setTradeMode] = useState("market");
 
-  useEffect(() => {
-    console.log("Trade", props?.trade);
-    console.log("TradeMode", tradeMode);
-  }, [props?.trade, tradeMode]);
-
-  const getBidPrice = (type) => {
-    let bidQuote = []; // decimals strateg
-    let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
-    // % strategy
-    let bid = currentPrice * 0.002;
-    let finalBid;
-    // console.log(bid);
-    switch (type) {
-      case "buy":
-        finalBid = (Number(currentPrice) + Number(bid)).toFixed(
-          decimals?.length
-        );
-        console.log(finalBid);
-        // return Number(currentPrice) + Number("0.".concat(bidQuote?.join("")));
-        return finalBid;
-      case "sell":
-        finalBid = (Number(currentPrice) - Number(bid)).toFixed(
-          decimals?.length
-        );
-        console.log(finalBid);
-        // return Number(currentPrice) - Number("0.".concat(bidQuote?.join("")));
-        return finalBid;
-      default:
-        break;
-    }
-  };
-
-  const calculatePrice = (val) => {
-    const value = Number(val) * currentPrice;
-    setPrice(value);
-  };
-
-  const calculateAmount = (val) => {
-    const value = Number(val) / currentPrice;
-    setAmount(value.toFixed(3));
-  };
-
-  const createOrder = () => {
-    let body = {
-      text: "t-123",
-      currency_pair: `${props?.ticker}_USDT`,
-      amount: amount,
-      price: tradeMode === "market" ? getBidPrice(props?.trade) : price,
-      side: props?.trade,
-      type: tradeMode,
-    };
-    axios
-      .post(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
-        body
-      )
-      .then((response) => {
-        console.log("Response", response?.data);
-        toast.warn(response?.data?.status, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      })
-      .catch((err) => console.log("Error", err));
-  };
-
-  const handlePriceInput = (e) => {
-    if (tradeMode === "market") {
-      setPrice(e.target.value);
-      calculateAmount(e.target.value);
-    }
-    if (tradeMode === "limit") {
-      setPrice(e.target.value);
-    }
-  };
-
-  const handleAmountInput = (e) => {
-    if (tradeMode === "market") {
-      setAmount(e.target.value);
-      calculatePrice(e.target.value);
-    }
-    if (tradeMode === "limit") {
-      setAmount(e.target.value);
-    }
-  };
-
-  const priceText = () => {
-    if (tradeMode === "market") {
-      switch (props?.trade) {
-        case "buy":
-          return "Investment price";
-        case "sell":
-          return "Withdrawal price";
-      }
-    }
-    if (tradeMode === "limit") {
-      return "Token price";
-    }
-  };
+  // useEffect(() => {
+  //   console.log("Trade", props?.trade);
+  //   console.log("TradeMode", tradeMode);
+  // }, [props?.trade, tradeMode]);
 
   useEffect(() => {
     console.log("isOpen", props?.isOpen);
@@ -131,9 +37,9 @@ export const BuySellModal = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log("Buy/Sell", data?.result);
+    // console.log("Buy/Sell", data?.result);
     const coinName = data?.result?.s?.split("_")[0];
-    if (coinName && coinName == props?.ticker) {
+    if (coinName && coinName === props?.ticker) {
       setCurrentPrice(data?.result?.a);
     }
   }
@@ -182,6 +88,116 @@ export const BuySellModal = (props) => {
       }
     }
   }, [props?.isOpen]);
+
+  const getBidPrice = (type) => {
+    let bidQuote = []; // decimals strateg
+    let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
+    // % strategy
+    let bid = currentPrice * 0.002;
+    let finalBid;
+    // console.log(bid);
+    switch (type) {
+      case "buy":
+        finalBid = (Number(currentPrice) + Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) + Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      case "sell":
+        finalBid = (Number(currentPrice) - Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) - Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      default:
+        break;
+    }
+  };
+
+  const calculatePrice = (amount) => {
+    const value = Number(amount) * currentPrice;
+    setPrice(value.toFixed(4));
+  };
+
+  const calculateAmount = (price) => {
+    const value = Number(price) / currentPrice;
+    setAmount(value.toFixed(3));
+  };
+
+  const createOrder = () => {
+    let body = {
+      text: "t-123",
+      currency_pair: `${props?.ticker}_USDT`,
+      amount: amount,
+      price: tradeMode === "market" ? getBidPrice(props?.trade) : price,
+      side: props?.trade,
+      type: tradeMode,
+    };
+    axios
+      .post(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        body
+      )
+      .then((response) => {
+        console.log("Response", response?.data);
+        switch (response?.data?.status) {
+          case "closed":
+            toast.success("order successful", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "open":
+            toast.success("order created - open", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "cancelled":
+            toast.warn("order cancelled - try again", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          default:
+            break;
+        }
+      })
+      .catch((err) => console.log("Error", err));
+  };
+
+  const handlePriceInput = (e) => {
+    if (tradeMode === "market") {
+      setPrice(e.target.value);
+      calculateAmount(e.target.value);
+    }
+    if (tradeMode === "limit") {
+      setPrice(e.target.value);
+    }
+  };
+
+  const handleAmountInput = (e) => {
+    if (tradeMode === "market") {
+      setAmount(e.target.value);
+      calculatePrice(e.target.value);
+    }
+    if (tradeMode === "limit") {
+      setAmount(e.target.value);
+    }
+  };
+
+  const priceText = () => {
+    if (tradeMode === "market") {
+      switch (props?.trade) {
+        case "buy":
+          return "Investment price";
+        case "sell":
+          return "Withdrawal price";
+      }
+    }
+    if (tradeMode === "limit") {
+      return "Token price";
+    }
+  };
 
   // useEffect(() => {
   //   console.log("Price", currentPrice);
@@ -243,7 +259,7 @@ export const BuySellModal = (props) => {
       </div>
       <ThemeButton
         onClick={createOrder}
-        text="Trade"
+        text={props?.trade?.charAt(0).toUpperCase() + props?.trade?.slice(1)}
         className="w-[75%] mt-10"
       />
     </div>
