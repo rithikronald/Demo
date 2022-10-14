@@ -79,11 +79,11 @@ export const BuySellModal = (props) => {
         body
       )
       .then((response) => {
-        console.log("Response", response?.data)
+        console.log("Response", response?.data);
         toast.warn(response?.data?.status, {
           position: toast.POSITION.TOP_RIGHT,
         });
-      }) 
+      })
       .catch((err) => console.log("Error", err));
   };
 
@@ -131,17 +131,21 @@ export const BuySellModal = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log("Buy/Sell", data?.result?.currency_pair);
-    const coinName = data?.result?.currency_pair?.split("_")[0];
+    console.log("Buy/Sell", data?.result);
+    const coinName = data?.result?.s?.split("_")[0];
     if (coinName && coinName == props?.ticker) {
-      setCurrentPrice(data?.result?.last);
+      setCurrentPrice(data?.result?.a);
     }
   }
 
   useEffect(() => {
+    console.log("Current Price", currentPrice);
+  }, [currentPrice]);
+
+  useEffect(() => {
     var array = JSON.stringify({
       time: new Date().getTime,
-      channel: "spot.tickers",
+      channel: "spot.book_ticker",
       event: "subscribe",
       payload: [`${props?.ticker}_USDT`],
     });
@@ -153,7 +157,7 @@ export const BuySellModal = (props) => {
     return () => {
       var array = JSON.stringify({
         time: new Date().getTime,
-        channel: "spot.tickers",
+        channel: "spot.book_ticker",
         event: "unsubscribe",
         payload: [`${props?.ticker}_USDT`],
       });
@@ -162,7 +166,7 @@ export const BuySellModal = (props) => {
         ws.send(array);
       }
     };
-  }, [ws.readyState, props?.ticker,props?.isOpen]);
+  }, [ws.readyState, props?.ticker, props?.isOpen]);
 
   useEffect(() => {
     if (props?.isOpen == false) {
