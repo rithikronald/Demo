@@ -14,7 +14,7 @@ import {
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { maximumInstance, ws } from "../../setup";
+import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -22,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import Stepper from "react-stepper-horizontal";
 import Slider from "../../components/Slider";
+import { ws } from "../../App";
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
@@ -35,11 +36,11 @@ const Home = (props) => {
   const [tenureIndex, setTenureIndex] = useState();
   const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
-  const [currentPrice, setCurrentPrice] = useState({});
+  const [currentPrice, setCurrentPrice] = useState(0);
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log(data);
+    console.log("Home", data?.result?.currency_pair);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName) {
       setCurrentPrice((prev) => {
@@ -55,9 +56,8 @@ const Home = (props) => {
   }
 
   useEffect(() => {
-    ws.onopen = function () {
-      console.log("open - from home");
-    };
+    console.log("IN HOME SCREEN");
+    console.log(ws.readyState);
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.tickers",
@@ -73,35 +73,33 @@ const Home = (props) => {
         "DOT_USDT",
       ],
     });
-    ws.send(array);
-
-    ws.onmessage = onmessage;
-
-    ws.onclose = function () {
-      console.log("close - from home");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-    return () => {
-      var array = JSON.stringify({
-        time: new Date().getTime,
-        channel: "spot.tickers",
-        event: "unsubscribe",
-        payload: [
-          "BTC_USDT",
-          "ETH_USDT",
-          "BNB_USDT",
-          "XRP_USDT",
-          "ADA_USDT",
-          "SOL_USDT",
-          "DOGE_USDT",
-          "DOT_USDT",
-        ],
-      });
+    if (ws.readyState) {
+      console.log("CLEARED")
       ws.send(array);
+      ws.onmessage = onmessage;
+    }
+
+    return () => {
+      if (ws.readyState) {
+        var array = JSON.stringify({
+          time: Date.now(),
+          channel: "spot.tickers",
+          event: "unsubscribe",
+          payload: [
+            "BTC_USDT",
+            "ETH_USDT",
+            "BNB_USDT",
+            "XRP_USDT",
+            "ADA_USDT",
+            "SOL_USDT",
+            "DOGE_USDT",
+            "DOT_USDT",
+          ],
+        });
+        ws.send(array);
+      }
     };
-  }, []);
+  }, [ws.readyState]);
 
   useEffect(() => {
     props.openLoader();
@@ -251,11 +249,11 @@ const Home = (props) => {
                     height="h-16"
                     children={
                       <button
-                        onClick={() =>
+                        onClick={() => {
                           navigate(`/coin-desc/${data?.ticker}`, {
                             state: { coin: item?.ticker },
-                          })
-                        }
+                          });
+                        }}
                         className="flex justify-between items-center p-4 px-4 w-full h-full"
                       >
                         <div className="flex flex-row items-center">

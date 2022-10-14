@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { wsGet, ws } from "../../setup";
 import { GradientContainer } from "../GradientContainer";
 import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
+var WebSocketClient = require("websocket").w3cwebsocket;
+const WS_URL = "wss://api.gateio.ws/ws/v4/";
 
 const innertabsData = [
   {
@@ -15,6 +16,7 @@ const innertabsData = [
 ];
 
 export const BuySellModal = (props) => {
+  const ws = new WebSocketClient(WS_URL);
   const [currentPrice, setCurrentPrice] = useState("");
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
@@ -135,12 +137,12 @@ export const BuySellModal = (props) => {
   useEffect(() => {
     if (props?.ticker) {
       console.log("Ticker", props?.ticker);
-      wsGet(
-        Math.round(Math.random() * 1000),
-        "ticker.subscribe",
-        [props?.ticker + "_USDT"],
-        onmessage
-      );
+      // wsGet(
+      //   Math.round(Math.random() * 1000),
+      //   "ticker.subscribe",
+      //   [props?.ticker + "_USDT"],
+      //   onmessage
+      // );
     }
     return () => {
       // Anything in here is fired on component unmount.
@@ -148,9 +150,9 @@ export const BuySellModal = (props) => {
     };
   }, [props?.ticker]);
 
-  useEffect(()=>{
-    console.log("Price",currentPrice)
-  },[currentPrice])
+  useEffect(() => {
+    console.log("Price", currentPrice);
+  }, [currentPrice]);
 
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">

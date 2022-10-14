@@ -2,6 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
+import { ws } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
@@ -9,8 +10,11 @@ import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import { numFormatter } from "../../utility/kFormatter";
 import Modal from "./modal";
+// var WebSocketClient = require("websocket").w3cwebsocket;
+// const WS_URL = "wss://api.gateio.ws/ws/v4/";
 
 const CoinDesc = (props) => {
+  // const coinWs = new WebSocketClient(WS_URL);
   const [data, setData] = useState();
   const [priceIndex, setPriceIndex] = useState("1d");
   const [activeAddressPerct, setActiveAddressPerct] = useState(0);
@@ -21,14 +25,13 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState("");
+  const [currentPrice, setCurrentPrice] = useState("0");
   const location = useLocation();
   const params = useParams();
-  var WebSocketClient = require("websocket").w3cwebsocket;
-  const WS_URL = "wss://api.gateio.ws/ws/v4/";
-  const ws = new WebSocketClient(WS_URL);
+
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
+    console.log("CoinDesc", data?.result?.currency_pair);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName && coinName === location?.state?.coin) {
       setCurrentPrice(data?.result?.last);
@@ -36,24 +39,31 @@ const CoinDesc = (props) => {
   }
 
   useEffect(() => {
-    ws.onopen = function () {
-      console.log("open - from coinDesc");
+    console.log("ReadyState coinDesc",ws.readyState)
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [`${location?.state?.coin}_USDT`],
+    });
+    if (ws.readyState) {
+      console.log("CoinDesc Sub")
+      ws.send(array);
+      ws.onmessage = onmessage;
+    }
+    return () => {
       var array = JSON.stringify({
         time: new Date().getTime,
         channel: "spot.tickers",
-        event: "subscribe",
+        event: "unsubscribe",
         payload: [`${location?.state?.coin}_USDT`],
       });
-      ws.send(array);
+      if(ws.readyState){
+      console.log("CoinDesc Un Sub")
+        ws.send(array);
+      }
     };
-    ws.onmessage = onmessage;
-    ws.onclose = function () {
-      console.log("close - from coinDesc");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  }, []);
+  }, [ws.readyState]);
 
   useEffect(() => {
     props.openLoader();
@@ -106,9 +116,6 @@ const CoinDesc = (props) => {
       });
   }, []);
 
-  useEffect(() => {
-    console.log(currentPrice);
-  }, [currentPrice]);
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
@@ -146,11 +153,11 @@ const CoinDesc = (props) => {
         fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >
-      <Modal
+      {/* <Modal
         ticker={data?.ticker}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-      />
+      /> */}
       {!fakeModalOpen ? (
         <div
           className={`grid ${
@@ -177,7 +184,7 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(currentPrice)}
+                    {Number(currentPrice).toFixed(0)}
                   </p>
                   <p className="text-[15px] font-bold">
                     .{currentPrice.split(".")[1]}
@@ -275,7 +282,7 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(currentPrice[data?.ticker])}
+                    {currentPrice[data?.ticker]}
                   </p>
                   <p className="text-[15px] font-bold">
                     .{getAfterDecimalValue(data?.price?.value)}

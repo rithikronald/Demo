@@ -6,8 +6,11 @@ import Sidebar from "./components/Sidebar";
 import { auth } from "./firebas-config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { maximumInstance, ws } from "./setup";
+import { maximumInstance } from "./setup";
 import Loader from "./components/Loader";
+var WebSocketClient = require("websocket").w3cwebsocket;
+const WS_URL = "wss://api.gateio.ws/ws/v4/";
+export const ws = new WebSocketClient(WS_URL);
 
 const makeRoutes = () => {
   return (
@@ -34,6 +37,16 @@ export const userIdContext = React.createContext();
 function App() {
   const navigate = useNavigate();
 
+  ws.onopen = function () {
+    console.log("open - from app");
+  };
+  ws.onclose = function () {
+    console.log("close - from app");
+  };
+  ws.onerror = function (err) {
+    console.log("error - from app", err);
+  };
+
   function onAuthStateChanged(user) {
     if (user) {
       localStorage.setItem("accessToken", user.accessToken);
@@ -43,7 +56,6 @@ function App() {
           .get(`/setRole/${user.uid}`)
           .then((response) => {
             console.log("CUSTOM ROLE SET", response?.data);
-            navigate("/dashboard");
           })
           .catch((err) => console.log("Error", err));
       }
@@ -54,20 +66,9 @@ function App() {
   }
 
   useEffect(() => {
-    auth.onAuthStateChanged(onAuthStateChanged);
+   auth.onAuthStateChanged(onAuthStateChanged);
   }, []);
-  useEffect(() => {
-    ws.onopen = function () {
-      console.log("open - from app");
-    };
 
-    ws.onclose = function () {
-      console.log("close - from app");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  }, []);
   return (
     <div className="App flex">
       <Loader />
