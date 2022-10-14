@@ -238,7 +238,7 @@ const WalletOverView = (props) => {
                           {numFormatter(ele.available)}
                         </p>
                         <div className=" text-white text-[9px] flex items-center">
-                          <p>${numFormatter(currentPrice[ele.currency])}</p>
+                          <p>${ele.available && currentPrice[ele.currency] && numFormatter(numFormatter(ele.available)*numFormatter(currentPrice[ele.currency]))}</p>
                           <p className="text-[7px]">(+{24}%)</p>
                         </div>
                       </div>
