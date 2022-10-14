@@ -14,7 +14,7 @@ import {
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { maximumInstance, ws, wsGet } from "../../setup";
+import { maximumInstance, ws } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -39,12 +39,13 @@ const Home = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    const coinName = data?.params?.[0].toString().split("_")[0];
+    console.log(data);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName) {
       setCurrentPrice((prev) => {
         return {
           ...prev,
-          [`${coinName}`]: data?.params?.[1]?.last,
+          [`${coinName}`]: data?.result?.last,
         };
       });
     }
@@ -54,10 +55,14 @@ const Home = (props) => {
   }
 
   useEffect(() => {
-    wsGet(
-      Math.round(Math.random() * 1000),
-      "ticker.subscribe",
-      [
+    ws.onopen = function () {
+      console.log("open - from home");
+    };
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [
         "BTC_USDT",
         "ETH_USDT",
         "BNB_USDT",
@@ -67,11 +72,34 @@ const Home = (props) => {
         "DOGE_USDT",
         "DOT_USDT",
       ],
-      onmessage
-    );
+    });
+    ws.send(array);
+
+    ws.onmessage = onmessage;
+
+    ws.onclose = function () {
+      console.log("close - from home");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
     return () => {
-      // Anything in here is fired on component unmount.
-      ws.onclose();
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: [
+          "BTC_USDT",
+          "ETH_USDT",
+          "BNB_USDT",
+          "XRP_USDT",
+          "ADA_USDT",
+          "SOL_USDT",
+          "DOGE_USDT",
+          "DOT_USDT",
+        ],
+      });
+      ws.send(array);
     };
   }, []);
 

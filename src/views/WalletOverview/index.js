@@ -91,7 +91,7 @@ const WalletOverView = (props) => {
                 };
               });
             }
-            console.log("CURRENT PRICE", currentPrice);
+            // console.log("CURRENT PRICE", currentPrice);
           };
           ws.onclose = function () {
             console.log("close");

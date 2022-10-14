@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar";
 import { auth } from "./firebas-config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { maximumInstance } from "./setup";
+import { maximumInstance, ws } from "./setup";
 import Loader from "./components/Loader";
 
 const makeRoutes = () => {
@@ -56,7 +56,18 @@ function App() {
   useEffect(() => {
     auth.onAuthStateChanged(onAuthStateChanged);
   }, []);
+  useEffect(() => {
+    ws.onopen = function () {
+      console.log("open - from app");
+    };
 
+    ws.onclose = function () {
+      console.log("close - from app");
+    };
+    ws.onerror = function (err) {
+      console.log("error", err);
+    };
+  }, []);
   return (
     <div className="App flex">
       <Loader />
