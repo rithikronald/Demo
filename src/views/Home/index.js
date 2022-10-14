@@ -40,7 +40,7 @@ const Home = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log("Home", data?.result?.currency_pair);
+    console.log("Home", data?.result?.currency_pair ,data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName) {
       setCurrentPrice((prev) => {
@@ -50,11 +50,8 @@ const Home = (props) => {
         };
       });
     }
-    // console.log(data?.params?.[0], data?.params?.[1]?.last);
-    // if(methods != 'server.sign')
-    // ws.close();
   }
-
+  
   useEffect(() => {
     console.log("IN HOME SCREEN");
     console.log(ws.readyState);
@@ -76,8 +73,8 @@ const Home = (props) => {
     if (ws.readyState) {
       console.log("CLEARED")
       ws.send(array);
-      ws.onmessage = onmessage;
     }
+    ws.onmessage = onmessage;
 
     return () => {
       if (ws.readyState) {
@@ -86,7 +83,6 @@ const Home = (props) => {
           channel: "spot.tickers",
           event: "unsubscribe",
           payload: [
-            "BTC_USDT",
             "ETH_USDT",
             "BNB_USDT",
             "XRP_USDT",

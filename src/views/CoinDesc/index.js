@@ -39,7 +39,7 @@ const CoinDesc = (props) => {
   }
 
   useEffect(() => {
-    console.log("ReadyState coinDesc",ws.readyState)
+    console.log("ReadyState coinDesc", ws.readyState);
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.tickers",
@@ -47,10 +47,11 @@ const CoinDesc = (props) => {
       payload: [`${location?.state?.coin}_USDT`],
     });
     if (ws.readyState) {
-      console.log("CoinDesc Sub")
+      console.log("CoinDesc Sub");
       ws.send(array);
       ws.onmessage = onmessage;
     }
+
     return () => {
       var array = JSON.stringify({
         time: new Date().getTime,
@@ -58,8 +59,8 @@ const CoinDesc = (props) => {
         event: "unsubscribe",
         payload: [`${location?.state?.coin}_USDT`],
       });
-      if(ws.readyState){
-      console.log("CoinDesc Un Sub")
+      if (ws.readyState) {
+        console.log("CoinDesc Un Sub");
         ws.send(array);
       }
     };
