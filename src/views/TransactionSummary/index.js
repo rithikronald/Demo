@@ -11,22 +11,26 @@ import { pieColors } from "../../constants/constants";
 import { Table } from "../../components/TransactionsHistoryTable";
 import { Deopsite } from "../../components/Deposite";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const TransactionSummary = () => {
   const location = useLocation();
   const [currentPrice, setCurrentPrice] = useState({});
-  const socketPayload = location?.state?.indexData?.coins?.map(
-    (ticker) => `${ticker}_USDT`
-  );
+  const [buyPrice, setBuyPrice] = useState(70);
+  const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
+  // const socketPayload = location?.state?.indexData?.coins?.map(
+  //   (ticker) => `${ticker}_USDT`
+  // );
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     // console.log(data);
-    const coinName = data?.result?.s?.split("_")[0];
+    const coinName = data?.result?.currency_pair?.split("_")[0];
     console.log(coinName, data?.result?.last);
     if (coinName) {
       setCurrentPrice((prev) => {
         return {
           ...prev,
-          [`${coinName}`]: data?.result?.a,
+          [`${coinName}`]: data?.result?.last,
         };
       });
     }
@@ -40,18 +44,20 @@ const TransactionSummary = () => {
   }, []);
   useEffect(() => {
     console.log("ReadyState transSumm", ws.readyState);
-    // console.log("socketPayload", socketPayload);
-    var array = JSON.stringify({
-      time: new Date().getTime,
-      channel: "spot.book_ticker",
-      event: "subscribe",
-      payload: socketPayload,
-      // payload: [`${location?.state?.coin}_USDT`],
-    });
-    if (ws.readyState) {
-      console.log("indexDesc Sub");
-      ws.send(array);
-      ws.onmessage = onmessage;
+    console.log("socketPayload", socketPayload);
+    if (socketPayload) {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "subscribe",
+        payload: socketPayload,
+        // payload: [`${location?.state?.coin}_USDT`],
+      });
+      if (ws.readyState) {
+        console.log("indexDesc Sub");
+        ws.send(array);
+        ws.onmessage = onmessage;
+      }
     }
 
     return () => {
@@ -59,9 +65,7 @@ const TransactionSummary = () => {
         time: new Date().getTime,
         channel: "spot.tickers",
         event: "unsubscribe",
-        payload: location?.state?.indexData?.coins?.map(
-          (ticker) => `${ticker}_USDT`
-        ),
+        payload: socketPayload,
       });
       if (ws.readyState) {
         console.log("indexDesc Un Sub");
@@ -71,9 +75,83 @@ const TransactionSummary = () => {
   }, [ws.readyState]);
 
   useEffect(() => {
-    // console.log(currentPrice);
+    console.log(currentPrice);
   }, [currentPrice]);
+  const getBidPrice = (type, currentPrice) => {
+    let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
+    // % strategy
+    let bid = currentPrice * 0.0005;
+    let finalBid;
+    // console.log(bid);
+    switch (type) {
+      case "buy":
+        finalBid = (Number(currentPrice) + Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) + Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      case "sell":
+        finalBid = (Number(currentPrice) - Number(bid)).toFixed(
+          decimals?.length
+        );
+        console.log(finalBid);
+        // return Number(currentPrice) - Number("0.".concat(bidQuote?.join("")));
+        return finalBid;
+      default:
+        break;
+    }
+  };
 
+  const calculateSplit = () => {
+    let totalCoins = socketPayload.length;
+    let individualSplit = buyPrice / totalCoins;
+
+    let splitArray = socketPayload.map((item) => {
+      const value = Number(individualSplit) / currentPrice[item.split("_")[0]];
+      return value.toFixed(3);
+    });
+    return splitArray;
+  };
+
+  const createBatchOrder = () => {
+    let payloadBody = socketPayload.map((item, index) => {
+      return {
+        currency_pair: item,
+        amount: calculateSplit()[index],
+        price: getBidPrice("buy", currentPrice[item.split("_")[0]]),
+      };
+    });
+    console.log("payloadBody", payloadBody);
+    axios
+      .post(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/batchOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        { orders: payloadBody, side: "buy" }
+      )
+      .then((response) => {
+        console.log("Response", response?.data);
+        switch (response?.data?.status) {
+          case "closed":
+            toast.success("order successful", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "open":
+            toast.success("order created - open", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "cancelled":
+            toast.warn("order cancelled - try again", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          default:
+            break;
+        }
+      })
+      .catch((err) => console.log("Error", err));
+  };
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
@@ -163,7 +241,10 @@ const TransactionSummary = () => {
                 <p className="font-semibold text-white text-5xl">5289</p>
                 <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
               </div>
-              <button className="bg-primaryButton text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg">
+              <button
+                onClick={createBatchOrder}
+                className="bg-primaryButton text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
+              >
                 Pay Now
               </button>
             </div>
@@ -204,6 +285,8 @@ const TransactionSummary = () => {
         }}
         className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-center items-center flex flex-col sm:hidden xl:flex"
       >
+        <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
+
         <Deopsite />
       </div>
     </div>

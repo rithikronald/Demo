@@ -39,7 +39,7 @@ const Indexes = (props) => {
     maximumInstance(localStorage.getItem("accessToken"))
       .get(`/getIndex/${location?.state?.indexData?.basketName}`)
       .then((response) => {
-        console.log("Response", response?.data);
+        // console.log("Response", response?.data);
         setBasketData(response?.data?.basketData);
         props.closeLoader();
       })
@@ -50,8 +50,8 @@ const Indexes = (props) => {
   }, [location]);
 
   useEffect(() => {
-    console.log("transaction volume", basketData?.transaction_volume);
-    console.log("K formatter", numFormatter(basketData?.transaction_volume));
+    // console.log("transaction volume", basketData?.transaction_volume);
+    // console.log("K formatter", numFormatter(basketData?.transaction_volume));
   }, [basketData]);
 
   const arrGen = (arr) => {
