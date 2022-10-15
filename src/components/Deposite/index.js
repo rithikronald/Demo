@@ -8,6 +8,21 @@ export const Deopsite = () => {
   const [ticker, setTicker] = useState();
   const [walletAddress, setWalletAddress] = useState();
 
+  function textAbstract(el, maxlength = 16, delimiter = " ") {
+    let txt = el.text();
+    if (el == null) {
+      return "";
+    }
+    if (txt.length <= maxlength) {
+      return txt;
+    }
+    let t = txt.substring(0, maxlength);
+    let re = /\s+\S*$/;
+    let m = re.exec(t);
+    t = t.substring(0, m.index);
+    return t + "...";
+  }
+
   useEffect(() => {
     axios({
       url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/generateDepositAddress/QrUR3ejnnTY9mgTOLN4dqMwttVP2/${ticker}`,
@@ -60,7 +75,7 @@ export const Deopsite = () => {
                   <button
                     onClick={() => setTicker("USDT")}
                     className={`rounded-3xl p-2 w-[30%] ${
-                      ticker == "USDt" && "ring-2"
+                      ticker == "USDT" && "ring-2"
                     } bg-maxPurple focus:ring-2 ring-white flex justify-center items-center`}
                   >
                     <img
@@ -141,9 +156,11 @@ export const Deopsite = () => {
                     width="w-full"
                     className={"mt-2"}
                     children={
-                      <div className="flex w-full h-full justify-between items-center px-3">
+                      <div className="flex w-full h-full justify-between items-center px-4">
                         <p className="text-white font-semibold text-[13px]">
-                          {walletAddress}
+                          {walletAddress.length > 35
+                            ? walletAddress.substring(0, 35) + "..."
+                            : walletAddress}
                         </p>
                         <button
                           onClick={() =>
@@ -151,7 +168,7 @@ export const Deopsite = () => {
                           }
                         >
                           <svg
-                            class="w-4 h-4"
+                            class="w-5 h-5"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
