@@ -22,6 +22,7 @@ import { connect } from "react-redux";
 import { Tabs } from "../../components/Tabs";
 import { Withdraw } from "../../components/Withdraw";
 import { Deopsite } from "../../components/Deposite";
+import { ComingSoonCard } from "../../components/ComingSoonCard";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
 
@@ -138,7 +139,7 @@ const WalletOverView = (props) => {
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left p-10 pt-[300px] px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-y-scroll h-[100%]">
+      <div className="Left px-[3%] flex flex-col justify-center mt-[3%] sm:flex xl:basis-3/4 h-full">
         <div className="flex flex-col w-full">
           <p className="text-2xl 2xl:text-3xl 3xl:text-4xl font-semibold text-white">
             Wallet Overview
@@ -148,8 +149,8 @@ const WalletOverView = (props) => {
             height="h-[300px]"
             className={"mt-6"}
             children={
-              <div className="w-full h-full rounded-2xl flex justify-between p-10 px-14">
-                <div className="flex h-full w-[40%] flex-col justify-between">
+              <div className="w-full h-full rounded-2xl flex justify-between p-8 px-6">
+                <div className="flex h-full w-[40%] flex-col justify-between mr-8">
                   <div>
                     <p className="text-white text-sm font-medium">
                       Available Balance
@@ -159,7 +160,8 @@ const WalletOverView = (props) => {
                       {availableBal}
                     </p>
                   </div>
-                  <div className="w-full flex flex-row gap-x-14">
+                  <ComingSoonCard />
+                  {/* <div className="w-full flex flex-row gap-x-14">
                     <div className="">
                       <p className="text-gray-400 font-medium text-[10px]">
                         Portfolio Change
@@ -190,17 +192,18 @@ const WalletOverView = (props) => {
                       </p>
                       <p className="text-green-600 font-semibold">+8.6%</p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex flex-col w-[60%] h-full justify-center">
                   <p className="text-white text-sm font-medium">
                     Profit/Loss Graph
                   </p>
-                  <CustomAreaChart
+                  <ComingSoonCard />
+                  {/* <CustomAreaChart
                     data={dummyChartData}
                     width={"100%"}
                     height={"90%"}
-                  />
+                  /> */}
                 </div>
               </div>
             }
@@ -211,7 +214,7 @@ const WalletOverView = (props) => {
             width="w-[30%]"
             height="h-[200px]"
             children={
-              <div className="w-full h-full rounded-2xl flex p-4 flex-col px-8">
+              <div className="w-full h-full rounded-2xl flex p-4 flex-col px-4">
                 <p className="text-white text-sm font-medium">Assets</p>
                 <div className="assetsContainer flex flex-col h-full  overflow-y-scroll pt-8">
                   {coinList?.map((ele) => (
@@ -258,7 +261,7 @@ const WalletOverView = (props) => {
             children={
               <div className="w-full h-full rounded-2xl flex p-4 flex-col">
                 <p className="text-white text-sm font-medium">Indexes</p>
-                <div className="flex w-full h-full items-center">
+                {/* <div className="flex w-full h-full items-center">
                   <GradientContainer
                     width="w-1/5"
                     height="h-[90%]"
@@ -300,32 +303,13 @@ const WalletOverView = (props) => {
                       </div>
                     ))}
                   </div>
-                  {/* <div>
-                    <GradientContainer
-                      width="w-[100px]"
-                      height="h-[90%]"
-                      children={
-                        <div className="w-full h-full rounded-2xl flex p-1">
-                          <div
-                            style={{
-                              backgroundImage: `url('/${indBgImgList[12]}')`,
-                            }}
-                            className="bg-no-repeat bg-cover bg-center flex h-full w-full rounded-xl justify-center items-center p-3"
-                          >
-                            <p className="text-white font-bold text-sm text-center">
-                              Gaming Index
-                            </p>
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div> */}
-                </div>
+                </div> */}
+                <ComingSoonCard />
               </div>
             }
           />
         </div>
-        <div className="w-[100%] mt-[50px]">
+        {/* <div className="w-[100%] mt-[50px]">
           <Table
             title={"Transactions"}
             data={[
@@ -363,7 +347,7 @@ const WalletOverView = (props) => {
               },
             ]}
           />
-        </div>
+        </div> */}
       </div>
       <div
         style={{
@@ -374,17 +358,19 @@ const WalletOverView = (props) => {
         <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
         <div className="mt-[8%] flex flex-col justify-between">
           {transactionMode == 0 ? (
-            <Deopsite />
+            <Deopsite balance={availableBal} />
           ) : (
             <Withdraw currencyChain={currentCurrencyChain} />
           )}
         </div>
-        {transactionMode == 1 && <button
-          onClick={() => console.log(ticker)}
-          className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
-        >
-          Deposit Now
-        </button>}
+        {transactionMode == 1 && (
+          <button
+            onClick={() => console.log(ticker)}
+            className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
+          >
+            Deposit Now
+          </button>
+        )}
       </div>
     </div>
   );

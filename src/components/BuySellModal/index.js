@@ -93,7 +93,7 @@ export const BuySellModal = (props) => {
     let bidQuote = []; // decimals strateg
     let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
     // % strategy
-    let bid = currentPrice * 0.0005;
+    let bid = currentPrice * 0.001;
     let finalBid;
     // console.log(bid);
     switch (type) {

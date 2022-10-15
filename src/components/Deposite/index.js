@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import { GradientContainer } from "../GradientContainer";
 
-export const Deopsite = () => {
+export const Deopsite = ({balance}) => {
   const [currencyChain, setCurrencyChain] = useState();
   const [ticker, setTicker] = useState();
   const [walletAddress, setWalletAddress] = useState();
@@ -203,7 +203,7 @@ export const Deopsite = () => {
             <div className="rounded-3xl h-full flex flex-col p-4">
               <p className="text-gray-400 text-sm">Available Balance</p>
               <p className="text-white font-bold text-2xl 2xl:text-3xl 3xl:text-5xl">
-                <span className="font-normal">$</span>12500
+                <span className="font-normal">$</span>{balance}
               </p>
             </div>
           }
