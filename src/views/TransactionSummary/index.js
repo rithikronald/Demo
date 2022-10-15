@@ -21,7 +21,7 @@ const TransactionSummary = () => {
     const data = JSON.parse(evt?.data);
     // console.log(data);
     const coinName = data?.result?.s?.split("_")[0];
-    // console.log(coinName, data?.result?.last);
+    console.log(coinName, data?.result?.last);
     if (coinName) {
       setCurrentPrice((prev) => {
         return {
@@ -35,26 +35,12 @@ const TransactionSummary = () => {
     // ws.close();
   }
 
-  // const createOrder = () => {
-  //   let body = {
-  //     text: "t-123",
-  //     currency_pair: `${props?.ticker}_USDT`,
-  //     amount: amount,
-  //     price: "",
-  //     side: props?.trade,
-  //     type: tradeMode,
-  //   };
-  //   axios
-  //     .post(
-  //       `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
-  //       body
-  //     )
-  //     .then((response) => console.log("Response", response?.data))
-  //     .catch((err) => console.log("Error", err));
-  // };
+  useEffect(() => {
+    return () => setCurrentPrice({});
+  }, []);
   useEffect(() => {
     console.log("ReadyState transSumm", ws.readyState);
-    console.log("socketPayload", socketPayload);
+    // console.log("socketPayload", socketPayload);
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.book_ticker",
@@ -78,14 +64,14 @@ const TransactionSummary = () => {
         ),
       });
       if (ws.readyState) {
-        console.log("CoinDesc Un Sub");
+        console.log("indexDesc Un Sub");
         ws.send(array);
       }
     };
   }, [ws.readyState]);
 
   useEffect(() => {
-    console.log(currentPrice);
+    // console.log(currentPrice);
   }, [currentPrice]);
 
   return (

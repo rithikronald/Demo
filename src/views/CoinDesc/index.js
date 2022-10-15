@@ -31,8 +31,9 @@ const CoinDesc = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log("CoinDesc", data?.result?.currency_pair);
     const coinName = data?.result?.currency_pair?.split("_")[0];
+    console.log("CoinDesc", coinName);
+
     if (coinName && coinName === location?.state?.coin) {
       setCurrentPrice(data?.result?.last);
     }
@@ -63,7 +64,7 @@ const CoinDesc = (props) => {
         ws.send(array);
       }
     };
-  }, [ws.readyState,modalOpen]);
+  }, [ws.readyState, modalOpen]);
 
   useEffect(() => {
     props.openLoader();

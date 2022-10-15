@@ -38,9 +38,9 @@ export const BuySellModal = (props) => {
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     // console.log("Buy/Sell", data?.result);
-    const coinName = data?.result?.s?.split("_")[0];
+    const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName && coinName === props?.ticker) {
-      setCurrentPrice(data?.result?.a);
+      setCurrentPrice(data?.result?.last);
     }
   }
 
@@ -51,7 +51,7 @@ export const BuySellModal = (props) => {
   useEffect(() => {
     var array = JSON.stringify({
       time: new Date().getTime,
-      channel: "spot.book_ticker",
+      channel: "spot.tickers",
       event: "subscribe",
       payload: [`${props?.ticker}_USDT`],
     });
@@ -63,7 +63,7 @@ export const BuySellModal = (props) => {
     return () => {
       var array = JSON.stringify({
         time: new Date().getTime,
-        channel: "spot.book_ticker",
+        channel: "spot.tickers",
         event: "unsubscribe",
         payload: [`${props?.ticker}_USDT`],
       });
@@ -93,7 +93,7 @@ export const BuySellModal = (props) => {
     let bidQuote = []; // decimals strateg
     let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
     // % strategy
-    let bid = currentPrice * 0.002;
+    let bid = currentPrice * 0.0005;
     let finalBid;
     // console.log(bid);
     switch (type) {
