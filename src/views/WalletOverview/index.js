@@ -115,7 +115,7 @@ const WalletOverView = (props) => {
 
   useEffect(() => {
     let sum = 0;
-    console.log("BALANCE", coinList);
+    // console.log("BALANCE", coinList);
     coinList?.map((i) => {
       if (i.currency !== "USDT") {
         let first = i.available || 0;
@@ -369,22 +369,22 @@ const WalletOverView = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 p-8 justify-center items-center flex flex-col"
+        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 px-8 justify-center items-center flex flex-col"
       >
         <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
-        <div className="mt-[8%] h-[70%] flex flex-col justify-between">
+        <div className="mt-[8%] flex flex-col justify-between">
           {transactionMode == 0 ? (
             <Deopsite />
           ) : (
             <Withdraw currencyChain={currentCurrencyChain} />
           )}
         </div>
-        <button
+        {transactionMode == 1 && <button
           onClick={() => console.log(ticker)}
           className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
         >
           Deposit Now
-        </button>
+        </button>}
       </div>
     </div>
   );
