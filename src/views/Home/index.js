@@ -37,6 +37,7 @@ const Home = (props) => {
   const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
   const [currentPrice, setCurrentPrice] = useState(0);
+  const [percentageChange, setPercentageChange] = useState();
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
@@ -49,9 +50,15 @@ const Home = (props) => {
           [`${coinName}`]: data?.result?.last,
         };
       });
+      setPercentageChange((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.change_percentage,
+        };
+      });
     }
   }
-  
+
   useEffect(() => {
     console.log("IN HOME SCREEN");
     console.log(ws.readyState);
@@ -71,7 +78,7 @@ const Home = (props) => {
       ],
     });
     if (ws.readyState) {
-      console.log("CLEARED")
+      console.log("CLEARED");
       ws.send(array);
     }
     ws.onmessage = onmessage;
@@ -269,24 +276,31 @@ const Home = (props) => {
                         </div>
                         <div className="flex flex-col items-end">
                           <p className="text-white font-semibold text-sm">
-                            {/* ${item?.price?.value.toFixed(2)} */}
-                            {currentPrice[data?.ticker]}
+                            {"$"}
+                            {currentPrice?.[data?.ticker] == null
+                              ? item?.price?.value.toFixed(4)
+                              : currentPrice?.[data?.ticker]}
                           </p>
                           <p
                             className={`${
-                              Number(item?.percent_change_24h) > 0
+                              Number(item?.percent_change_24h) > 0 ||
+                              percentageChange?.[data?.ticker] > 0
                                 ? "text-green-500"
                                 : "text-red-500"
                             } text-[10px] font-semibold`}
                           >
                             <i
                               class={`fa-sharp fa-solid ${
-                                Number(item?.percent_change_24h) > 0
+                                Number(item?.percent_change_24h) > 0 ||
+                                percentageChange?.[data?.ticker] > 0
                                   ? "text-green-500 fa-caret-up"
                                   : "text-red-500 fa-caret-down"
                               } mr-[1px]`}
                             />{" "}
-                            {item?.percent_change_24h}%
+                            {percentageChange?.[data?.ticker] == null
+                              ? item?.percent_change_24h
+                              : percentageChange?.[data?.ticker]}
+                            %
                           </p>
                         </div>
                       </button>

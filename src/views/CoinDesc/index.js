@@ -25,14 +25,19 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState("0");
+  const [currentPrice, setCurrentPrice] = useState();
   const location = useLocation();
   const params = useParams();
+
+  useEffect(() => {
+    console.log("Current Price", currentPrice);
+    console.log(data?.price?.value);
+  }, [currentPrice, data]);
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     const coinName = data?.result?.currency_pair?.split("_")[0];
-    console.log("CoinDesc", coinName);
+    // console.log("CoinDesc", coinName);
 
     if (coinName && coinName === location?.state?.coin) {
       setCurrentPrice(data?.result?.last);
@@ -182,13 +187,18 @@ const CoinDesc = (props) => {
             <div className="flex-col justify-between text-white flex justify-">
               <div className="priceBorder p-[1px]">
                 <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                  <p className="text-[12px] ">Price</p>
+                  {/* <p className="text-[12px] ">Price</p> */}
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Number(currentPrice).toFixed(0)}
+                    {currentPrice == null
+                      ? Math.floor(data?.price?.value)
+                      : Number(currentPrice)?.toFixed(0)}
                   </p>
                   <p className="text-[15px] font-bold">
-                    .{currentPrice.split(".")[1]}
+                    .
+                    {currentPrice == null
+                      ? getAfterDecimalValue(data?.price?.value)
+                      : currentPrice?.split(".")[1]}
                   </p>
                 </div>
               </div>
