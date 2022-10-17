@@ -13,19 +13,21 @@ import { Deopsite } from "../../components/Deposite";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { maximumInstance } from "../../setup";
 const TransactionSummary = () => {
   const location = useLocation();
   const [currentPrice, setCurrentPrice] = useState({});
-  const [buyPrice, setBuyPrice] = useState(70);
-  const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
-  // const socketPayload = location?.state?.indexData?.coins?.map(
-  //   (ticker) => `${ticker}_USDT`
-  // );
+  const [buyPrice, setBuyPrice] = useState(60);
+  const [status, setStatus] = useState({});
+  // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
+  const socketPayload = location?.state?.indexData?.coins?.map(
+    (ticker) => `${ticker}_USDT`
+  );
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     // console.log(data);
     const coinName = data?.result?.currency_pair?.split("_")[0];
-    console.log(coinName, data?.result?.last);
+    // console.log(coinName, data?.result?.last);
     if (coinName) {
       setCurrentPrice((prev) => {
         return {
@@ -40,8 +42,12 @@ const TransactionSummary = () => {
   }
 
   useEffect(() => {
-    return () => setCurrentPrice({});
+    return () => {
+      setCurrentPrice({});
+      setStatus({});
+    };
   }, []);
+
   useEffect(() => {
     console.log("ReadyState transSumm", ws.readyState);
     console.log("socketPayload", socketPayload);
@@ -75,8 +81,12 @@ const TransactionSummary = () => {
   }, [ws.readyState]);
 
   useEffect(() => {
-    console.log(currentPrice);
+    // console.log(currentPrice);
   }, [currentPrice]);
+  useEffect(() => {
+    console.log(status);
+  }, [status]);
+
   const getBidPrice = (type, currentPrice) => {
     let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
     // % strategy
@@ -114,44 +124,75 @@ const TransactionSummary = () => {
     return splitArray;
   };
 
-  const createBatchOrder = () => {
-    let payloadBody = socketPayload.map((item, index) => {
-      return {
+  const createBatchOrder = async () => {
+    let split = calculateSplit();
+    await socketPayload.map(async (item, index) => {
+      await createOrder({
         currency_pair: item,
-        amount: calculateSplit()[index],
-        price: getBidPrice("buy", currentPrice[item.split("_")[0]]),
-      };
+        amount: split[index],
+        current_price: getBidPrice("buy", currentPrice[item.split("_")[0]]),
+      });
     });
-    console.log("payloadBody", payloadBody);
-    axios
+    // console.log("payloadBody", payloadBody);
+    // axios
+    //   .post(
+    //     `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/batchOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+    //     { orders: payloadBody, side: "buy" }
+    //   )
+    //   .then((response) => {
+    //     console.log("Response", response?.data);
+    //     switch (response?.data?.status) {
+    //       case "closed":
+    //         toast.success("order successful", {
+    //           position: toast.POSITION.TOP_RIGHT,
+    //         });
+    //         break;
+    //       case "open":
+    //         toast.success("order created - open", {
+    //           position: toast.POSITION.TOP_RIGHT,
+    //         });
+    //         break;
+    //       case "cancelled":
+    //         toast.warn("order cancelled - try again", {
+    //           position: toast.POSITION.TOP_RIGHT,
+    //         });
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   })
+    //   .catch((err) => console.log("Error", err));
+  };
+
+  const createOrder = async ({ currency_pair, amount, current_price }) => {
+    let body = {
+      text: "t-123",
+      currency_pair: currency_pair,
+      amount: amount,
+      price: getBidPrice("buy", current_price),
+      side: "buy",
+      type: "market",
+    };
+    console.log(body);
+    await axios
+
       .post(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/batchOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
-        { orders: payloadBody, side: "buy" }
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        body
       )
       .then((response) => {
-        console.log("Response", response?.data);
-        switch (response?.data?.status) {
-          case "closed":
-            toast.success("order successful", {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-            break;
-          case "open":
-            toast.success("order created - open", {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-            break;
-          case "cancelled":
-            toast.warn("order cancelled - try again", {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-            break;
-          default:
-            break;
-        }
+        console.log(`response of ${currency_pair}`, response?.data);
+        setStatus((prev) => {
+          return {
+            ...prev,
+            [currency_pair]: response?.data?.status,
+          };
+        });
       })
       .catch((err) => console.log("Error", err));
+    return;
   };
+
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
