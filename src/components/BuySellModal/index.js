@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ws } from "../../App";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { GradientContainer } from "../GradientContainer";
 import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
@@ -210,7 +211,7 @@ export const BuySellModal = (props) => {
         onClick={(val) => setTradeMode(val === 1 ? "limit" : "market")}
         data={innertabsData}
       />
-      <div className="flex flex-col h-[90%] justify-center">
+      <div className="flex flex-col h-[90%] w-[96%] justify-center">
         <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">
             {priceText()}
@@ -219,12 +220,24 @@ export const BuySellModal = (props) => {
             height="h-16"
             width="w-full"
             children={
-              <input
-                type="text"
-                value={price}
-                onChange={handlePriceInput}
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
+              <div className="w-full px-2 h-full flex items-center justify-center">
+                <img
+                  alt="usdt"
+                  className="h-8 w-9 m-1"
+                  src={require("../../../src/assets/usdt.png")}
+                />
+                <input
+                  type="text"
+                  value={price}
+                  onChange={handlePriceInput}
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
+                  className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control"
+                />
+              </div>
             }
           />
         </div>
@@ -234,12 +247,24 @@ export const BuySellModal = (props) => {
             height="h-16"
             width="w-full"
             children={
-              <input
-                type="text"
-                value={amount}
-                onChange={handleAmountInput}
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
+              <div className="w-full px-2 h-full flex items-center justify-center">
+                <img
+                  alt="usdt"
+                  className="h-8 w-9 m-1 rounded-full bg-white"
+                  src={getCoinMeta(props?.ticker)?.logoUrl}
+                />
+                <input
+                  type="text"
+                  value={amount}
+                  onChange={handleAmountInput}
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
+                  className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+                />
+              </div>
             }
           />
         </div>

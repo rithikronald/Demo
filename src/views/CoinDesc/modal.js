@@ -36,7 +36,7 @@ const Modal = (props) => {
       />
       {props?.modalOpen && (
         <GradientContainer
-          className={"w-[75%]"}
+          className={"w-[80%]"}
           children={
             <BuySellModal
               isOpen={props?.modalOpen}

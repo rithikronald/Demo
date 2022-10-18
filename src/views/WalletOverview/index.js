@@ -139,7 +139,7 @@ const WalletOverView = (props) => {
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left px-[3%] flex flex-col justify-center mt-[3%] sm:flex xl:basis-3/4 h-full">
+      <div className="Left  px-[3%] flex flex-col justify-center sm:flex xl:basis-3/4 h-full">
         <div className="flex flex-col w-full">
           <p className="text-2xl 2xl:text-3xl 3xl:text-4xl font-semibold text-white">
             Wallet Overview
@@ -209,7 +209,7 @@ const WalletOverView = (props) => {
             }
           />
         </div>
-        <div className="flex w-full h-[300px] justify-between mt-10">
+        <div className="flex w-full justify-between mt-10">
           <GradientContainer
             width="w-[30%]"
             height="h-[200px]"

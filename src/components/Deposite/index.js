@@ -42,7 +42,7 @@ export const Deopsite = ({balance}) => {
 
   return (
     <>
-      <div className="flex flex-col w-full font-mont">
+      <div className="flex flex-col font-mont">
         {/* <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
           Deposit
         </p> */}
@@ -158,8 +158,8 @@ export const Deopsite = ({balance}) => {
                     children={
                       <div className="flex w-full h-full justify-between items-center px-4">
                         <p className="text-white font-semibold text-[13px]">
-                          {walletAddress.length > 35
-                            ? walletAddress.substring(0, 35) + "..."
+                          {walletAddress.length > 28
+                            ? walletAddress.substring(0, 28) + "..."
                             : walletAddress}
                         </p>
                         <button
