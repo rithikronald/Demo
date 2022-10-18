@@ -42,6 +42,7 @@ const WalletOverView = (props) => {
   const [ticker, setTicker] = useState(arr[0].ticker);
   const [currentCurrencyChain, setCurrentCurrencyChain] = useState([]);
   const [transactionMode, setTransactionMode] = useState(0);
+  const [openIndex, setOpenIndex] = useState(-1)
 
   useEffect(() => {
     axios({
@@ -242,7 +243,15 @@ const WalletOverView = (props) => {
                           {numFormatter(ele.available)}
                         </p>
                         <div className=" text-white text-[9px] flex items-center">
-                          <p>${ele.available && currentPrice[ele.currency] && numFormatter(numFormatter(ele.available)*numFormatter(currentPrice[ele.currency]))}</p>
+                          <p>
+                            $
+                            {ele.available &&
+                              currentPrice[ele.currency] &&
+                              numFormatter(
+                                numFormatter(ele.available) *
+                                  numFormatter(currentPrice[ele.currency])
+                              )}
+                          </p>
                           <p className="text-[7px]">(+{24}%)</p>
                         </div>
                       </div>
@@ -325,9 +334,37 @@ const WalletOverView = (props) => {
             }
           />
         </div>
-        <div className="w-[100%] mt-[50px]">
+        <div className="flex mt-[50px]" >
+          <div
+            className="h-[50px] font-mont text-white text-[24px] rounded-3xl px-8 flex items-center"
+            style={{ background: "rgba(255, 255, 255, 0.2" }}
+          >
+            Transactions
+            <img src={require('../../assets/dropdown.png')} onClick={() => {
+              if(openIndex === 0) {
+                setOpenIndex(-1)
+              } else {
+                setOpenIndex(0)
+              }
+            }} style={openIndex === 0 ? {} : {transform: 'rotate(-90deg)'}} className="ml-2 cursor-pointer" />
+          </div>
+          <div
+            className="h-[50px] font-mont text-white text-[24px] rounded-3xl px-8 flex items-center ml-[20px]"
+            style={{ background: "rgba(255, 255, 255, 0.2" }}
+          >
+            Order History
+            <img src={require('../../assets/dropdown.png')}  onClick={() => {
+              if(openIndex === 1) {
+                setOpenIndex(-1)
+              } else {
+                setOpenIndex(1)
+              }
+            }} style={openIndex === 1 ? {} :{transform: 'rotate(-90deg)'}} className="ml-2 cursor-pointer" />
+          </div> 
+        </div>
+        <div className="w-[100%] mt-[10px]">
+          {openIndex === 0 && 
           <Table
-            title={"Transactions"}
             data={[
               {
                 transactionId: "3343443433434",
@@ -362,7 +399,53 @@ const WalletOverView = (props) => {
                 status: "Pending",
               },
             ]}
-          />
+          />}
+          {openIndex === 1 && 
+          <Table
+            data={[
+              {
+                transactionId: "443433434",
+                type: "Sell",
+                coin: "Other Index",
+                date: "June 22, 2022",
+                amount: "$25",
+                status: "Completed",
+              },
+              {
+                transactionId: "443433434",
+                type: "Sell",
+                coin: "Other Index",
+                date: "June 22, 2022",
+                amount: "$25",
+                status: "Completed",
+              },
+              {
+                transactionId: "3443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+              {
+                transactionId: "3343443433434",
+                type: "Buy",
+                coin: "Gaming Index",
+                date: "June 22, 2022",
+                amount: "$15",
+                status: "Pending",
+              },
+            ]}
+          />}
+
         </div>
       </div>
       <div
