@@ -127,6 +127,15 @@ const WalletOverView = (props) => {
           sum = sum + first * second;
         }
       }
+      if (i.currency === "USDT") {
+        let first = i.available || 0;
+        first = parseFloat(first);
+        let second = 1;
+        second = parseFloat(second);
+        if (first && second) {
+          sum = sum + first * second;
+        }
+      }
     });
     setAvailableBal(numFormatter(sum));
   }, [coinList, currentPrice]);

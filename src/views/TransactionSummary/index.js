@@ -5,10 +5,8 @@ import { Cell, Pie, PieChart } from "recharts";
 import { useLocation } from "react-router-dom";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { GradientContainer } from "../../components/GradientContainer";
-import { Tooltip } from "flowbite-react";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
 import { pieColors } from "../../constants/constants";
-import { Table } from "../../components/TransactionsHistoryTable";
 import { Deopsite } from "../../components/Deposite";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -17,7 +15,7 @@ import { maximumInstance } from "../../setup";
 const TransactionSummary = () => {
   const location = useLocation();
   const [currentPrice, setCurrentPrice] = useState({});
-  const [buyPrice, setBuyPrice] = useState(60);
+  const [buyPrice, setBuyPrice] = useState(100);
   const [status, setStatus] = useState({});
   // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
   const socketPayload = location?.state?.indexData?.coins?.map(
@@ -133,35 +131,6 @@ const TransactionSummary = () => {
         current_price: getBidPrice("buy", currentPrice[item.split("_")[0]]),
       });
     });
-    // console.log("payloadBody", payloadBody);
-    // axios
-    //   .post(
-    //     `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/batchOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
-    //     { orders: payloadBody, side: "buy" }
-    //   )
-    //   .then((response) => {
-    //     console.log("Response", response?.data);
-    //     switch (response?.data?.status) {
-    //       case "closed":
-    //         toast.success("order successful", {
-    //           position: toast.POSITION.TOP_RIGHT,
-    //         });
-    //         break;
-    //       case "open":
-    //         toast.success("order created - open", {
-    //           position: toast.POSITION.TOP_RIGHT,
-    //         });
-    //         break;
-    //       case "cancelled":
-    //         toast.warn("order cancelled - try again", {
-    //           position: toast.POSITION.TOP_RIGHT,
-    //         });
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   })
-    //   .catch((err) => console.log("Error", err));
   };
 
   const createOrder = async ({ currency_pair, amount, current_price }) => {
@@ -175,7 +144,6 @@ const TransactionSummary = () => {
     };
     console.log(body);
     await axios
-
       .post(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
         body
