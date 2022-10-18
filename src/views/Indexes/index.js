@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CustomIndexChart } from "../../components/Charts/CustomIndexChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
@@ -12,7 +12,7 @@ import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
-import moment from 'moment'
+import moment from "moment";
 
 const Indexes = (props) => {
   const navigate = useNavigate();
@@ -21,18 +21,18 @@ const Indexes = (props) => {
   const [indexData, setIndexData] = useState();
   const [pageRightIndex, setPageRightIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   useEffect(() => {
-    props.openLoader()
+    props.openLoader();
     maximumInstance(localStorage.getItem("accessToken"))
       .get(`/indexes`)
       .then((response) => {
         setBasketData(response?.data);
-        props.closeLoader()
+        props.closeLoader();
       })
       .catch((err) => {
-        console.log("error", err)
-        props.closeLoader()
+        console.log("error", err);
+        props.closeLoader();
       });
   }, []);
 
@@ -82,7 +82,14 @@ const Indexes = (props) => {
                         {item?.basketName}
                       </p>
                       <div className="flex w-full h-[90%] items-end">
-                      <CustomIndexChart grid={false} width={"100%"} height={"70%"} data={arrGen(item.basketData?.price[`change_${'1d'}`])} />
+                        <CustomIndexChart
+                          grid={false}
+                          width={"100%"}
+                          height={"70%"}
+                          data={arrGen(
+                            item.basketData?.price[`change_${"30d"}`]
+                          )}
+                        />
                       </div>
                     </div>
                     <div className="flex w-full justify-between items-center mt-1">
@@ -135,7 +142,7 @@ const Indexes = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex"
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 items-center justify-around flex flex-col sm:hidden xl:flex"
       >
         {pageRightIndex == 0 && (
           <IndexDetails
@@ -153,9 +160,9 @@ const Indexes = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    closeLoader: () => dispatch({type: types.CLOSE_LOADER}),
-    openLoader: () => dispatch({type: types.OPEN_LOADER})
-  }
-}
+    closeLoader: () => dispatch({ type: types.CLOSE_LOADER }),
+    openLoader: () => dispatch({ type: types.OPEN_LOADER }),
+  };
+};
 
 export default connect(null, mapDispatchToProps)(Indexes);

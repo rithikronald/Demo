@@ -14,18 +14,14 @@ import {
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { maximumInstance } from "../../setup";
+import { maximumInstance, ws } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import Stepper from 'react-stepper-horizontal'
-import Slider from '../../components/Slider'
-
-var WebSocketClient = require("websocket").w3cwebsocket;
-const WS_URL = "wss://ws.gate.io/v3/";
-var ws = new WebSocketClient(WS_URL);
+import Stepper from "react-stepper-horizontal";
+import Slider from "../../components/Slider";
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
@@ -41,50 +37,70 @@ const Home = (props) => {
   const [smartSuggestList, setSmartSuggestList] = useState();
   const [currentPrice, setCurrentPrice] = useState({});
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    console.log(data);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    if (coinName) {
+      setCurrentPrice((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.last,
+        };
       });
-      ws.send(array);
+    }
+    // console.log(data?.params?.[0], data?.params?.[1]?.last);
+    // if(methods != 'server.sign')
+    // ws.close();
+  }
+
+  useEffect(() => {
+    ws.onopen = function () {
+      console.log("open - from home");
     };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
-      }
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [
+        "BTC_USDT",
+        "ETH_USDT",
+        "BNB_USDT",
+        "XRP_USDT",
+        "ADA_USDT",
+        "SOL_USDT",
+        "DOGE_USDT",
+        "DOT_USDT",
+      ],
+    });
+    ws.send(array);
+
+    ws.onmessage = onmessage;
+
     ws.onclose = function () {
-      console.log("close");
+      console.log("close - from home");
     };
     ws.onerror = function (err) {
       console.log("error", err);
     };
-  };
-
-  useEffect(() => {
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      "BTC_USDT",
-      "ETH_USDT",
-      "BNB_USDT",
-      "XRP_USDT",
-      "ADA_USDT",
-      "SOL_USDT",
-      "DOGE_USDT",
-      "DOT_USDT",
-    ]);
+    return () => {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: [
+          "BTC_USDT",
+          "ETH_USDT",
+          "BNB_USDT",
+          "XRP_USDT",
+          "ADA_USDT",
+          "SOL_USDT",
+          "DOGE_USDT",
+          "DOT_USDT",
+        ],
+      });
+      ws.send(array);
+    };
   }, []);
 
   useEffect(() => {
@@ -175,30 +191,39 @@ const Home = (props) => {
           </div>
         </div> */}
         <div className="flex w-full h-1/3 relative">
-          <img src={require('../../assets/smartSuggestFlowBackground.png')} className="w-full" />
+          <img
+            src={require("../../assets/smartSuggestFlowBackground.png")}
+            className="w-full"
+          />
           {/* <img src={require('../../assets/smartSuggestFlow.png')} className="absolute top-1/2 left-1/2" style={{transform: 'translate(-55%, -90px)'}} /> */}
           <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
-            <Stepper steps={[
-              {title: ''},
-              {title: ''},
-              {title: ''},
-            ]} activeStep={1} />
+            <Stepper
+              steps={[{ title: "" }, { title: "" }, { title: "" }]}
+              activeStep={1}
+            />
             <div className="px-[15%] flex justify-between">
               <p className="font-mont text-white text-[13px]">Step 1</p>
               <p className="font-mont text-white text-[13px]">Step 2</p>
               <p className="font-mont text-white text-[13px]">Step 3</p>
             </div>
             <div className="px-[15%] flex justify-between">
-              <p className="font-mont text-white font-bold text-[16px]">KYC Completed</p>
-              <p className="font-mont text-white font-bold text-[16px]">Smart Suggest</p>
-              <p className="font-mont text-white font-bold text-[16px]">Secure Account</p>
+              <p className="font-mont text-white font-bold text-[16px]">
+                KYC Completed
+              </p>
+              <p className="font-mont text-white font-bold text-[16px]">
+                Smart Suggest
+              </p>
+              <p className="font-mont text-white font-bold text-[16px]">
+                Secure Account
+              </p>
             </div>
             <div className="px-[15%] pt-[20px]">
-
-            <Slider />
+              <Slider />
             </div>
             <div className="px-[15%]">
-              <p className="font-mont text-white font-bold text-[14px] pt-[10px]">36% Completed</p>
+              <p className="font-mont text-white font-bold text-[14px] pt-[10px]">
+                36% Completed
+              </p>
             </div>
           </div>
         </div>
@@ -324,7 +349,7 @@ const Home = (props) => {
                               width={"100%"}
                               height={"70%"}
                               data={arrGen(
-                                item.basketData?.price[`change_${"1d"}`]
+                                item?.basketData?.price[`change_${"30d"}`]
                               )}
                             />
                           </div>
@@ -490,8 +515,13 @@ const Home = (props) => {
               <div className="text-white justify-center items-center flex font-bold text-center mt-5 text-2xl 2xl:text-4xl 3xl:text-5xl">
                 <p className="font-normal">$</p>
                 <input
-                  type="number"
+                  type="text"
                   value={amount}
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
                   onChange={(e) => {
                     console.log(
                       "comma",
@@ -624,7 +654,7 @@ const Home = (props) => {
                     <CustomPieChart
                       data={smartSuggestList}
                       width={"100%"}
-                      height={"40%"}
+                      height={"45%"}
                     />
                   )}
                   <div className="flex flex-row w-full justify-center items-center gap-2 text-sm font-semibold">
@@ -649,7 +679,7 @@ const Home = (props) => {
                       return (
                         <div
                           key={index}
-                          className="flex items-center mt-[20px] w-[100%] px-3"
+                          className="flex items-center justify-center mt-[20px] w-[100%] px-3"
                         >
                           <img
                             alt="btc"

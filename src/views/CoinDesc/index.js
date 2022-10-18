@@ -12,16 +12,7 @@ import Modal from "./modal";
 
 const CoinDesc = (props) => {
   const [data, setData] = useState();
-  const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
-  const [mainIndex, setMainIndex] = useState("1d");
-  const [socialIndex, setSocialIndex] = useState("1d");
-  const [networkIndex, setNetworkIndex] = useState("1d");
-  const [developerIndex, setDeveloperIndex] = useState("1d");
-  const [sentimentIndex, setSentimentIndex] = useState("1d");
-  const [mainSecondaryIndex, setMainSecondaryIndex] = useState("marketcap_usd");
-  const [activeWalletPercentageChange, setActiveWalletPercentageChange] =
-    useState("");
   const [activeAddressPerct, setActiveAddressPerct] = useState(0);
   const [dailyActivePerct, setDailyActivePerct] = useState(0);
   const [transactionVolumePerct, setTransactionVolumePerct] = useState(0);
@@ -33,46 +24,36 @@ const CoinDesc = (props) => {
   const [currentPrice, setCurrentPrice] = useState("");
   const location = useLocation();
   const params = useParams();
-
   var WebSocketClient = require("websocket").w3cwebsocket;
-  const WS_URL = "wss://ws.gate.io/v3/";
-  var ws = new WebSocketClient(WS_URL);
+  const WS_URL = "wss://api.gateio.ws/ws/v4/";
+  const ws = new WebSocketClient(WS_URL);
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    if (coinName && coinName === location?.state?.coin) {
+      setCurrentPrice(data?.result?.last);
+    }
+  }
 
-
-  const wsGet = (id, method, params) => {
+  useEffect(() => {
     ws.onopen = function () {
-      console.log("open");
+      console.log("open - from coinDesc");
       var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "subscribe",
+        payload: [`${location?.state?.coin}_USDT`],
       });
       ws.send(array);
     };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice(data?.params?.[1]?.last);
-      }
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
+    ws.onmessage = onmessage;
     ws.onclose = function () {
-      console.log("close");
+      console.log("close - from coinDesc");
     };
     ws.onerror = function (err) {
       console.log("error", err);
     };
-  };
-
-  useEffect(() => {
-    console.log("COINNAME", `${location?.state?.coin}_USDT`);
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      `${location?.state?.coin}_USDT`,
-    ]);
-  }, [location?.state]);
+  }, []);
 
   useEffect(() => {
     props.openLoader();
@@ -125,6 +106,9 @@ const CoinDesc = (props) => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(currentPrice);
+  }, [currentPrice]);
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
@@ -144,7 +128,7 @@ const CoinDesc = (props) => {
     let percentage = div * 100;
     return Math.floor(value);
   };
-  
+
   const getAfterDecimalValue = (num) => {
     if (!num) {
       return;
