@@ -230,11 +230,11 @@ export const BuySellModal = (props) => {
                   type="text"
                   value={price}
                   onChange={handlePriceInput}
-                  onKeyPress={(event) => {
-                    if (!/[0-9]/.test(event.key)) {
-                      event.preventDefault();
-                    }
-                  }}
+                  // onKeyPress={(event) => {
+                  //   if (!/[0-9]/.test(event.key)) {
+                  //     event.preventDefault();
+                  //   }
+                  // }}
                   className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control"
                 />
               </div>
@@ -257,11 +257,11 @@ export const BuySellModal = (props) => {
                   type="text"
                   value={amount}
                   onChange={handleAmountInput}
-                  onKeyPress={(event) => {
-                    if (!/[0-9]/.test(event.key)) {
-                      event.preventDefault();
-                    }
-                  }}
+                  // onKeyPress={(event) => {
+                  //   if (!/[0-9]/.test(event.key)) {
+                  //     event.preventDefault();
+                  //   }
+                  // }}
                   className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control "
                 />
               </div>
