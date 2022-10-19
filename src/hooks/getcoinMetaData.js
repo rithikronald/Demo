@@ -721,3 +721,5 @@ module.exports = {
   getCoinMeta,
   arr,
 };
+
+// arr.map((item)=>console.log(`"${item.ticker}_USDT",`))

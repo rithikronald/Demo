@@ -5,9 +5,54 @@ import { useNavigate } from "react-router-dom";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { FilterComponent } from "./filterComponent";
 import { numFormatter } from "../../utility/kFormatter";
+import { ws } from "../../App";
+import { socketCoinTickerListlist } from "../../constants/SocketCoinTickerList";
 
-export const Table = (props) => {
+export const Table = ({ openModal, data, title }) => {
   const navigate = useNavigate();
+  const [filterText, setFilterText] = useState("");
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const [coinData, setCoinData] = useState();
+
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    console.log("All Coins", data?.result?.currency_pair, data?.result?.last);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    if (coinName) {
+      setCoinData((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result,
+        };
+      });
+    }
+  }
+
+  useEffect(() => {
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: socketCoinTickerListlist,
+    });
+    if (ws.readyState) {
+      console.log("CLEARED");
+      ws.send(array);
+    }
+    ws.onmessage = onmessage;
+
+    return () => {
+      if (ws.readyState) {
+        let array = JSON.stringify({
+          time: Date.now(),
+          channel: "spot.tickers",
+          event: "unsubscribe",
+          payload: socketCoinTickerListlist,
+        });
+        ws.send(array);
+      }
+    };
+  }, [ws.readyState]);
 
   const columns = [
     {
@@ -105,13 +150,13 @@ export const Table = (props) => {
       selector: (row) => (
         <div className="flex gap-x-3">
           <button
-            onClick={() => props?.openModal(row?.ticker)}
+            onClick={() => openModal(row?.ticker)}
             className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-green-600"
           >
             Buy
           </button>
           <button
-            onClick={() => props?.openModal(row?.ticker)}
+            onClick={() => openModal(row?.ticker)}
             className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-red-600"
           >
             Sell
@@ -126,10 +171,7 @@ export const Table = (props) => {
     },
   ];
 
-  const [filterText, setFilterText] = useState("");
-  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-
-  const filteredItems = props?.data.filter((item) => {
+  const filteredItems = data.filter((item) => {
     const coinData = getCoinMeta(item?.ticker);
     return (
       JSON.stringify(coinData?.slug + coinData?.ticker)
@@ -148,7 +190,7 @@ export const Table = (props) => {
   return (
     <div className="flex flex-col">
       <div className="w-full flex justify-between self-end">
-        <p className="text-white text-2xl font-semibold">{props?.title}</p>
+        <p className="text-white text-2xl font-semibold">{title}</p>
         <FilterComponent
           onFilter={(e) => setFilterText(e.target.value)}
           onClear={handleClear}
@@ -162,10 +204,6 @@ export const Table = (props) => {
             data={filteredItems}
             striped
             responsive
-            // pagination
-            // paginationComponentOptions={{ noRowsPerPage: true }}
-            // paginationPerPage={10}
-            // responsive
             customStyles={{
               responsiveWrapper: {
                 style: {

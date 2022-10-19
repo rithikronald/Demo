@@ -42,7 +42,7 @@ export const Deopsite = ({balance}) => {
 
   return (
     <>
-      <div className="flex flex-col font-mont">
+      <div className="flex flex-col font-mont w-full">
         {/* <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
           Deposit
         </p> */}
