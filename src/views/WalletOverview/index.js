@@ -22,6 +22,7 @@ import { connect } from "react-redux";
 import { Tabs } from "../../components/Tabs";
 import { Withdraw } from "../../components/Withdraw";
 import { Deopsite } from "../../components/Deposite";
+import moment from "moment";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
 
@@ -43,6 +44,7 @@ const WalletOverView = (props) => {
   const [currentCurrencyChain, setCurrentCurrencyChain] = useState([]);
   const [transactionMode, setTransactionMode] = useState(0);
   const [openIndex, setOpenIndex] = useState(-1)
+  const [transactions, setTransactions] = useState()
 
   useEffect(() => {
     axios({
@@ -60,7 +62,6 @@ const WalletOverView = (props) => {
   useEffect(() => {
     props.openLoader();
     setTicker(arr[0].ticker);
-
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -108,6 +109,17 @@ const WalletOverView = (props) => {
         );
       })
       .catch((err) => console.log("error", err));
+
+      // transaction history
+      axios({
+        url: 'https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/tradingHistory/QrUR3ejnnTY9mgTOLN4dqMwttVP2', 
+        method: 'get', 
+        headers: { "Content-Type": "application/json" }
+      }).then(res => {
+        setTransactions(res?.data)
+      }).catch(err => {
+        console.log(err)
+      })
   }, []);
 
   const [currentPrice, setCurrentPrice] = useState({});
@@ -365,40 +377,49 @@ const WalletOverView = (props) => {
         <div className="w-[100%] mt-[10px]">
           {openIndex === 0 && 
           <Table
-            data={[
-              {
-                transactionId: "3343443433434",
-                type: "Buy",
-                coin: "Gaming Index",
-                date: "June 22, 2022",
-                amount: "$15",
-                status: "Pending",
-              },
-              {
-                transactionId: "3343443433434",
-                type: "Buy",
-                coin: "Gaming Index",
-                date: "June 22, 2022",
-                amount: "$15",
-                status: "Pending",
-              },
-              {
-                transactionId: "3343443433434",
-                type: "Buy",
-                coin: "Gaming Index",
-                date: "June 22, 2022",
-                amount: "$15",
-                status: "Pending",
-              },
-              {
-                transactionId: "3343443433434",
-                type: "Buy",
-                coin: "Gaming Index",
-                date: "June 22, 2022",
-                amount: "$15",
-                status: "Pending",
-              },
-            ]}
+            data={transactions?.map(item => ({
+              transactionId: item.id, 
+              type: item.side, 
+              coin: getCoinMeta(item.currencyPair.split("_")[0]).slug, 
+              date: moment(item.createTime).format('DD/MM/YYYY'), 
+              amount: item.amount, 
+              status: 'Completed'
+            }))
+            // [
+            //   {
+            //     transactionId: "3343443433434",
+            //     type: "Buy",
+            //     coin: "Gaming Index",
+            //     date: "June 22, 2022",
+            //     amount: "$15",
+            //     status: "Pending",
+            //   },
+            //   {
+            //     transactionId: "3343443433434",
+            //     type: "Buy",
+            //     coin: "Gaming Index",
+            //     date: "June 22, 2022",
+            //     amount: "$15",
+            //     status: "Pending",
+            //   },
+            //   {
+            //     transactionId: "3343443433434",
+            //     type: "Buy",
+            //     coin: "Gaming Index",
+            //     date: "June 22, 2022",
+            //     amount: "$15",
+            //     status: "Pending",
+            //   },
+            //   {
+            //     transactionId: "3343443433434",
+            //     type: "Buy",
+            //     coin: "Gaming Index",
+            //     date: "June 22, 2022",
+            //     amount: "$15",
+            //     status: "Pending",
+            //   },
+            // ]
+          }
           />}
           {openIndex === 1 && 
           <Table
