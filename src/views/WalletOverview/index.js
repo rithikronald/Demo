@@ -160,9 +160,8 @@ const WalletOverView = (props) => {
                       {availableBal}
                     </p>
                   </div>
-                  <ComingSoonCard />
-                  {/* <div className="w-full flex flex-row gap-x-14">
-                    <div className="">
+                  <div className="w-full flex flex-row gap-x-14 blur-sm">
+                    <div className="w-1/2">
                       <p className="text-gray-400 font-medium text-[10px]">
                         Portfolio Change
                       </p>
@@ -177,7 +176,7 @@ const WalletOverView = (props) => {
                       </p>
                       <p className="text-red-700 font-semibold">-2.1%</p>
                     </div>
-                    <div className="">
+                    <div className="w-1/2">
                       <p className="text-gray-400 font-medium text-[10px]">
                         Portfolio Change
                       </p>
@@ -192,18 +191,19 @@ const WalletOverView = (props) => {
                       </p>
                       <p className="text-green-600 font-semibold">+8.6%</p>
                     </div>
-                  </div> */}
+                  </div>
                 </div>
-                <div className="flex flex-col w-[60%] h-full justify-center">
+                <div className="flex flex-col w-[60%] h-full justify-between">
                   <p className="text-white text-sm font-medium">
                     Profit/Loss Graph
                   </p>
-                  <ComingSoonCard />
-                  {/* <CustomAreaChart
-                    data={dummyChartData}
-                    width={"100%"}
-                    height={"90%"}
-                  /> */}
+                  <div className="w-full h-full blur-sm mt-2">
+                    <CustomAreaChart
+                      data={dummyChartData}
+                      width={"100%"}
+                      height={"100%"}
+                    />
+                  </div>
                 </div>
               </div>
             }
@@ -261,7 +261,7 @@ const WalletOverView = (props) => {
             children={
               <div className="w-full h-full rounded-2xl flex p-4 flex-col">
                 <p className="text-white text-sm font-medium">Indexes</p>
-                {/* <div className="flex w-full h-full items-center">
+                <div className="flex w-full h-full items-center blur-sm">
                   <GradientContainer
                     width="w-1/5"
                     height="h-[90%]"
@@ -303,8 +303,7 @@ const WalletOverView = (props) => {
                       </div>
                     ))}
                   </div>
-                </div> */}
-                <ComingSoonCard />
+                </div>
               </div>
             }
           />

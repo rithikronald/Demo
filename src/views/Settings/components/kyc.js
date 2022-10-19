@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./kyc.css";
+import Persona from "persona";
+import Modal from "react-bootstrap/Modal";
+
 const stages = {
   INTRO: "INTRO",
   DETAILS: "DETAILS",
@@ -8,23 +11,85 @@ const stages = {
 };
 
 const Kyc1 = (props) => {
+  const [beginKYC, setBeginKYC] = useState(false);
+
+  const InlineInquiry = () => {
+    return (
+      <div className="w-full h-[98%] flex">
+        <Persona.Inquiry
+          templateId="itmpl_jn1nNDs3wMGuoBajLvmT5t5h"
+          environment='sandbox'
+          onLoad={() => {
+            console.log("Loaded inline");
+          }}
+          onComplete={({ inquiryId, status, fields }) => {
+            // Inquiry completed. Optionally tell your server about it.
+            console.log(`Sending finished inquiry ${inquiryId} to backend`);
+          }}
+        />
+      </div>
+    );
+  };
 
   return (
     <>
+      {/* <button type="button"
+  class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button> */}
       <p className="text-white opacity-40 font-mont text-[24px]">KYC</p>
-      <div className="absolute top-1/2 -translate-y-1/2">
-        <p className="font-mont text-white font-bold text-[32px]">
-          Help us confirm your identity
-        </p>
-        <button
-          onClick={() => {
-            props.setStage(stages.DETAILS);
-          }}
-          className="bg-primaryButton w-[330px] text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px]  mt-[20px]"
-        >
-          Begin KYC
-        </button>
-      </div>
+      {beginKYC ? (
+        <>
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setBeginKYC(false)}
+            ></div>
+            <div className="flex items-center min-h-screen px-4 py-8">
+              <div className="relative h-[700px] p-4 mx-auto bg-white rounded-md shadow-lg">
+                <div className="w-full flex justify-end">
+                <svg
+                  onClick={() => setBeginKYC(false)}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-8 h-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                </div>
+                
+
+                <InlineInquiry />
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="absolute top-1/2 -translate-y-1/2">
+          <p className="font-mont text-white font-bold text-[32px]">
+            Help us confirm your identity
+          </p>
+          <button
+            onClick={() => {
+              // props.setStage(stages.DETAILS);
+              // InlineInquiry();
+              setBeginKYC(true);
+            }}
+            data-modal-toggle="popup-modal"
+            className=" bg-primaryButton w-[330px] text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px]  mt-[20px]"
+          >
+            Begin KYC
+          </button>
+        </div>
+      )}
     </>
   );
 };

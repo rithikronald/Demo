@@ -23,6 +23,7 @@ import moment from "moment";
 import Stepper from "react-stepper-horizontal";
 import Slider from "../../components/Slider";
 import { ws } from "../../App";
+import { getCurrentPrice } from "../../utility/getCurrentPrice";
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
@@ -429,7 +430,10 @@ const Home = (props) => {
               src={require("../../assets/illustration.png")}
             />
             <button
-              onClick={() => setPageRightIndex(1)}
+              onClick={() => {
+                setPageRightIndex(1);
+                // getCurrentPrice("BTC")
+              }}
               className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
             >
               Start Now
