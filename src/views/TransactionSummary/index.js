@@ -256,12 +256,25 @@ const TransactionSummary = () => {
                     height={"100%"}
                   />
                   <div className="flex mt-3 items-center ml-5">
-                    <p className="text-gray-400 text-sm font-medium w-1/3">
-                      Portfolio Value
+                    <p className="text-gray-400 text-sm font-medium w-[20%]">
+                      Input Amount
                     </p>
-                    <p className="text-white font-semibold text-4xl ml-4">
-                      $5100
-                    </p>
+                    <GradientContainer
+                      height="h-14"
+                      width="w-[60%]"
+                      className={""}
+                      children={
+                        <div className="w-full h-full flex justify-center items-center px-2">
+                          <p className="text-3xl text-white font-semibold">
+                            $
+                          </p>
+                          <input
+                            type="text"
+                            className="h-full w-full bg-transparent font-semibold focus:outline-none text-white text-2xl rounded-2xl text-center form-control"
+                          />
+                        </div>
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -327,7 +340,6 @@ const TransactionSummary = () => {
         className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-center items-center flex flex-col sm:hidden xl:flex"
       >
         <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
-
         <Deopsite />
       </div>
     </div>
