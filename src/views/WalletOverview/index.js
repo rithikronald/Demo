@@ -151,7 +151,8 @@ const WalletOverView = (props) => {
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left p-10 pt-[300px] px-14 flex flex-col justify-around sm:flex xl:basis-3/4 overflow-y-scroll h-[100%]">
+      <div className="Left p-10 px-14 flex flex-col justify-around overflow-y-hidden sm:flex xl:basis-3/4 h-[100%]">
+        <div className="overflow-y-scroll something">
         <div className="flex flex-col w-full">
           <p className="text-2xl 2xl:text-3xl 3xl:text-4xl font-semibold text-white">
             Wallet Overview
@@ -467,6 +468,7 @@ const WalletOverView = (props) => {
             ]}
           />}
 
+        </div>
         </div>
       </div>
       <div
