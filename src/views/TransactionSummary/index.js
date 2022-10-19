@@ -15,8 +15,11 @@ import { maximumInstance } from "../../setup";
 const TransactionSummary = () => {
   const location = useLocation();
   const [currentPrice, setCurrentPrice] = useState({});
-  const [buyPrice, setBuyPrice] = useState(100);
   const [status, setStatus] = useState({});
+  const [split, setSplit] = useState({});
+
+  const [buyPrice, setBuyPrice] = useState(88);
+
   // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
   const socketPayload = location?.state?.indexData?.coins?.map(
     (ticker) => `${ticker}_USDT`
@@ -24,19 +27,16 @@ const TransactionSummary = () => {
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     // console.log(data);
-    const coinName = data?.result?.currency_pair?.split("_")[0];
+    const coinName = data?.result?.currency_pair;
     // console.log(coinName, data?.result?.last);
     if (coinName) {
       setCurrentPrice((prev) => {
         return {
           ...prev,
-          [`${coinName}`]: data?.result?.last,
+          [coinName]: data?.result?.last,
         };
       });
     }
-    // console.log(data?.params?.[0], data?.params?.[1]?.last);
-    // if(methods != 'server.sign')
-    // ws.close();
   }
 
   useEffect(() => {
@@ -79,10 +79,10 @@ const TransactionSummary = () => {
   }, [ws.readyState]);
 
   useEffect(() => {
-    // console.log(currentPrice);
+    // console.log("cp", currentPrice);
   }, [currentPrice]);
   useEffect(() => {
-    console.log(status);
+    console.log("status", status);
   }, [status]);
 
   const getBidPrice = (type, currentPrice) => {
@@ -115,22 +115,46 @@ const TransactionSummary = () => {
     let totalCoins = socketPayload.length;
     let individualSplit = buyPrice / totalCoins;
 
-    let splitArray = socketPayload.map((item) => {
-      const value = Number(individualSplit) / currentPrice[item.split("_")[0]];
-      return value.toFixed(3);
+    socketPayload.map((item) => {
+      let value = Number(individualSplit) / currentPrice[item];
+      // return
+      setSplit((prev) => {
+        return {
+          ...prev,
+          [item]: value.toFixed(3),
+        };
+      });
     });
-    return splitArray;
+    return;
   };
 
   const createBatchOrder = async () => {
-    let split = calculateSplit();
-    await socketPayload.map(async (item, index) => {
+    calculateSplit();
+    console.log("split -", split);
+    socketPayload.map(async (item, index) => {
       await createOrder({
         currency_pair: item,
-        amount: split[index],
-        current_price: getBidPrice("buy", currentPrice[item.split("_")[0]]),
+        amount: split[item],
+        current_price: getBidPrice("buy", currentPrice[item]),
       });
     });
+    //  await retryOrder();
+  };
+
+  const retryOrders = async () => {
+    calculateSplit();
+    // console.log("split -", split);
+    for (let key in status) {
+      if (status[key] !== "closed") {
+        console.log("retrying ....", key, status[key]);
+        await createOrder({
+          currency_pair: key,
+          amount: split[key],
+          current_price: getBidPrice("buy", currentPrice[key]),
+        });
+      }
+    }
+    return "retry done";
   };
 
   const createOrder = async ({ currency_pair, amount, current_price }) => {
@@ -142,7 +166,7 @@ const TransactionSummary = () => {
       side: "buy",
       type: "market",
     };
-    console.log(body);
+    // console.log(body);
     await axios
       .post(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -237,7 +261,7 @@ const TransactionSummary = () => {
           }
         />
         <div className="w-[80%] h-[30%] rounded-2xl flex flex-col justify-center ">
-          <div className="">
+          <div className="" onClick={retryOrders}>
             <p className="text-gray-400 text-sm font-medium">Order Number</p>
             <p className="font-semibold text-white text-xl">894ytiwnhiuyb8n</p>
           </div>
@@ -246,7 +270,10 @@ const TransactionSummary = () => {
               You have to pay
             </p>
             <div className="flex w-full justify-between">
-              <div className="flex items-end">
+              <div
+                onClick={() => console.log(currentPrice)}
+                className="flex items-end"
+              >
                 <p className="font-semibold text-white text-5xl">5289</p>
                 <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
               </div>
