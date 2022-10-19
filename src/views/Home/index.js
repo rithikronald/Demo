@@ -20,12 +20,10 @@ import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import Stepper from 'react-stepper-horizontal'
-import Slider from '../../components/Slider'
-
-var WebSocketClient = require("websocket").w3cwebsocket;
-const WS_URL = "wss://ws.gate.io/v3/";
-var ws = new WebSocketClient(WS_URL);
+import Stepper from "react-stepper-horizontal";
+import Slider from "../../components/Slider";
+import { ws } from "../../App";
+import { getCurrentPrice } from "../../utility/getCurrentPrice";
 
 const Home = (props) => {
   const { height, width } = useWindowDimensions();
@@ -39,53 +37,73 @@ const Home = (props) => {
   const [tenureIndex, setTenureIndex] = useState();
   const [riskIndex, setRiskIndex] = useState();
   const [smartSuggestList, setSmartSuggestList] = useState();
-  const [currentPrice, setCurrentPrice] = useState({});
+  const [currentPrice, setCurrentPrice] = useState(0);
+  const [percentageChange, setPercentageChange] = useState();
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    // console.log("Home", data?.result?.currency_pair ,data?.result?.last);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    if (coinName) {
+      setCurrentPrice((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.last,
+        };
       });
-      ws.send(array);
-    };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice((prev) => {
-          return {
-            ...prev,
-            [`${coinName}`]: data?.params?.[1]?.last,
-          };
-        });
-      }
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
-    ws.onclose = function () {
-      console.log("close");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  };
+      setPercentageChange((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.change_percentage,
+        };
+      });
+    }
+  }
 
   useEffect(() => {
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      "BTC_USDT",
-      "ETH_USDT",
-      "BNB_USDT",
-      "XRP_USDT",
-      "ADA_USDT",
-      "SOL_USDT",
-      "DOGE_USDT",
-      "DOT_USDT",
-    ]);
-  }, []);
+    console.log("IN HOME SCREEN");
+    console.log(ws.readyState);
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [
+        "BTC_USDT",
+        "ETH_USDT",
+        "BNB_USDT",
+        "XRP_USDT",
+        "ADA_USDT",
+        "SOL_USDT",
+        "DOGE_USDT",
+        "DOT_USDT",
+      ],
+    });
+    if (ws.readyState) {
+      console.log("CLEARED");
+      ws.send(array);
+    }
+    ws.onmessage = onmessage;
+
+    return () => {
+      if (ws.readyState) {
+        var array = JSON.stringify({
+          time: Date.now(),
+          channel: "spot.tickers",
+          event: "unsubscribe",
+          payload: [
+            "ETH_USDT",
+            "BNB_USDT",
+            "XRP_USDT",
+            "ADA_USDT",
+            "SOL_USDT",
+            "DOGE_USDT",
+            "DOT_USDT",
+          ],
+        });
+        ws.send(array);
+      }
+    };
+  }, [ws.readyState]);
 
   useEffect(() => {
     props.openLoader();
@@ -175,30 +193,39 @@ const Home = (props) => {
           </div>
         </div> */}
         <div className="flex w-full h-1/3 relative">
-          <img src={require('../../assets/smartSuggestFlowBackground.png')} className="w-full" />
+          <img
+            src={require("../../assets/smartSuggestFlowBackground.png")}
+            className="w-full"
+          />
           {/* <img src={require('../../assets/smartSuggestFlow.png')} className="absolute top-1/2 left-1/2" style={{transform: 'translate(-55%, -90px)'}} /> */}
           <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
-            <Stepper steps={[
-              {title: ''},
-              {title: ''},
-              {title: ''},
-            ]} activeStep={1} />
+            <Stepper
+              steps={[{ title: "" }, { title: "" }, { title: "" }]}
+              activeStep={1}
+            />
             <div className="px-[15%] flex justify-between">
               <p className="font-mont text-white text-[13px]">Step 1</p>
               <p className="font-mont text-white text-[13px]">Step 2</p>
               <p className="font-mont text-white text-[13px]">Step 3</p>
             </div>
             <div className="px-[15%] flex justify-between">
-              <p className="font-mont text-white font-bold text-[16px]">KYC Completed</p>
-              <p className="font-mont text-white font-bold text-[16px]">Smart Suggest</p>
-              <p className="font-mont text-white font-bold text-[16px]">Secure Account</p>
+              <p className="font-mont text-white font-bold text-[16px]">
+                KYC Completed
+              </p>
+              <p className="font-mont text-white font-bold text-[16px]">
+                Smart Suggest
+              </p>
+              <p className="font-mont text-white font-bold text-[16px]">
+                Secure Account
+              </p>
             </div>
             <div className="px-[15%] pt-[20px]">
-
-            <Slider />
+              <Slider />
             </div>
             <div className="px-[15%]">
-              <p className="font-mont text-white font-bold text-[14px] pt-[10px]">36% Completed</p>
+              <p className="font-mont text-white font-bold text-[14px] pt-[10px]">
+                36% Completed
+              </p>
             </div>
           </div>
         </div>
@@ -226,11 +253,11 @@ const Home = (props) => {
                     height="h-16"
                     children={
                       <button
-                        onClick={() =>
+                        onClick={() => {
                           navigate(`/coin-desc/${data?.ticker}`, {
                             state: { coin: item?.ticker },
-                          })
-                        }
+                          });
+                        }}
                         className="flex justify-between items-center p-4 px-4 w-full h-full"
                       >
                         <div className="flex flex-row items-center">
@@ -250,24 +277,31 @@ const Home = (props) => {
                         </div>
                         <div className="flex flex-col items-end">
                           <p className="text-white font-semibold text-sm">
-                            {/* ${item?.price?.value.toFixed(2)} */}
-                            {currentPrice[data?.ticker]}
+                            {"$"}
+                            {currentPrice?.[data?.ticker] == null
+                              ? item?.price?.value.toFixed(4)
+                              : currentPrice?.[data?.ticker]}
                           </p>
                           <p
                             className={`${
-                              Number(item?.percent_change_24h) > 0
+                              Number(item?.percent_change_24h) > 0 ||
+                              percentageChange?.[data?.ticker] > 0
                                 ? "text-green-500"
                                 : "text-red-500"
                             } text-[10px] font-semibold`}
                           >
                             <i
                               class={`fa-sharp fa-solid ${
-                                Number(item?.percent_change_24h) > 0
+                                Number(item?.percent_change_24h) > 0 ||
+                                percentageChange?.[data?.ticker] > 0
                                   ? "text-green-500 fa-caret-up"
                                   : "text-red-500 fa-caret-down"
                               } mr-[1px]`}
                             />{" "}
-                            {item?.percent_change_24h}%
+                            {percentageChange?.[data?.ticker] == null
+                              ? item?.percent_change_24h
+                              : percentageChange?.[data?.ticker]}
+                            %
                           </p>
                         </div>
                       </button>
@@ -324,7 +358,7 @@ const Home = (props) => {
                               width={"100%"}
                               height={"70%"}
                               data={arrGen(
-                                item.basketData?.price[`change_${"1d"}`]
+                                item?.basketData?.price[`change_${"30d"}`]
                               )}
                             />
                           </div>
@@ -396,7 +430,10 @@ const Home = (props) => {
               src={require("../../assets/illustration.png")}
             />
             <button
-              onClick={() => setPageRightIndex(1)}
+              onClick={() => {
+                setPageRightIndex(1);
+                // getCurrentPrice("BTC")
+              }}
               className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
             >
               Start Now
@@ -490,8 +527,13 @@ const Home = (props) => {
               <div className="text-white justify-center items-center flex font-bold text-center mt-5 text-2xl 2xl:text-4xl 3xl:text-5xl">
                 <p className="font-normal">$</p>
                 <input
-                  type="number"
+                  type="text"
                   value={amount}
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
                   onChange={(e) => {
                     console.log(
                       "comma",
@@ -624,7 +666,7 @@ const Home = (props) => {
                     <CustomPieChart
                       data={smartSuggestList}
                       width={"100%"}
-                      height={"40%"}
+                      height={"45%"}
                     />
                   )}
                   <div className="flex flex-row w-full justify-center items-center gap-2 text-sm font-semibold">
@@ -649,7 +691,7 @@ const Home = (props) => {
                       return (
                         <div
                           key={index}
-                          className="flex items-center mt-[20px] w-[100%] px-3"
+                          className="flex items-center justify-center mt-[20px] w-[100%] px-3"
                         >
                           <img
                             alt="btc"

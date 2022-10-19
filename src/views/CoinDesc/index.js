@@ -2,6 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
+import { ws } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
@@ -9,19 +10,13 @@ import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import { numFormatter } from "../../utility/kFormatter";
 import Modal from "./modal";
+// var WebSocketClient = require("websocket").w3cwebsocket;
+// const WS_URL = "wss://api.gateio.ws/ws/v4/";
 
 const CoinDesc = (props) => {
+  // const coinWs = new WebSocketClient(WS_URL);
   const [data, setData] = useState();
-  const [priceGrapgh, setPriceGrapgh] = useState([]);
   const [priceIndex, setPriceIndex] = useState("1d");
-  const [mainIndex, setMainIndex] = useState("1d");
-  const [socialIndex, setSocialIndex] = useState("1d");
-  const [networkIndex, setNetworkIndex] = useState("1d");
-  const [developerIndex, setDeveloperIndex] = useState("1d");
-  const [sentimentIndex, setSentimentIndex] = useState("1d");
-  const [mainSecondaryIndex, setMainSecondaryIndex] = useState("marketcap_usd");
-  const [activeWalletPercentageChange, setActiveWalletPercentageChange] =
-    useState("");
   const [activeAddressPerct, setActiveAddressPerct] = useState(0);
   const [dailyActivePerct, setDailyActivePerct] = useState(0);
   const [transactionVolumePerct, setTransactionVolumePerct] = useState(0);
@@ -30,49 +25,51 @@ const CoinDesc = (props) => {
   const [tradingVolume, setTradingVolume] = useState(0);
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState("");
+  const [currentPrice, setCurrentPrice] = useState();
   const location = useLocation();
   const params = useParams();
 
-  var WebSocketClient = require("websocket").w3cwebsocket;
-  const WS_URL = "wss://ws.gate.io/v3/";
-  var ws = new WebSocketClient(WS_URL);
+  useEffect(() => {
+    console.log("Current Price", currentPrice);
+    console.log(data?.price?.value);
+  }, [currentPrice, data]);
 
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    // console.log("CoinDesc", coinName);
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
-      });
-      ws.send(array);
-    };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice(data?.params?.[1]?.last);
-      }
-      // console.log(data?.params?.[0], data?.params?.[1]?.last);
-      // if(methods != 'server.sign')
-      // ws.close();
-    };
-    ws.onclose = function () {
-      console.log("close");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  };
+    if (coinName && coinName === location?.state?.coin) {
+      setCurrentPrice(data?.result?.last);
+    }
+  }
 
   useEffect(() => {
-    console.log("COINNAME", `${location?.state?.coin}_USDT`);
-    wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-      `${location?.state?.coin}_USDT`,
-    ]);
-  }, [location?.state]);
+    console.log("ReadyState coinDesc", ws.readyState);
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [`${location?.state?.coin}_USDT`],
+    });
+    if (ws.readyState) {
+      console.log("CoinDesc Sub");
+      ws.send(array);
+      ws.onmessage = onmessage;
+    }
+    return () => {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: [`${location?.state?.coin}_USDT`],
+      });
+      if (ws.readyState) {
+        console.log("CoinDesc Un Sub");
+        ws.send(array);
+      }
+    };
+  }, [ws.readyState, modalOpen]);
 
   useEffect(() => {
     props.openLoader();
@@ -144,7 +141,7 @@ const CoinDesc = (props) => {
     let percentage = div * 100;
     return Math.floor(value);
   };
-  
+
   const getAfterDecimalValue = (num) => {
     if (!num) {
       return;
@@ -190,13 +187,18 @@ const CoinDesc = (props) => {
             <div className="flex-col justify-between text-white flex justify-">
               <div className="priceBorder p-[1px]">
                 <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
-                  <p className="text-[12px] ">Price</p>
+                  {/* <p className="text-[12px] ">Price</p> */}
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(currentPrice)}
+                    {currentPrice == null
+                      ? Math.floor(data?.price?.value)
+                      : Number(currentPrice)?.toFixed(0)}
                   </p>
                   <p className="text-[15px] font-bold">
-                    .{currentPrice.split(".")[1]}
+                    .
+                    {currentPrice == null
+                      ? getAfterDecimalValue(data?.price?.value)
+                      : currentPrice?.split(".")[1]}
                   </p>
                 </div>
               </div>
@@ -291,7 +293,7 @@ const CoinDesc = (props) => {
                   <p className="text-[12px] ">Price</p>
                   <p className="text-[18px] ml-[5px]">$</p>
                   <p className="text-[25px] font-bold">
-                    {Math.floor(currentPrice[data?.ticker])}
+                    {currentPrice[data?.ticker]}
                   </p>
                   <p className="text-[15px] font-bold">
                     .{getAfterDecimalValue(data?.price?.value)}

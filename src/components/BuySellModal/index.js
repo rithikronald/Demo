@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { maximumInstance } from "../../setup";
-import { Tabs } from "../../views/CoinList";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ws } from "../../App";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { GradientContainer } from "../GradientContainer";
+import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
 
 const innertabsData = [
@@ -19,44 +22,79 @@ export const BuySellModal = (props) => {
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
   const [tradeMode, setTradeMode] = useState("market");
-  var WebSocketClient = require("websocket").w3cwebsocket;
-  const WS_URL = "wss://ws.gate.io/v3/";
-  var ws = new WebSocketClient(WS_URL);
+
+  // useEffect(() => {
+  //   console.log("Trade", props?.trade);
+  //   console.log("TradeMode", tradeMode);
+  // }, [props?.trade, tradeMode]);
 
   useEffect(() => {
-    console.log("Trade", props?.trade);
-    console.log("TradeMode", tradeMode);
-  }, [props?.trade, tradeMode]);
+    console.log("isOpen", props?.isOpen);
+    if (props?.isOpen === false) {
+      setAmount("");
+      setPrice("");
+    }
+  }, [props?.isOpen]);
 
-  const wsGet = (id, method, params) => {
-    ws.onopen = function () {
-      console.log("open");
-      var array = JSON.stringify({
-        id: id,
-        method: method,
-        params: params,
-      });
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    // console.log("Buy/Sell", data?.result);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    if (coinName && coinName === props?.ticker) {
+      setCurrentPrice(data?.result?.last);
+    }
+  }
+
+  useEffect(() => {
+    console.log("Current Price", currentPrice);
+  }, [currentPrice]);
+
+  useEffect(() => {
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [`${props?.ticker}_USDT`],
+    });
+    if (ws.readyState) {
+      console.log("Buy/Sell Sub");
       ws.send(array);
-    };
-    ws.onmessage = function (evt) {
-      const data = JSON.parse(evt?.data);
-      const coinName = data?.params?.[0].toString().split("_")[0];
-      if (coinName) {
-        setCurrentPrice(data?.params?.[1]?.last);
+      ws.onmessage = onmessage;
+    }
+    return () => {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: [`${props?.ticker}_USDT`],
+      });
+      if (ws.readyState) {
+        console.log("Buy/Sell Un Sub");
+        ws.send(array);
       }
     };
-    ws.onclose = function () {
-      console.log("close");
-    };
-    ws.onerror = function (err) {
-      console.log("error", err);
-    };
-  };
+  }, [ws.readyState, props?.ticker, props?.isOpen]);
+
+  useEffect(() => {
+    if (props?.isOpen == false) {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "unsubscribe",
+        payload: [`${props?.ticker}_USDT`],
+      });
+      if (ws.readyState) {
+        console.log("Buy/Sell Un Sub");
+        ws.send(array);
+      }
+    }
+  }, [props?.isOpen]);
+
   const getBidPrice = (type) => {
     let bidQuote = []; // decimals strateg
     let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
     // % strategy
-    let bid = currentPrice * 0.002;
+    let bid = currentPrice * 0.001;
     let finalBid;
     // console.log(bid);
     switch (type) {
@@ -78,22 +116,14 @@ export const BuySellModal = (props) => {
         break;
     }
   };
-  useEffect(() => {
-    if (props?.ticker) {
-      console.log("Ticker", props?.ticker);
-      wsGet(Math.round(Math.random() * 1000), "ticker.subscribe", [
-        props?.ticker + "_USDT",
-      ]);
-    }
-  }, [props?.ticker]);
 
-  const calculatePrice = (val) => {
-    const value = Number(val) * currentPrice;
-    setPrice(value);
+  const calculatePrice = (amount) => {
+    const value = Number(amount) * currentPrice;
+    setPrice(value.toFixed(4));
   };
 
-  const calculateAmount = (val) => {
-    const value = Number(val) / currentPrice;
+  const calculateAmount = (price) => {
+    const value = Number(price) / currentPrice;
     setAmount(value.toFixed(3));
   };
 
@@ -111,7 +141,28 @@ export const BuySellModal = (props) => {
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
         body
       )
-      .then((response) => console.log("Response", response?.data))
+      .then((response) => {
+        console.log("Response", response?.data);
+        switch (response?.data?.status) {
+          case "closed":
+            toast.success("order successful", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "open":
+            toast.success("order created - open", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "cancelled":
+            toast.warn("order cancelled - try again", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          default:
+            break;
+        }
+      })
       .catch((err) => console.log("Error", err));
   };
 
@@ -148,14 +199,19 @@ export const BuySellModal = (props) => {
       return "Token price";
     }
   };
+
+  // useEffect(() => {
+  //   console.log("Price", currentPrice);
+  // }, [currentPrice]);
+
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
+      <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
       <Tabs
         onClick={(val) => setTradeMode(val === 1 ? "limit" : "market")}
         data={innertabsData}
       />
-      ;
-      <div className="flex flex-col h-[90%] justify-center">
+      <div className="flex flex-col h-[90%] w-[96%] justify-center">
         <div className="mt-4">
           <p className="text-white font-medium text-xs ml-2 mb-1">
             {priceText()}
@@ -164,12 +220,24 @@ export const BuySellModal = (props) => {
             height="h-16"
             width="w-full"
             children={
-              <input
-                type="text"
-                value={price}
-                onChange={handlePriceInput}
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
+              <div className="w-full px-2 h-full flex items-center justify-center">
+                <img
+                  alt="usdt"
+                  className="h-8 w-9 m-1"
+                  src={require("../../../src/assets/usdt.png")}
+                />
+                <input
+                  type="text"
+                  value={price}
+                  onChange={handlePriceInput}
+                  // onKeyPress={(event) => {
+                  //   if (!/[0-9]/.test(event.key)) {
+                  //     event.preventDefault();
+                  //   }
+                  // }}
+                  className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control"
+                />
+              </div>
             }
           />
         </div>
@@ -179,12 +247,24 @@ export const BuySellModal = (props) => {
             height="h-16"
             width="w-full"
             children={
-              <input
-                type="text"
-                value={amount}
-                onChange={handleAmountInput}
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
+              <div className="w-full px-2 h-full flex items-center justify-center">
+                <img
+                  alt="usdt"
+                  className="h-8 w-9 m-1 rounded-full bg-white"
+                  src={getCoinMeta(props?.ticker)?.logoUrl}
+                />
+                <input
+                  type="text"
+                  value={amount}
+                  onChange={handleAmountInput}
+                  // onKeyPress={(event) => {
+                  //   if (!/[0-9]/.test(event.key)) {
+                  //     event.preventDefault();
+                  //   }
+                  // }}
+                  className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+                />
+              </div>
             }
           />
         </div>
@@ -204,7 +284,7 @@ export const BuySellModal = (props) => {
       </div>
       <ThemeButton
         onClick={createOrder}
-        text="Trade"
+        text={props?.trade?.charAt(0).toUpperCase() + props?.trade?.slice(1)}
         className="w-[75%] mt-10"
       />
     </div>

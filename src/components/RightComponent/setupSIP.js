@@ -90,7 +90,7 @@ const SetupSIP = (props) => {
           </div>
         }
       />
-      <div className="flex space-x-2">
+      <div className="flex w-full space-x-2">
         <button
           onClick={() => props?.onClick()}
           className="bg-gradient-to-r from-purple-300 bg-purple-400 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center"

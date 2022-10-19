@@ -53,7 +53,7 @@ export const IndexDetails = (props) => {
         </p>
       </div>
       <GradientContainer
-        width="w-full"
+        width="w-[95%]"
         height="h-[72%]"
         className={"my-5 2xl:h-[60%]"}
         children={
@@ -62,14 +62,14 @@ export const IndexDetails = (props) => {
               <CustomPieChart
                 data={props?.indexData}
                 width={"100%"}
-                height={"70%"}
+                height={"50%"}
               />
             )}
-            <div className="coinList grid grid-cols-2 p-[20px_10px_40px_20px] overflow-scroll ml-1">
+            <div className="coinList grid grid-cols-2 p-[20px_10px_40px_20px] overflow-scroll pb-2">
               {props?.indexData?.coins?.map((item, index) => {
                 const data = getCoinMeta(item);
                 return (
-                  <div className="flex items-center mt-[20px] w-[100%] px-3">
+                  <div className="flex items-center justify-center mt-[20px] w-[100%] px-3">
                     <img
                       alt="btc"
                       className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
@@ -98,7 +98,7 @@ export const IndexDetails = (props) => {
           </div>
         }
       />
-      <div className="flex space-x-2">
+      <div className="flex w-[95%] space-x-2">
         <button
           onClick={() =>
             navigate("/transactionSummary", {

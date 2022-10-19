@@ -707,6 +707,10 @@ let arr = [
     description: "Blockchain platform designed to scale",
     slug: "zilliqa",
   },
+  {
+    logoUrl: require("../../src/assets/usdt.png"),
+    ticker: "USDT",
+  },
 ];
 function getCoinMeta(ticker) {
   let obj = arr.find((o) => o.ticker === ticker);
@@ -715,5 +719,7 @@ function getCoinMeta(ticker) {
 
 module.exports = {
   getCoinMeta,
-  arr
+  arr,
 };
+
+// arr.map((item)=>console.log(`"${item.ticker}_USDT",`))
