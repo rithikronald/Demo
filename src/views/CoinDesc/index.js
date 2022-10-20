@@ -418,6 +418,7 @@ const CoinDesc = (props) => {
                 width={"100%"}
                 height={"98%"}
                 data={arrGen(data?.price[`change_${priceIndex}`])}
+                isDollar={true}
               />
             </GradientContainer>
           </div>
