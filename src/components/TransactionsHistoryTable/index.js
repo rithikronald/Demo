@@ -13,9 +13,7 @@ export const Table = (props) => {
       name: "TRANSACTION ID",
       selector: (row) => {
         return (
-          <div
-            className="flex items-center cursor-pointer"
-          >
+          <div className="flex items-center cursor-pointer">
             <p className="text- font-bold ml-2">{row.transactionId}</p>
           </div>
         );
@@ -50,7 +48,7 @@ export const Table = (props) => {
     {
       name: "COIN/INDEX",
       selector: (row) => {
-        return row.coin
+        return row.coin;
       },
       sortable: true,
       style: {
@@ -60,7 +58,9 @@ export const Table = (props) => {
     },
     {
       name: "DATE",
-      selector: (row) => {return row.date},
+      selector: (row) => {
+        return row.date;
+      },
       sortable: true,
       style: {
         color: "#7d8597",
@@ -69,7 +69,9 @@ export const Table = (props) => {
     },
     {
       name: "AMOUNT",
-      selector: (row) => {return row.amount},
+      selector: (row) => {
+        return row.amount;
+      },
       sortable: true,
       style: {
         color: "#7d8597",
@@ -78,11 +80,15 @@ export const Table = (props) => {
     },
     {
       name: "STATUS",
-      selector: (row) => {return (
-        <>
-          <div className="p-1 rounded-sm bg-[rgba(201,153, 32, 0.15)] text-[#C99920]">{row.status}</div>
-        </>
-      )},
+      selector: (row) => {
+        return (
+          <>
+            <div className="p-1 rounded-sm bg-[rgba(201,153, 32, 0.15)] text-green-500">
+              {row.status}
+            </div>
+          </>
+        );
+      },
       sortable: true,
       style: {
         color: "#fff",
@@ -103,7 +109,7 @@ export const Table = (props) => {
   //   );
   // });
 
-  const filteredItems = props?.data
+  const filteredItems = props?.data;
 
   const handleClear = () => {
     if (filterText) {

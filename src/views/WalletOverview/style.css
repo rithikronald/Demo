@@ -1,6 +1,9 @@
 .Left::-webkit-scrollbar {
   display: none;
 }
+.something::-webkit-scrollbar {
+  display: none;
+}
 .assetsContainer::-webkit-scrollbar {
   display: none;
 }
@@ -10,6 +13,10 @@
   scrollbar-width: none; /* Firefox */
 }
 .Left {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.something {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
