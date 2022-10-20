@@ -50,8 +50,8 @@ const CoinDesc = (props) => {
       ws.send(array);
       ws.onmessage = onmessage;
     }
-    return () => {
-      var array = JSON.stringify({
+    if (modalOpen) {
+      let array = JSON.stringify({
         time: new Date().getTime,
         channel: "spot.tickers",
         event: "unsubscribe",
@@ -60,7 +60,7 @@ const CoinDesc = (props) => {
       if (ws.readyState) {
         ws.send(array);
       }
-    };
+    }
   }, [ws.readyState, modalOpen]);
 
   useEffect(() => {
@@ -155,6 +155,7 @@ const CoinDesc = (props) => {
         ticker={data?.ticker}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
+        price={currentPrice}
       />
       {!fakeModalOpen ? (
         <div
@@ -417,6 +418,7 @@ const CoinDesc = (props) => {
                 width={"100%"}
                 height={"98%"}
                 data={arrGen(data?.price[`change_${priceIndex}`])}
+                isDollar={true}
               />
             </GradientContainer>
           </div>

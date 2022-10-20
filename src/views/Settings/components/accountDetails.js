@@ -20,7 +20,7 @@ const AccountDetails1 = (props) => {
             First Name
           </p>
           <p className="font-mont text-white opacity-40 font-bold text-[32px]">
-            Ram
+            first name
           </p>
         </div>
         <div className="flex mt-[20px]">
@@ -31,7 +31,7 @@ const AccountDetails1 = (props) => {
             Last Name
           </p>
           <p className="font-mont text-white opacity-40 font-bold text-[32px]">
-            Singh
+            last name
           </p>
         </div>
         <div

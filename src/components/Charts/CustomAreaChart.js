@@ -57,7 +57,7 @@ export const CustomAreaChart = (props) => {
         <YAxis
           axisLine={false}
           stroke={"#595959"}
-          tickCount={6}
+          tickCount={4}
           width={30}
           tick={{ fontSize: 10, fontWeight: "normal", fill: "#eff1ed" }}
           tickFormatter={DataFormater}

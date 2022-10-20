@@ -30,6 +30,7 @@ const Indexes = (props) => {
   const [dailyActiveAddress, setDailyActiveAddress] = useState();
   const [transactionVolume, setTransactionVolume] = useState();
   const [nvtRation, setNvtRation] = useState();
+  const [description, setDescription] = useState("");
   const [pageRightIndex, setPageRightIndex] = useState(0);
   const [basketData, setBasketData] = useState();
   const [priceIndex, setPriceIndex] = useState("1d");
@@ -41,6 +42,7 @@ const Indexes = (props) => {
       .then((response) => {
         // console.log("Response", response?.data);
         setBasketData(response?.data?.basketData);
+        setDescription(response?.data?.description);
         props.closeLoader();
       })
       .catch((err) => {
@@ -74,11 +76,7 @@ const Indexes = (props) => {
               {location?.state?.indexData?.basketName}
             </p>
             <p className="text-purple-600 font-light text-sm">Index</p>
-            <p className=" text-white text-sm pr-[15px] mt-3">
-              Crypto gaming is on the rise, {"&"} gaming coins are becoming a
-              popular choice as an investment. Play to earn is an emerging
-              gaming model that rewards players in cryptocurrencies
-            </p>
+            <p className=" text-white text-sm pr-[15px] mt-3">{description}</p>
           </div>
           <div className="grid grid-cols-2 gap-1 w-1/2">
             {location?.state?.indexData &&

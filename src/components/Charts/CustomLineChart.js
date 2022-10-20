@@ -91,7 +91,7 @@ export const CustomLineChart = (props) => {
           dataKey="uv"
           dot={true}
           strokeWidth={2}
-          stroke="#341E63"
+          stroke="violet"
         />
         <YAxis
           axisLine={false}

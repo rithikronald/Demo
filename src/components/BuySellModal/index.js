@@ -40,15 +40,22 @@ export const BuySellModal = (props) => {
     console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName && coinName === props?.ticker) {
-      setCurrentPrice(data?.result?.last);
+      if (props?.isAllCoins) {
+        setCurrentPrice(data?.result?.last);
+      }
     }
   }
+
+  useEffect(() => {
+    setCurrentPrice(props?.price);
+  }, [props?.price]);
 
   useEffect(() => {
     console.log("Current Price", currentPrice);
   }, [currentPrice]);
 
-  useEffect(() => {
+  if (props?.isAllCoins) {
+    console.log("AllCoins");
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.tickers",
@@ -60,19 +67,20 @@ export const BuySellModal = (props) => {
       ws.send(array);
       ws.onmessage = onmessage;
     }
-    return () => {
-      var array = JSON.stringify({
-        time: new Date().getTime,
-        channel: "spot.tickers",
-        event: "unsubscribe",
-        payload: [`${props?.ticker}_USDT`],
-      });
-      if (ws.readyState) {
-        console.log("Buy/Sell Un Sub");
-        ws.send(array);
-      }
-    };
-  }, [ws.readyState, props?.ticker, props?.isOpen]);
+  }
+
+  // return () => {
+  //   var array = JSON.stringify({
+  //     time: new Date().getTime,
+  //     channel: "spot.tickers",
+  //     event: "unsubscribe",
+  //     payload: [`${props?.ticker}_USDT`],
+  //   });
+  //   if (ws.readyState) {
+  //     console.log("Buy/Sell Un Sub");
+  //     ws.send(array);
+  //   }
+  // };
 
   useEffect(() => {
     if (props?.isOpen == false) {
