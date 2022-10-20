@@ -1,7 +1,6 @@
 import "./style.css";
 import React, { useEffect, useState } from "react";
 import { ws } from "../../App";
-import { Cell, Pie, PieChart } from "recharts";
 import { useLocation } from "react-router-dom";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { GradientContainer } from "../../components/GradientContainer";
@@ -18,7 +17,7 @@ const TransactionSummary = () => {
   const [status, setStatus] = useState({});
   const [split, setSplit] = useState({});
 
-  const [buyPrice, setBuyPrice] = useState(88);
+  const [buyPrice, setBuyPrice] = useState(100);
 
   // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
   const socketPayload = location?.state?.indexData?.coins?.map(
@@ -142,7 +141,7 @@ const TransactionSummary = () => {
   };
 
   const retryOrders = async () => {
-    calculateSplit();
+    // calculateSplit();
     // console.log("split -", split);
     for (let key in status) {
       if (status[key] !== "closed") {
@@ -257,10 +256,10 @@ const TransactionSummary = () => {
                       className={""}
                       children={
                         <div className="w-full h-full flex justify-center items-center px-2">
-                          <p className="text-3xl text-white font-semibold">
-                            $
-                          </p>
+                          <p className="text-3xl text-white font-semibold">$</p>
                           <input
+                            onChange={(e) => setBuyPrice(e.target.value)}
+                            value={buyPrice}
                             type="text"
                             className="h-full w-full bg-transparent font-semibold focus:outline-none text-white text-2xl rounded-2xl text-center form-control"
                           />
@@ -284,10 +283,10 @@ const TransactionSummary = () => {
             </p>
             <div className="flex w-full justify-between">
               <div
-                onClick={() => console.log(currentPrice)}
                 className="flex items-end"
+                onClick={() => console.log(currentPrice)}
               >
-                <p className="font-semibold text-white text-5xl">5289</p>
+                <p className="font-semibold text-white text-5xl">{buyPrice}</p>
                 <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
               </div>
               <button
