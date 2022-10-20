@@ -65,12 +65,12 @@ export const Table = ({ openModal, data, title, price }) => {
             className="flex items-center cursor-pointer"
           >
             <img
-              className="w-6 h-6 rounded-full bg-white"
+              className="w-8 h-8 rounded-full bg-white"
               src={coinData?.logoUrl}
               alt="logo"
             />
-            <p className="text- font-bold ml-2">{coinData?.ticker}</p>
-            <p className="text-white ml-2">{coinData?.slug}</p>
+            <p className="text-xl font-bold ml-2">{coinData?.ticker}</p>
+            <p className="text-white text-lg ml-2 ">{coinData?.slug}</p>
           </div>
         );
       },
@@ -81,7 +81,11 @@ export const Table = ({ openModal, data, title, price }) => {
       name: "PRICE",
       selector: (row) => {
         const coinData = getCoinMeta(row.ticker);
-        return "$" + Number(row?.price?.value).toFixed(10);
+        return (
+          <p className="font-mont text-white text-lg">
+            {"$" + Number(row?.price?.value).toFixed(10)}
+          </p>
+        );
       },
       sortable: true,
       style: {
@@ -93,7 +97,9 @@ export const Table = ({ openModal, data, title, price }) => {
     {
       name: "24h CHANGE",
       selector: (row) => {
-        return row.percent_change_24h + "%";
+        return (
+          <p className="font-mont text-lg">{row.percent_change_24h + "%"}</p>
+        );
       },
       sortable: true,
       style: {
@@ -116,7 +122,11 @@ export const Table = ({ openModal, data, title, price }) => {
     },
     {
       name: "MARKET CAP",
-      selector: (row) => numFormatter(row.marketcap_usd?.value),
+      selector: (row) => (
+        <p className="font-mont text-lg">
+          {numFormatter(row.marketcap_usd?.value)}
+        </p>
+      ),
       sortable: true,
       style: {
         color: "#fff",
@@ -125,7 +135,11 @@ export const Table = ({ openModal, data, title, price }) => {
     },
     {
       name: "VOLUME",
-      selector: (row) => numFormatter(row.tradingVolume?.value),
+      selector: (row) => (
+        <p className="font-mont text-lg">
+          {numFormatter(row.tradingVolume?.value)}
+        </p>
+      ),
       sortable: true,
       style: {
         color: "#7d8597",
@@ -147,13 +161,13 @@ export const Table = ({ openModal, data, title, price }) => {
         <div className="flex gap-x-3">
           <button
             onClick={() => getSocketData(row?.ticker)}
-            className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-green-600"
+            className="p-2.5 px-5 font-semibold rounded-xl text-white font-mont bg-green-600"
           >
             Buy
           </button>
           <button
             onClick={() => getSocketData(row?.ticker)}
-            className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-red-600"
+            className="p-1.5 px-5 font-semibold rounded-xl text-white font-mont bg-red-600"
           >
             Sell
           </button>
@@ -214,6 +228,7 @@ export const Table = ({ openModal, data, title, price }) => {
                 style: {
                   backgroundColor: "#131136",
                   color: "#fff",
+                  height: "6em",
                 },
               },
               headRow: {
