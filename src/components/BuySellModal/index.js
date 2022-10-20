@@ -235,7 +235,7 @@ export const BuySellModal = (props) => {
                   //     event.preventDefault();
                   //   }
                   // }}
-                  className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control"
+                  className="h-full w-full border-0 focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control"
                 />
               </div>
             }
@@ -262,7 +262,7 @@ export const BuySellModal = (props) => {
                   //     event.preventDefault();
                   //   }
                   // }}
-                  className="h-full w-full focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control "
+                  className="h-full w-full border-0 focus:outline-none bg-transparent text-white text-2xl rounded-2xl text-center form-control "
                 />
               </div>
             }
