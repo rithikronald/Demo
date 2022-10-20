@@ -29,15 +29,9 @@ const CoinDesc = (props) => {
   const location = useLocation();
   const params = useParams();
 
-  useEffect(() => {
-    console.log("Current Price", currentPrice);
-    console.log(data?.price?.value);
-  }, [currentPrice, data]);
-
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     const coinName = data?.result?.currency_pair?.split("_")[0];
-    // console.log("CoinDesc", coinName);
 
     if (coinName && coinName === location?.state?.coin) {
       setCurrentPrice(data?.result?.last);
@@ -45,7 +39,6 @@ const CoinDesc = (props) => {
   }
 
   useEffect(() => {
-    console.log("ReadyState coinDesc", ws.readyState);
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.tickers",
@@ -53,7 +46,6 @@ const CoinDesc = (props) => {
       payload: [`${location?.state?.coin}_USDT`],
     });
     if (ws.readyState) {
-      console.log("CoinDesc Sub");
       ws.send(array);
       ws.onmessage = onmessage;
     }
@@ -65,7 +57,6 @@ const CoinDesc = (props) => {
         payload: [`${location?.state?.coin}_USDT`],
       });
       if (ws.readyState) {
-        console.log("CoinDesc Un Sub");
         ws.send(array);
       }
     };
@@ -312,14 +303,16 @@ const CoinDesc = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-center items-end mt-2">
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]"
-                >
+              <button
+                onClick={() => {
+                  setModalOpen(true);
+                }}
+                className="flex justify-center items-end mt-2"
+              >
+                <button className="bg-primaryButton font-mont flex justify-center items-baseline rounded-xl py-[15px] px-[20px] w-[100%]">
                   Trade Now
                 </button>
-              </div>
+              </button>
             </div>
           </div>
         </div>

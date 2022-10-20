@@ -28,15 +28,8 @@ const Modal = (props) => {
         }
       )
       .then((response) => {
-        console.log("Props", props?.ticker);
-        const bal = response?.data?.map((item) => {
-          if (item?.currency == props?.ticker) {
-            console.log("in", item?.available);
-            return item?.available;
-          }
-        });
-        console.log("BALANCE", bal);
-        setBalance(bal);
+        const bal = response?.data?.find((o) => o.currency === props?.ticker);
+        setBalance(bal?.available);
       })
       .catch((e) => console.log("Error", e));
   }, [props?.modalOpen]);
@@ -68,7 +61,6 @@ const Modal = (props) => {
           </p>
         </div>
       )}
-
       <Tabs
         onClick={(val) => setTrade(val === 0 ? "buy" : "sell")}
         data={tabsData}
