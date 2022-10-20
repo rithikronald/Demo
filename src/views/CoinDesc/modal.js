@@ -33,7 +33,6 @@ const Modal = (props) => {
       })
       .catch((e) => console.log("Error", e));
   }, [props?.modalOpen]);
-
   return (
     <div
       style={{
@@ -73,6 +72,7 @@ const Modal = (props) => {
               isOpen={props?.modalOpen}
               trade={trade}
               ticker={props?.ticker}
+              price={props?.price}
             />
           }
         />

@@ -155,6 +155,7 @@ const CoinDesc = (props) => {
         ticker={data?.ticker}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
+        price={currentPrice}
       />
       {!fakeModalOpen ? (
         <div
