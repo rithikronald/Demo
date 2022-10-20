@@ -29,7 +29,7 @@ const Modal = (props) => {
       )
       .then((response) => {
         const bal = response?.data?.find((o) => o.currency === props?.ticker);
-        setBalance(bal?.available);
+        setBalance(bal ? bal?.available : 0);
       })
       .catch((e) => console.log("Error", e));
   }, [props?.modalOpen]);

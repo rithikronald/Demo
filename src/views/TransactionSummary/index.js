@@ -86,13 +86,8 @@ const TransactionSummary = () => {
         }
       )
       .then((response) => {
-        setBalance(
-          response?.data?.map((item) => {
-            if (item?.currency == "USDT") {
-              return item?.available;
-            }
-          })
-        );
+        const bal = response?.data?.find((o) => o.currency === "USDT");
+        setBalance(Number(bal?.available).toFixed(2));
       })
       .catch((e) => console.log("Error", e));
   }, []);
