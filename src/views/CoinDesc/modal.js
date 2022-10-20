@@ -73,6 +73,7 @@ const Modal = (props) => {
               trade={trade}
               ticker={props?.ticker}
               price={props?.price}
+              isAllCoins={props?.isAllCoins}
             />
           }
         />

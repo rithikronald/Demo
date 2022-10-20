@@ -64,7 +64,8 @@ const CoinList = (props) => {
             ticker={tickerName}
             modalOpen={modalOpen}
             setModalOpen={setModalOpen}
-            price={currentPrice}
+            // price={currentPrice}
+            isAllCoins={true}
           />
         </div>
       </div>
