@@ -5,12 +5,50 @@ import { useNavigate } from "react-router-dom";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { FilterComponent } from "./filterComponent";
 import { numFormatter } from "../../utility/kFormatter";
+import { ws } from "../../App";
 
-export const Table = ({ openModal, data, title }) => {
+export const Table = ({ openModal, data, title, price }) => {
   const navigate = useNavigate();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [coinData, setCoinData] = useState();
+  const [currentPrice, setCurrentPrice] = useState(0);
+
+  // function onmessage(evt) {
+  //   const data = JSON.parse(evt?.data);
+  //   // console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
+  //   const coinName = data?.result?.currency_pair?.split("_")[0];
+  //   if (coinName && coinName === ) {
+  //     // setCurrentPrice(data?.result?.last);
+  //   }
+  // }
+
+  const getSocketData = (val) => {
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [`${val}_USDT`],
+    });
+    if (ws.readyState) {
+      console.log("Buy/Sell Sub");
+      ws.send(array);
+      ws.onmessage = (evt) => {
+        const data = JSON.parse(evt?.data);
+        const coinName = data?.result?.currency_pair?.split("_")[0];
+        console.log("CoinList", coinName, data?.result?.last);
+        if (coinName && coinName === val) {
+          // setCurrentPrice(data?.result?.last);
+          price(data?.result?.last);
+        }
+      };
+    }
+    openModal(val);
+  };
+
+  // useEffect(()=>{
+  //   if(openModal)
+  // },[openModal])
 
   const columns = [
     {
@@ -108,13 +146,13 @@ export const Table = ({ openModal, data, title }) => {
       selector: (row) => (
         <div className="flex gap-x-3">
           <button
-            onClick={() => openModal(row?.ticker)}
+            onClick={() => getSocketData(row?.ticker)}
             className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-green-600"
           >
             Buy
           </button>
           <button
-            onClick={() => openModal(row?.ticker)}
+            onClick={() => getSocketData(row?.ticker)}
             className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-red-600"
           >
             Sell

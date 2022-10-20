@@ -431,8 +431,8 @@ const Home = (props) => {
             />
             <button
               onClick={() => {
-                // setPageRightIndex(1);
-                getCurrentPrice("BTC");
+                setPageRightIndex(1);
+                // getCurrentPrice("BTC");
               }}
               className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
             >

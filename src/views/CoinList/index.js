@@ -52,9 +52,11 @@ const CoinList = (props) => {
               data={coinList}
               currentPrice={currentPrice}
               openModal={(val) => {
-                console.log("Modal", val);
                 setTickerName(val);
                 setModalOpen(true);
+              }}
+              price={(val) => {
+                setCurrentPrice(val);
               }}
             />
           )}
@@ -62,6 +64,7 @@ const CoinList = (props) => {
             ticker={tickerName}
             modalOpen={modalOpen}
             setModalOpen={setModalOpen}
+            price={currentPrice}
           />
         </div>
       </div>
