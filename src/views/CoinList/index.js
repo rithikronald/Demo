@@ -53,8 +53,9 @@ const CoinList = (props) => {
               currentPrice={currentPrice}
               openModal={(val) => {
                 console.log("Modal", val);
-                setTickerName(val);
+                setTickerName(val)
                 setModalOpen(true);
+                
               }}
             />
           )}

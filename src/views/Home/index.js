@@ -733,7 +733,11 @@ const Home = (props) => {
                 Go Back
               </button>
               <button
-                onClick={() => navigate("/transactionSummary")}
+                onClick={() =>
+                  navigate("/transactionSummary", {
+                    state: { indexData: smartSuggestList, amount: amount },
+                  })
+                }
                 className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
               >
                 Invest Now

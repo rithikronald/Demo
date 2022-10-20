@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { BuySellModal } from "../../components/BuySellModal";
 import { GradientContainer } from "../../components/GradientContainer";
 import { Tabs } from "../../components/Tabs";
+import { numFormatter } from "../../utility/kFormatter";
 import "./style.css";
 
 const tabsData = [
@@ -15,6 +17,30 @@ const tabsData = [
 
 const Modal = (props) => {
   const [trade, setTrade] = useState("buy");
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        console.log("Props", props?.ticker);
+        const bal = response?.data?.map((item) => {
+          if (item?.currency == props?.ticker) {
+            console.log("in", item?.available);
+            return item?.available;
+          }
+        });
+        console.log("BALANCE", bal);
+        setBalance(bal);
+      })
+      .catch((e) => console.log("Error", e));
+  }, [props?.modalOpen]);
+
   return (
     <div
       style={{
@@ -32,6 +58,17 @@ const Modal = (props) => {
       >
         <div className="h-[30px] w-[4px] rounded-3xl bg-white opacity-25 absolute left-[20px] top-1/2 -translate-y-1/2"></div>
       </button>
+      {props?.modalOpen && (
+        <div className="flex">
+          <p className="text-white font-mont font-semibold text-2xl">
+            {props?.ticker}
+          </p>
+          <p className="text-white font-mont font-semibold text-2xl ml-14">
+            bal:{balance}
+          </p>
+        </div>
+      )}
+
       <Tabs
         onClick={(val) => setTrade(val === 0 ? "buy" : "sell")}
         data={tabsData}

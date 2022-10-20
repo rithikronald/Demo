@@ -78,7 +78,7 @@ export const Table = ({ openModal, data, title }) => {
     },
     {
       name: "MARKET CAP",
-      selector: (row) => numFormatter(row?.market_cap),
+      selector: (row) => row?.market_cap,
       sortable: true,
       style: {
         color: "#fff",
@@ -108,13 +108,13 @@ export const Table = ({ openModal, data, title }) => {
       selector: (row) => (
         <div className="flex gap-x-3">
           <button
-            onClick={() => openModal(row?.ticker)}
+            onClick={() => openModal(row?.symbol?.toUpperCase())}
             className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-green-600"
           >
             Buy
           </button>
           <button
-            onClick={() => openModal(row?.ticker)}
+            onClick={() => openModal(row?.symbol?.toUpperCase())}
             className="p-1.5 px-4 font-semibold rounded-xl text-white font-mont bg-red-600"
           >
             Sell

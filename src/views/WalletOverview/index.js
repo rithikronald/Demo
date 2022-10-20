@@ -43,7 +43,7 @@ const WalletOverView = (props) => {
   const [ticker, setTicker] = useState(arr[0].ticker);
   const [currentCurrencyChain, setCurrentCurrencyChain] = useState([]);
   const [transactionMode, setTransactionMode] = useState(0);
-
+  const [usdtSum, setUsdtSum] = useState();
   useEffect(() => {
     axios({
       url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/getCurrencyChains/${ticker}`,
@@ -116,6 +116,7 @@ const WalletOverView = (props) => {
 
   useEffect(() => {
     let sum = 0;
+    let usdtSum = 0;
     // console.log("BALANCE", coinList);
     coinList?.map((i) => {
       if (i.currency !== "USDT") {
@@ -133,11 +134,12 @@ const WalletOverView = (props) => {
         let second = 1;
         second = parseFloat(second);
         if (first && second) {
-          sum = sum + first * second;
+          usdtSum = usdtSum + first * second;
         }
       }
     });
-    setAvailableBal(numFormatter(sum));
+    setAvailableBal(numFormatter(sum+usdtSum));
+    setUsdtSum(usdtSum);
   }, [coinList, currentPrice]);
 
   useEffect(() => {
@@ -162,7 +164,7 @@ const WalletOverView = (props) => {
                 <div className="flex h-full w-[40%] flex-col justify-between mr-8">
                   <div>
                     <p className="text-white text-sm font-medium">
-                      Available Balance
+                      Portfolio Balance
                     </p>
                     <p className="text-white font-semibold text-6xl mt-2">
                       <span className="text-white font-normal text-5xl">$</span>
@@ -366,7 +368,7 @@ const WalletOverView = (props) => {
         <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
         <div className="mt-[8%] flex flex-col justify-between">
           {transactionMode == 0 ? (
-            <Deopsite balance={availableBal} />
+            <Deopsite balance={Number(usdtSum).toFixed(2)} />
           ) : (
             <Withdraw currencyChain={currentCurrencyChain} />
           )}

@@ -22,7 +22,6 @@ export const BuySellModal = (props) => {
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
   const [tradeMode, setTradeMode] = useState("market");
-
   // useEffect(() => {
   //   console.log("Trade", props?.trade);
   //   console.log("TradeMode", tradeMode);
@@ -48,6 +47,8 @@ export const BuySellModal = (props) => {
   useEffect(() => {
     console.log("Current Price", currentPrice);
   }, [currentPrice]);
+
+  
 
   useEffect(() => {
     var array = JSON.stringify({
