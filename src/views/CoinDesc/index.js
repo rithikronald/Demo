@@ -31,7 +31,7 @@ const CoinDesc = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log("CoinDesc",data?.result?.currency_pair, data?.result?.last);
+    console.log("CoinDesc", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
 
     if (coinName && coinName === location?.state?.coin) {
@@ -50,8 +50,8 @@ const CoinDesc = (props) => {
       ws.send(array);
       ws.onmessage = onmessage;
     }
-    return () => {
-      var array = JSON.stringify({
+    if (modalOpen) {
+      let array = JSON.stringify({
         time: new Date().getTime,
         channel: "spot.tickers",
         event: "unsubscribe",
@@ -60,7 +60,7 @@ const CoinDesc = (props) => {
       if (ws.readyState) {
         ws.send(array);
       }
-    };
+    }
   }, [ws.readyState, modalOpen]);
 
   useEffect(() => {
