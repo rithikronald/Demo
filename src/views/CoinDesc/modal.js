@@ -56,8 +56,8 @@ const Modal = (props) => {
           <p className="text-white font-mont font-semibold text-2xl">
             {props?.ticker}
           </p>
-          <p className="text-white font-mont font-semibold text-2xl ml-14">
-            bal:{balance}
+          <p className="text-white font-mont font-semibold text-lg ml-14">
+            Balance: {balance}
           </p>
         </div>
       )}
