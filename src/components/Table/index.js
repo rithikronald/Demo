@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { FilterComponent } from "./filterComponent";
 import { numFormatter } from "../../utility/kFormatter";
-import { ws } from "../../App";
-import { socketCoinTickerListlist } from "../../constants/SocketCoinTickerList";
 
 export const Table = ({ openModal, data, title }) => {
   const navigate = useNavigate();
@@ -14,56 +12,17 @@ export const Table = ({ openModal, data, title }) => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [coinData, setCoinData] = useState();
 
-  function onmessage(evt) {
-    const data = JSON.parse(evt?.data);
-    console.log("All Coins", data?.result?.currency_pair, data?.result?.last);
-    const coinName = data?.result?.currency_pair?.split("_")[0];
-    if (coinName) {
-      setCoinData((prev) => {
-        return {
-          ...prev,
-          [`${coinName}`]: data?.result,
-        };
-      });
-    }
-  }
-
-  useEffect(() => {
-    var array = JSON.stringify({
-      time: new Date().getTime,
-      channel: "spot.tickers",
-      event: "subscribe",
-      payload: socketCoinTickerListlist,
-    });
-    if (ws.readyState) {
-      console.log("CLEARED");
-      ws.send(array);
-    }
-    ws.onmessage = onmessage;
-
-    return () => {
-      if (ws.readyState) {
-        let array = JSON.stringify({
-          time: Date.now(),
-          channel: "spot.tickers",
-          event: "unsubscribe",
-          payload: socketCoinTickerListlist,
-        });
-        ws.send(array);
-      }
-    };
-  }, [ws.readyState]);
-
   const columns = [
     {
       name: "NAME",
       selector: (row) => {
-        const coinData = getCoinMeta(row.ticker);
+        // console.log(row?.symbol?.toUpperCase());
+        const coinData = getCoinMeta(row?.symbol?.toUpperCase());
         return (
           <div
             onClick={() =>
-              navigate(`/coin-desc/${row?.ticker}`, {
-                state: { coin: row?.ticker },
+              navigate(`/coin-desc/${coinData?.ticker}`, {
+                state: { coin: coinData?.ticker },
               })
             }
             className="flex items-center cursor-pointer"
@@ -84,8 +43,7 @@ export const Table = ({ openModal, data, title }) => {
     {
       name: "PRICE",
       selector: (row) => {
-        const coinData = getCoinMeta(row.ticker);
-        return "$" + Number(row?.price?.value).toFixed(10);
+        return "$" + Number(row?.current_price);
       },
       sortable: true,
       style: {
@@ -97,7 +55,7 @@ export const Table = ({ openModal, data, title }) => {
     {
       name: "24h CHANGE",
       selector: (row) => {
-        return row.percent_change_24h + "%";
+        return row?.price_change_percentage_24h + "%";
       },
       sortable: true,
       style: {
@@ -120,7 +78,7 @@ export const Table = ({ openModal, data, title }) => {
     },
     {
       name: "MARKET CAP",
-      selector: (row) => numFormatter(row.marketcap_usd?.value),
+      selector: (row) => numFormatter(row?.market_cap),
       sortable: true,
       style: {
         color: "#fff",
@@ -129,7 +87,7 @@ export const Table = ({ openModal, data, title }) => {
     },
     {
       name: "VOLUME",
-      selector: (row) => numFormatter(row.tradingVolume?.value),
+      selector: (row) => numFormatter(row?.total_volume),
       sortable: true,
       style: {
         color: "#7d8597",
@@ -138,7 +96,7 @@ export const Table = ({ openModal, data, title }) => {
     },
     {
       name: "SUPPLY",
-      selector: (row) => numFormatter(row.total_supply?.value),
+      selector: (row) => numFormatter(row?.total_supply),
       sortable: true,
       style: {
         color: "#7d8597",

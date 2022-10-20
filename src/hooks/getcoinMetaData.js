@@ -717,9 +717,25 @@ function getCoinMeta(ticker) {
   return obj;
 }
 
+const idGen = () => {
+  let ids = [];
+  let str;
+  arr.map((d) => {
+    ids.push(d.slug);
+  });
+
+  str = ids.join("%2C");
+  return str;
+};
+
+const coinGekoUrl =
+  "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=1inch%2Caave%2Ccardano%2Calgorand%2Capecoin%2Capi3%2Carweave%2Ccosmos%2Caurora%2Cavalanche%2Caxie-infinity%2Cbasic-attention-token%2Cbitcoin-cash%2Cbluzelle%2Cbnb%2Cbitcoin%2Cblocktrade-token%2Cpancakeswap%2Ccelo%2Cchiliz%2Cnervos-network%2Ccompound%2Ccovalent%2Ccrypto-com-coin%2Ccurve%2Cdogecoin%2Cpolkadot-new%2Celrond-egld%2Cenjin-coin%2Cethereum-name-service%2Ceos%2Cethereum-classic%2Cethereum%2Cfile-coin%2Cfloki-inu%2Cflow%2Cflux%2Cfantom%2Cftx-token%2Cgala%2Cgraphlinq-protocol%2Cgreen-metaverse-token%2Cthe-graph%2Chedera-hashgraph%2Chandshake%2Chelium%2Cholo%2Chuobi-token%2Cinternet-computer%2Cimmutable-x%2Cinjective-protocol%2Ciotex%2Ckucoin-shares%2Ckadena%2Cklaytn%2Ckusama%2Cunus-sed-leo%2Cchainlink%2Clition%2Cloopring%2Clitecoin%2Cdecentraland%2Cmatic-network%2Cmobox%2Ciota%2Cmaker%2Cmachine-xchange-coin%2Cnear-protocol%2Cneo%2Cnexo%2Cocean-protocol%2Cokb%2Charmony%2Contology%2Coptimism-ethereum%2Cparsiq%2Cepns%2Crarible%2Crender-token%2Cthorchain%2Cthe-sandbox%2Csiacoin%2Cshiba-inu%2Csolana%2Cserum%2Csushi%2Ctelos%2Ctron%2Cuniswap%2Cvechain%2Cwaves%2Cwax%2Cstellar%2Cmonero%2Cripple%2Ctezos%2Cxyo%2Czcash%2Czilliqa&order=market_cap_desc&per_page=250&page=1&sparkline=false";
+
 module.exports = {
   getCoinMeta,
   arr,
+  idGen,
+  coinGekoUrl,
 };
 
 // arr.map((item)=>console.log(`"${item.ticker}_USDT",`))
