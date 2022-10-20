@@ -11,6 +11,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { maximumInstance } from "../../setup";
+import { Failed } from "./popovers";
+
 const TransactionSummary = () => {
   const location = useLocation();
   const [currentPrice, setCurrentPrice] = useState({});
@@ -18,6 +20,8 @@ const TransactionSummary = () => {
   const [split, setSplit] = useState({});
   const [balance, setBalance] = useState(0);
   const [buyPrice, setBuyPrice] = useState(location?.state?.amount || 0);
+  const [failed, setFailed] = useState(false);
+  const [failedCounter, setFailedCounter] = useState(0);
 
   // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
   const socketPayload = location?.state?.indexData?.coins?.map(
@@ -94,6 +98,11 @@ const TransactionSummary = () => {
 
   useEffect(() => {
     console.log("status", status);
+    // for(let key in status){
+    //   if (Object.values(obj).every((v) => v === false)) {
+
+    //   }
+    // }
   }, [status]);
 
   const getBidPrice = (type, currentPrice) => {
@@ -140,15 +149,32 @@ const TransactionSummary = () => {
   };
 
   const createBatchOrder = async () => {
+    let orders = [];
     calculateSplit();
     console.log("split -", split);
     socketPayload.map(async (item, index) => {
-      await createOrder({
-        currency_pair: item,
-        amount: split[item],
-        current_price: getBidPrice("buy", currentPrice[item]),
-      });
+      orders.push(
+        createOrder({
+          currency_pair: item,
+          amount: split[item],
+          current_price: getBidPrice("buy", currentPrice[item]),
+        })
+      );
     });
+    let orderStatus = await Promise.all(orders);
+    console.log("orderStatus", orderStatus);
+    let counter = 0;
+    orderStatus.map((d, i) => {
+      console.log("ORDER", d);
+      if (d?.status !== "closed") {
+        counter = counter + 1;
+        setFailedCounter(counter);
+      }
+    });
+    if (counter !== null) {
+      setFailed(true);
+    }
+
     //  await retryOrder();
   };
 
@@ -191,13 +217,20 @@ const TransactionSummary = () => {
             [currency_pair]: response?.data?.status,
           };
         });
+        return response?.data;
       })
       .catch((err) => console.log("Error", err));
-    return;
   };
 
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
+      <Failed
+        on={failed}
+        turn={setFailed}
+        failedCounter={failedCounter}
+        retry={retryOrders}
+      />
+
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
         <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
           Transaction Summary
@@ -302,6 +335,7 @@ const TransactionSummary = () => {
                 <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
               </div>
               <button
+                // onClick={createBatchOrder}
                 onClick={createBatchOrder}
                 className="bg-primaryButton text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
               >

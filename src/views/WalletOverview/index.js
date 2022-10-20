@@ -24,7 +24,7 @@ import { Withdraw } from "../../components/Withdraw";
 import { Deopsite } from "../../components/Deposite";
 import { ComingSoonCard } from "../../components/ComingSoonCard";
 import moment from "moment";
-import { Failed } from "./popovers";
+import { Failed } from "../TransactionSummary/popovers";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
 

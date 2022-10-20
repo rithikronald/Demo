@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 export const Processing = (props) => {
   return !props.on ? (
     ""
@@ -34,7 +36,23 @@ export const Successful = (props) => {
     </div>
   );
 };
+const failedCounter = (data) => {
+  //Object.keys(myObj).length
+  let counter = 0;
+
+  for (let key in data) {
+    if (data[key] !== "closed") {
+      console.log("failed ....", key, data[key]);
+      counter = counter + 1;
+    }
+  }
+  return counter;
+};
 export const Failed = (props) => {
+  // const [counter, setCounter] = useState(0);
+  // useEffect(() => {
+  //   setCounter(failedCounter(props?.failedData));
+  // }, []);
   return !props.on ? (
     ""
   ) : (
@@ -52,7 +70,7 @@ export const Failed = (props) => {
         <div className="flex items-end justify-center">
           <img src={require("../../assets/infoError.png")} />
           <div className="font-mont text-white font-bold text-[32px] ml-[60px]">
-            2 Assets <br />
+            {props?.failedCounter} <br />
             failed
           </div>
         </div>
@@ -72,6 +90,10 @@ export const Failed = (props) => {
             style={{
               background:
                 "radial-gradient(86.8% 325.5% at 8% 0%, #D446F1 0%, #9A35EB 100%)",
+            }}
+            onClick={() => {
+              props?.retry();
+              props.turn(false);
             }}
           >
             Try Again
