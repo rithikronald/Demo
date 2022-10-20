@@ -23,6 +23,7 @@ import { Tabs } from "../../components/Tabs";
 import { Withdraw } from "../../components/Withdraw";
 import { Deopsite } from "../../components/Deposite";
 import moment from "moment";
+import { Failed } from "./popovers";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
 
@@ -45,6 +46,7 @@ const WalletOverView = (props) => {
   const [transactionMode, setTransactionMode] = useState(0);
   const [openIndex, setOpenIndex] = useState(-1)
   const [transactions, setTransactions] = useState()
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     axios({
@@ -151,6 +153,7 @@ const WalletOverView = (props) => {
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
+      <Failed on={failed} turn={setFailed}/>
       <div className="Left p-10 px-14 flex flex-col justify-around overflow-y-hidden sm:flex xl:basis-3/4 h-[100%]">
         <div className="overflow-y-scroll something">
         <div className="flex flex-col w-full">
@@ -486,7 +489,9 @@ const WalletOverView = (props) => {
           )}
         </div>
         <button
-          onClick={() => console.log(ticker)}
+          onClick={() => {
+            setFailed(true)
+          }}
           className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
         >
           Deposit Now
