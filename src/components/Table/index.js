@@ -16,13 +16,12 @@ export const Table = ({ openModal, data, title }) => {
     {
       name: "NAME",
       selector: (row) => {
-        // console.log(row?.symbol?.toUpperCase());
-        const coinData = getCoinMeta(row?.symbol?.toUpperCase());
+        const coinData = getCoinMeta(row.ticker);
         return (
           <div
             onClick={() =>
-              navigate(`/coin-desc/${coinData?.ticker}`, {
-                state: { coin: coinData?.ticker },
+              navigate(`/coin-desc/${row?.ticker}`, {
+                state: { coin: row?.ticker },
               })
             }
             className="flex items-center cursor-pointer"
@@ -43,7 +42,8 @@ export const Table = ({ openModal, data, title }) => {
     {
       name: "PRICE",
       selector: (row) => {
-        return "$" + Number(row?.current_price);
+        const coinData = getCoinMeta(row.ticker);
+        return "$" + Number(row?.price?.value).toFixed(10);
       },
       sortable: true,
       style: {
@@ -55,7 +55,7 @@ export const Table = ({ openModal, data, title }) => {
     {
       name: "24h CHANGE",
       selector: (row) => {
-        return row?.price_change_percentage_24h + "%";
+        return row.percent_change_24h + "%";
       },
       sortable: true,
       style: {
@@ -78,7 +78,7 @@ export const Table = ({ openModal, data, title }) => {
     },
     {
       name: "MARKET CAP",
-      selector: (row) => numFormatter(row?.market_cap),
+      selector: (row) => numFormatter(row.marketcap_usd?.value),
       sortable: true,
       style: {
         color: "#fff",
@@ -87,22 +87,22 @@ export const Table = ({ openModal, data, title }) => {
     },
     {
       name: "VOLUME",
-      selector: (row) => numFormatter(row?.total_volume),
+      selector: (row) => numFormatter(row.tradingVolume?.value),
       sortable: true,
       style: {
         color: "#7d8597",
         fontWeight: "500",
       },
     },
-    {
-      name: "SUPPLY",
-      selector: (row) => numFormatter(row?.total_supply),
-      sortable: true,
-      style: {
-        color: "#7d8597",
-        fontWeight: "500",
-      },
-    },
+    // {
+    //   name: "SUPPLY",
+    //   selector: (row) => numFormatter(row.total_supply?.value),
+    //   sortable: true,
+    //   style: {
+    //     color: "#7d8597",
+    //     fontWeight: "500",
+    //   },
+    // },
     {
       name: "Trade",
       selector: (row) => (

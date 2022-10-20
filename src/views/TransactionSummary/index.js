@@ -16,8 +16,8 @@ const TransactionSummary = () => {
   const [currentPrice, setCurrentPrice] = useState({});
   const [status, setStatus] = useState({});
   const [split, setSplit] = useState({});
-
-  const [buyPrice, setBuyPrice] = useState(100);
+  const [balance, setBalance] = useState(0);
+  const [buyPrice, setBuyPrice] = useState(location?.state?.amount || 0);
 
   // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
   const socketPayload = location?.state?.indexData?.coins?.map(
@@ -78,8 +78,20 @@ const TransactionSummary = () => {
   }, [ws.readyState]);
 
   useEffect(() => {
-    // console.log("cp", currentPrice);
-  }, [currentPrice]);
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        const bal = response?.data?.find((o) => o.currency === "USDT");
+        setBalance(Number(bal?.available).toFixed(2));
+      })
+      .catch((e) => console.log("Error", e));
+  }, []);
+
   useEffect(() => {
     console.log("status", status);
   }, [status]);
@@ -334,7 +346,7 @@ const TransactionSummary = () => {
         className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-center items-center flex flex-col sm:hidden xl:flex"
       >
         <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
-        <Deopsite />
+        <Deopsite balance={balance} />
       </div>
     </div>
   );

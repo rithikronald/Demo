@@ -42,7 +42,7 @@ const Home = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    // console.log("Home", data?.result?.currency_pair ,data?.result?.last);
+    console.log("Home", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName) {
       setCurrentPrice((prev) => {
@@ -431,8 +431,8 @@ const Home = (props) => {
             />
             <button
               onClick={() => {
-                setPageRightIndex(1);
-                // getCurrentPrice("BTC")
+                // setPageRightIndex(1);
+                getCurrentPrice("BTC");
               }}
               className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
             >
@@ -733,7 +733,11 @@ const Home = (props) => {
                 Go Back
               </button>
               <button
-                onClick={() => navigate("/transactionSummary")}
+                onClick={() =>
+                  navigate("/transactionSummary", {
+                    state: { indexData: smartSuggestList, amount: amount },
+                  })
+                }
                 className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
               >
                 Invest Now

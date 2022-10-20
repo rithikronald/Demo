@@ -18,30 +18,30 @@ const CoinList = (props) => {
 
   useEffect(() => {
     props.openLoader();
-    // maximumInstance(localStorage.getItem("accessToken"))
-    //   .get(`/coinList`)
-    //   .then((response) => {
-    //     setCoinList(response?.data);
-    //     props.closeLoader();
-    //   })
-    //   .catch((err) => {
-    //     console.log("error", err);
-    //     props.closeLoader();
-    //   });
-    fetchData();
+    maximumInstance(localStorage.getItem("accessToken"))
+      .get(`/coinList`)
+      .then((response) => {
+        setCoinList(response?.data);
+        props.closeLoader();
+      })
+      .catch((err) => {
+        console.log("error", err);
+        props.closeLoader();
+      });
+    // fetchData();
   }, []);
 
-  const fetchData = () => {
-    axios
-      .get(coinGekoUrl)
-      .then((d) => {
-        console.log("coinGeko", d.data);
-        console.log("coinGeko", d.data.length);
-        props.closeLoader();
-        setCoinList(d.data);
-      })
-      .catch((err) => console.log(err));
-  };
+  // const fetchData = () => {
+  //   axios
+  //     .get(coinGekoUrl)
+  //     .then((d) => {
+  //       console.log("coinGeko", d.data);
+  //       console.log("coinGeko", d.data.length);
+  //       props.closeLoader();
+  //       setCoinList(d.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
       <div className="Left p-10 px-14 flex w-[96%] flex-col sm:flex overflow-y-scroll">

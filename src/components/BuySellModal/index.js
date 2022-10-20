@@ -22,7 +22,6 @@ export const BuySellModal = (props) => {
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
   const [tradeMode, setTradeMode] = useState("market");
-
   // useEffect(() => {
   //   console.log("Trade", props?.trade);
   //   console.log("TradeMode", tradeMode);
@@ -38,7 +37,7 @@ export const BuySellModal = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    // console.log("Buy/Sell", data?.result);
+    console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName && coinName === props?.ticker) {
       setCurrentPrice(data?.result?.last);
@@ -123,8 +122,10 @@ export const BuySellModal = (props) => {
   };
 
   const calculateAmount = (price) => {
-    const value = Number(price) / currentPrice;
-    setAmount(value.toFixed(3));
+    if (currentPrice) {
+      const value = Number(price) / currentPrice;
+      setAmount(value.toFixed(3));
+    }
   };
 
   const createOrder = () => {
@@ -199,10 +200,6 @@ export const BuySellModal = (props) => {
       return "Token price";
     }
   };
-
-  // useEffect(() => {
-  //   console.log("Price", currentPrice);
-  // }, [currentPrice]);
 
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
