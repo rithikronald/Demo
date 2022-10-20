@@ -26,7 +26,9 @@ const Modal = (props) => {
     >
       <button
         className="w-[50px] h-[100vh] absolute top-0 left-0 cursor-pointer"
-        onClick={() => props.setModalOpen(!props.modalOpen)}
+        onClick={() =>
+          props?.modalOpen ? props.setModalOpen(!props.modalOpen) : null
+        }
       >
         <div className="h-[30px] w-[4px] rounded-3xl bg-white opacity-25 absolute left-[20px] top-1/2 -translate-y-1/2"></div>
       </button>
