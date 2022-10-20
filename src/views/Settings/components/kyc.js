@@ -25,6 +25,7 @@ const Kyc1 = (props) => {
           onComplete={({ inquiryId, status, fields }) => {
             // Inquiry completed. Optionally tell your server about it.
             console.log(`Sending finished inquiry ${inquiryId} to backend`);
+            setBeginKYC(false)
           }}
         />
       </div>
