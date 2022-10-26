@@ -27,13 +27,24 @@ export const BuySellModal = (props) => {
   //   console.log("TradeMode", tradeMode);
   // }, [props?.trade, tradeMode]);
 
-  useEffect(() => {
-    console.log("isOpen", props?.isOpen);
-    if (props?.isOpen === false) {
-      setAmount("");
-      setPrice("");
-    }
-  }, [props?.isOpen]);
+  // useEffect(() => {
+  //   console.log("isOpen", props?.isOpen);
+  //   if (props?.isOpen === false) {
+  //     setAmount("");
+  //     setPrice("");
+  //     console.log("......................................", props?.ticker);
+  //     var array = JSON.stringify({
+  //       time: new Date().getTime,
+  //       channel: "spot.tickers",
+  //       event: "unsubscribe",
+  //       payload: [`${props?.ticker}_USDT`],
+  //     });
+  //     if (ws.readyState) {
+  //       console.log("Buy/Sell Un Sub");
+  //       ws.send(array);
+  //     }
+  //   }
+  // }, [props?.isOpen]);
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
@@ -54,20 +65,21 @@ export const BuySellModal = (props) => {
     console.log("Current Price", currentPrice);
   }, [currentPrice]);
 
-  if (props?.isAllCoins) {
-    console.log("AllCoins");
-    var array = JSON.stringify({
-      time: new Date().getTime,
-      channel: "spot.tickers",
-      event: "subscribe",
-      payload: [`${props?.ticker}_USDT`],
-    });
-    if (ws.readyState) {
-      console.log("Buy/Sell Sub");
-      ws.send(array);
-      ws.onmessage = onmessage;
+  useEffect(() => {
+    if (props?.isAllCoins) {
+      var array = JSON.stringify({
+        time: new Date().getTime,
+        channel: "spot.tickers",
+        event: "subscribe",
+        payload: [`${props?.ticker}_USDT`],
+      });
+      if (ws.readyState) {
+        console.log("Buy/Sell Sub");
+        ws.send(array);
+        ws.onmessage = onmessage;
+      }
     }
-  }
+  }, []);
 
   // return () => {
   //   var array = JSON.stringify({
@@ -82,20 +94,20 @@ export const BuySellModal = (props) => {
   //   }
   // };
 
-  useEffect(() => {
-    if (props?.isOpen == false) {
-      var array = JSON.stringify({
-        time: new Date().getTime,
-        channel: "spot.tickers",
-        event: "unsubscribe",
-        payload: [`${props?.ticker}_USDT`],
-      });
-      if (ws.readyState) {
-        console.log("Buy/Sell Un Sub");
-        ws.send(array);
-      }
-    }
-  }, [props?.isOpen]);
+  // useEffect(() => {
+  //   if (props?.isOpen == false) {
+  //     var array = JSON.stringify({
+  //       time: new Date().getTime,
+  //       channel: "spot.tickers",
+  //       event: "unsubscribe",
+  //       payload: [`${props?.ticker}_USDT`],
+  //     });
+  //     if (ws.readyState) {
+  //       console.log("Buy/Sell Un Sub");
+  //       ws.send(array);
+  //     }
+  //   }
+  // }, [props?.isOpen]);
 
   const getBidPrice = (type) => {
     let bidQuote = []; // decimals strateg
@@ -154,6 +166,8 @@ export const BuySellModal = (props) => {
         console.log("Response", response?.data);
         switch (response?.data?.status) {
           case "closed":
+            setAmount("");
+            setPrice("");
             toast.success("order successful", {
               position: toast.POSITION.TOP_RIGHT,
             });

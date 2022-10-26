@@ -53,9 +53,7 @@ export const Failed = (props) => {
   // useEffect(() => {
   //   setCounter(failedCounter(props?.failedData));
   // }, []);
-  return !props.on ? (
-    ""
-  ) : (
+  return (
     <div
       className="fixed top-0 left-0 h-screen w-screen"
       style={{ zIndex: 999, backdropFilter: "blur(9px)" }}

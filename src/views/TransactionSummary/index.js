@@ -98,11 +98,6 @@ const TransactionSummary = () => {
 
   useEffect(() => {
     console.log("status", status);
-    // for(let key in status){
-    //   if (Object.values(obj).every((v) => v === false)) {
-
-    //   }
-    // }
   }, [status]);
 
   const getBidPrice = (type, currentPrice) => {
@@ -151,11 +146,17 @@ const TransactionSummary = () => {
 
   useEffect(() => {
     console.log("length", Object.keys(status).length, socketPayload.length);
-    console.log("Counter",counter)
+    console.log("Counter", counter);
     if (status.length == socketPayload.length) {
-      setFailed(socketPayload.length == counter ? false : true);
+      const openModal = Number(socketPayload.length) > Number(counter);
+      if (openModal) {
+        setFailed(true);
+      } else {
+        setFailed(false);
+      }
+      console.log("Open Modal");
     }
-  }, [status]);
+  }, [counter, status]);
 
   const createBatchOrder = async () => {
     await socketPayload.map(async (item, index) => {
@@ -215,12 +216,13 @@ const TransactionSummary = () => {
 
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <Failed
-        on={failed}
-        turn={setFailed}
-        failedCounter={failedCounter}
-        retry={retryOrders}
-      />
+      {failed && (
+        <Failed
+          turn={(val) => setFailed(val)}
+          failedCounter={socketPayload.length - counter}
+          retry={retryOrders}
+        />
+      )}
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
         <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
           Transaction Summary
