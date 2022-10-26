@@ -21,6 +21,7 @@ const TransactionSummary = () => {
   const [balance, setBalance] = useState(0);
   const [buyPrice, setBuyPrice] = useState(location?.state?.amount || 0);
   const [failed, setFailed] = useState(false);
+  const [counter, setCounter] = useState(0);
   const [failedCounter, setFailedCounter] = useState(0);
 
   // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
@@ -29,7 +30,6 @@ const TransactionSummary = () => {
   );
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    // console.log(data);
     const coinName = data?.result?.currency_pair;
     // console.log(coinName, data?.result?.last);
     if (coinName) {
@@ -134,10 +134,8 @@ const TransactionSummary = () => {
   const calculateSplit = () => {
     let totalCoins = socketPayload.length;
     let individualSplit = buyPrice / totalCoins;
-
     socketPayload.map((item) => {
       let value = Number(individualSplit) / currentPrice[item];
-      // return
       setSplit((prev) => {
         return {
           ...prev,
@@ -145,37 +143,28 @@ const TransactionSummary = () => {
         };
       });
     });
-    return;
   };
 
-  const createBatchOrder = async () => {
-    let orders = [];
+  useEffect(() => {
     calculateSplit();
-    console.log("split -", split);
-    socketPayload.map(async (item, index) => {
-      orders.push(
-        createOrder({
-          currency_pair: item,
-          amount: split[item],
-          current_price: getBidPrice("buy", currentPrice[item]),
-        })
-      );
-    });
-    let orderStatus = await Promise.all(orders);
-    console.log("orderStatus", orderStatus);
-    let counter = 0;
-    orderStatus.map((d, i) => {
-      console.log("ORDER", d);
-      if (d?.status !== "closed") {
-        counter = counter + 1;
-        setFailedCounter(counter);
-      }
-    });
-    if (counter !== null) {
-      setFailed(true);
-    }
+  }, [buyPrice, currentPrice]);
 
-    //  await retryOrder();
+  useEffect(() => {
+    console.log("length", Object.keys(status).length, socketPayload.length);
+    console.log("Counter",counter)
+    if (status.length == socketPayload.length) {
+      setFailed(socketPayload.length == counter ? false : true);
+    }
+  }, [status]);
+
+  const createBatchOrder = async () => {
+    await socketPayload.map(async (item, index) => {
+      createOrder({
+        currency_pair: item,
+        amount: split[item],
+        current_price: getBidPrice("buy", currentPrice[item]),
+      });
+    });
   };
 
   const retryOrders = async () => {
@@ -203,7 +192,6 @@ const TransactionSummary = () => {
       side: "buy",
       type: "market",
     };
-    // console.log(body);
     await axios
       .post(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -217,6 +205,9 @@ const TransactionSummary = () => {
             [currency_pair]: response?.data?.status,
           };
         });
+        if (response?.data?.status == "closed") {
+          setCounter((prev) => prev + 1);
+        }
         return response?.data;
       })
       .catch((err) => console.log("Error", err));
@@ -230,7 +221,6 @@ const TransactionSummary = () => {
         failedCounter={failedCounter}
         retry={retryOrders}
       />
-
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
         <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
           Transaction Summary
