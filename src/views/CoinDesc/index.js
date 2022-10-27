@@ -117,9 +117,10 @@ const CoinDesc = (props) => {
   const arrGen = (arr) => {
     const tempArr = [];
     arr?.map((item, index) => {
+      // console.log("Item......", item);
       tempArr.push({
         uv: item?.value,
-        name: moment(item?.date).format("DDMMM YYYY"),
+        name: moment(item?.datetime).format("DDMMM YYYY"),
       });
     });
     return tempArr;

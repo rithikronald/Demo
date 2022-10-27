@@ -11,6 +11,7 @@ import {
 import { numFormatter } from "../../utility/kFormatter";
 
 export const CustomTooltip = ({ active, payload, label, isDollar }) => {
+  // console.log("PAYLOAD.......................", payload,label);
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip bg-black text-white font-mont rounded-lg p-2 text-xs font-semibold">
