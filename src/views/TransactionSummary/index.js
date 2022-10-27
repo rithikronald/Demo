@@ -11,7 +11,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { maximumInstance } from "../../setup";
-import { Failed } from "./popovers";
+import { TransactionModal } from "./popovers";
 
 const TransactionSummary = () => {
   const location = useLocation();
@@ -20,7 +20,7 @@ const TransactionSummary = () => {
   const [split, setSplit] = useState({});
   const [balance, setBalance] = useState(0);
   const [buyPrice, setBuyPrice] = useState(location?.state?.amount || 0);
-  const [failed, setFailed] = useState(false);
+  const [isOpen, setisOpen] = useState(false);
   const [counter, setCounter] = useState(0);
   const [failedCounter, setFailedCounter] = useState(0);
 
@@ -144,20 +144,6 @@ const TransactionSummary = () => {
     calculateSplit();
   }, [buyPrice, currentPrice]);
 
-  useEffect(() => {
-    console.log("length", Object.keys(status).length, socketPayload.length);
-    console.log("Counter", counter);
-    if (status.length == socketPayload.length) {
-      const openModal = Number(socketPayload.length) > Number(counter);
-      if (openModal) {
-        setFailed(true);
-      } else {
-        setFailed(false);
-      }
-      console.log("Open Modal");
-    }
-  }, [counter, status]);
-
   const createBatchOrder = async () => {
     await socketPayload.map(async (item, index) => {
       createOrder({
@@ -214,13 +200,25 @@ const TransactionSummary = () => {
       .catch((err) => console.log("Error", err));
   };
 
+  useEffect(() => {
+    console.log("length", Object.keys(status).length, socketPayload.length);
+    console.log("Counter", counter);
+    if (Object.keys(status).length == socketPayload.length) {
+      console.log("condition passed");
+      setisOpen(true);
+    } else {
+      console.log("condition failed");
+    }
+  }, [counter, status]);
+
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      {failed && (
-        <Failed
-          turn={(val) => setFailed(val)}
+      {isOpen && (
+        <TransactionModal
+          isOpen={(val) => setisOpen(val)}
           failedCounter={socketPayload.length - counter}
           retry={retryOrders}
+          status={socketPayload.length > counter ? false : true}
         />
       )}
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
