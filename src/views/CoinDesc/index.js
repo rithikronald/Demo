@@ -71,43 +71,27 @@ const CoinDesc = (props) => {
         setData(response?.data);
         props.closeLoader();
         setActiveAddressPerct(
-          oneDayPercentage(
-            response?.data?.active_addresses?.value,
-            response?.data?.active_addresses?.change_1d
-          )
+          response?.data?.sentiment_balance_telegram?.change_1d[
+            response?.data?.sentiment_balance_telegram?.change_1d.length - 1
+          ]?.value
         );
         setDailyActivePerct(
-          oneDayPercentage(
-            response?.data?.daily_active_addresses?.value,
-            response.data?.daily_active_addresses?.change_1d
-          )
+          response?.data?.trending_words_rank?.change_1d[
+            response?.data?.trending_words_rank?.change_1d.length - 1
+          ]?.value
         );
         setTransactionVolumePerct(
-          oneDayPercentage(
-            response?.data?.transaction_volume?.change_1d[
-              response?.data?.transaction_volume?.change_1d.length - 1
-            ]?.value,
-            response.data?.transaction_volume?.change_1d
-          )
+          response?.data?.sentiment_balance_reddit?.change_1d[
+            response?.data?.sentiment_balance_reddit?.change_1d.length - 1
+          ]?.value
         );
         setNvtRatioPerct(
-          oneDayPercentage(
-            response?.data?.nvt?.value,
-            response.data?.nvt?.change_1d
-          )
+          response?.data?.twitter_followers?.change_1d[
+            response?.data?.twitter_followers?.change_1d.length - 1
+          ]?.value
         );
-        setMarketCap(
-          oneDayPercentage(
-            response?.data?.marketcap_usd?.value,
-            response?.data?.marketcap_usd?.change_1d
-          )
-        );
-        setTradingVolume(
-          oneDayPercentage(
-            response?.data?.tradingVolume?.value,
-            response?.data?.tradingVolume?.change_1d
-          )
-        );
+        setMarketCap(response?.data?.marketcap_usd?.value);
+        setTradingVolume(response?.data?.tradingVolume?.value);
         props.closeLoader();
       })
       .catch((err) => {
@@ -228,12 +212,12 @@ const CoinDesc = (props) => {
                 value: numFormatter(marketCap),
               },
               {
-                title: "Transaction Volume",
+                title: "Reddit Sentiment",
                 logo: require("../../assets/transactionVolumeIcon.png"),
                 value: numFormatter(transactionVolumePerct),
               },
               {
-                title: "NVT Ratio",
+                title: "Twitter Followers",
                 logo: require("../../assets/nvtRatioIcon.png"),
                 value: numFormatter(nvtRatioPerct),
               },
@@ -243,12 +227,12 @@ const CoinDesc = (props) => {
                 value: numFormatter(tradingVolume),
               },
               {
-                title: "Active Wallet Addresses",
+                title: "Telegram Sentiment",
                 logo: require("../../assets/activeWalletAddressIcon.png"),
                 value: numFormatter(activeAddressPerct),
               },
               {
-                title: "Daily Active Addresses",
+                title: "Trending Words Rank",
                 logo: require("../../assets/dailyActiveAddressIcon.png"),
                 value: numFormatter(dailyActivePerct),
               },
@@ -501,7 +485,7 @@ const CoinDesc = (props) => {
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
-            <p style={{ transform: "translateX(20px)" }}>Network Growth</p>
+            <p style={{ transform: "translateX(20px)" }}>Active Holders Distribution Total</p>
           </div>
           <GradientContainer
             height={"h-[130px]"}
@@ -509,7 +493,7 @@ const CoinDesc = (props) => {
             className={`flex items-center mt-2 `}
           >
             <CustomAreaChart
-              data={arrGen(data?.networkGrowth[`change_${priceIndex}`])}
+              data={arrGen(data?.active_holders_distribution_total[`change_${priceIndex}`])}
               width={"100%"}
               height={"98%"}
             />
