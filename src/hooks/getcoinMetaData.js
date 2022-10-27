@@ -1,172 +1,202 @@
 let arr = [
   {
+    slug: "1inch",
+    description: "DEX aggregator",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/111676b0a9e53433f480260cc904f704912fd44d9b63fbc9103069cf299eeab1_1612281140765_1inch.png",
     ticker: "1INCH",
-    description: "DEX aggregator",
-    slug: "1inch",
   },
   {
-    slug: "aave",
     description: "A decentralized finance protocol, new token after LEND",
+    ticker: "AAVE",
+    slug: "aave",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_aave.png",
-    ticker: "AAVE",
   },
   {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_cardano.png",
-    ticker: "ADA",
-    slug: "cardano",
     description: "Layered currency and contracts",
+    slug: "cardano",
+    ticker: "ADA",
   },
   {
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_akash-network.png",
     description: "Decentralized cloud computing marketplace",
     ticker: "AKT",
     slug: "akash-network",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_akash-network.png",
   },
   {
+    description: "A scalable, secure and decentralized digital currency",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_algorand.png",
-    slug: "algorand",
-    description: "A scalable, secure and decentralized digital currency",
     ticker: "ALGO",
+    slug: "algorand",
   },
   {
-    ticker: "APE",
+    ticker: "AOA",
+    slug: "aurora",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_aurora.png",
+    description: "Lightning-fast contracts to link industries",
+  },
+  {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_apecoin.png",
     description: "Yield farming and NFT collectibles",
     slug: "apecoin",
+    ticker: "APE",
   },
   {
-    logoUrl: null,
     description: "Decentralized APIs for Web 3.0",
-    ticker: "API3",
     slug: "api3",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_api3.png",
+    ticker: "API3",
   },
   {
+    description: "A new data storage blockchain protocol",
+    ticker: "AR",
     slug: "arweave",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_arweave.png",
-    description: "A new data storage blockchain protocol",
-    ticker: "AR",
   },
   {
     description:
       "An ecosystem of blockchains that can scale and interoperate with each other",
-    ticker: "ATOM",
-    slug: "cosmos",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_cosmos.png",
+    slug: "cosmos",
+    ticker: "ATOM",
   },
   {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/a659f4f831616bd606f9aaab99d885d2944a8a509d155818ed83916fe0834bbd_1616690880636_AUDIO.png",
+    slug: "audius",
+    ticker: "AUDIO",
+    description: "Streaming platform",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_aurora-near.png",
     slug: "aurora-near",
     description: "EVM built on NEAR Protocol",
     ticker: "AURORA",
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_aurora-near.png",
   },
   {
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_avalanche.png",
     description: "A platform for launching highly decentralized applications",
     ticker: "AVAX",
     slug: "avalanche",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_avalanche.png",
   },
   {
-    slug: "axie-infinity",
-    ticker: "AXS",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_axie-infinity.png",
+    ticker: "AXS",
+    slug: "axie-infinity",
     description: "A Pokemon-inspired digital pet universe",
   },
   {
-    ticker: "BAT",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_balancer.png",
+    description:
+      "A non-custodial portfolio manager, liquidity provider and price sensor",
+    ticker: "BAL",
+    slug: "balancer",
+  },
+  {
+    slug: "basic-attention-token",
     description: "Decentralized ad network",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_basic-attention-token.png",
-    slug: "basic-attention-token",
+    ticker: "BAT",
   },
   {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_bitcoin-cash.png",
-    slug: "bitcoin-cash",
-    ticker: "BCH",
     description: "Bitcoin clone",
+    ticker: "BCH",
+    slug: "bitcoin-cash",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_bitdao.png",
+    ticker: "BIT",
+    description: null,
+    slug: "bitdao",
   },
   {
     slug: "bluzelle",
-    description: "Brings together the sharing economy and token economy",
-    ticker: "BLZ",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_bluzelle.png",
+    description: "Brings together the sharing economy and token economy",
+    ticker: "BLZ",
   },
   {
+    description: "The BNB coin on the Binance network",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_bnb.png",
     slug: "binance-coin",
     ticker: "BNB",
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_binance-coin.png",
-    description: "The BNB coin on the Binance network",
   },
   {
-    slug: "bitcoin",
     ticker: "BTC",
+    description: "Digital gold",
+    slug: "bitcoin",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_bitcoin.png",
-    description: "Digital gold",
   },
   {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_blocktrade-token.png",
     description:
       "A high-performant, soon-to-be MiFID II regulated Crypto Assets Trading Facility",
     ticker: "BTT",
     slug: "blocktrade-token",
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_blocktrade-token.png",
   },
   {
     description: "Yield farming on Binance Smart Chain",
-    ticker: "CAKE",
     slug: "pancakeswap",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_pancakeswap.png",
+    ticker: "CAKE",
   },
   {
     slug: "celo",
+    description: "Financial tools platform",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_celo.png",
-    description: "Financial tools platform",
     ticker: "CELO",
   },
   {
+    slug: "chiliz",
     description: "A currency for sports and entertainment platforms",
     ticker: "CHZ",
-    slug: "chiliz",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_chiliz.png",
   },
   {
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_nervos-network.png",
-    ticker: "CKB",
     slug: "nervos-network",
     description: "A suite of scalable and interoperable protocols",
+    ticker: "CKB",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_nervos-network.png",
   },
   {
-    description: "Yield interest on idle assets",
-    ticker: "COMP",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_compound.png",
+    ticker: "COMP",
+    description: "Yield interest on idle assets",
     slug: "compound",
   },
   {
-    slug: "covalent",
+    ticker: "CQT",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_covalent.png",
+    slug: "covalent",
     description: "An API to billions of blockchain data points",
-    ticker: "CQT",
   },
   {
     slug: "crypto-com-coin",
@@ -177,144 +207,216 @@ let arr = [
   },
   {
     description: "Governance token on the Curve platform",
-    slug: "curve",
     logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/2eccc30e063c4ccb37f978c830b22a2a3798280a586afd080e78caa1fd4e328e_1615385157018_curve.png",
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_curve-dao-token.png",
     ticker: "CRV",
+    slug: "curve",
   },
   {
-    ticker: "DOGE",
+    ticker: "CSPR",
+    slug: "casper",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_casper.png",
+    description:
+      "The first live PoS blockchain built off the Casper CBC specification",
+  },
+  {
+    slug: "convex-finance",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_convex-finance.png",
+    ticker: "CVX",
+    description: "Boosted Curve staking",
+  },
+  {
+    slug: "dash",
+    ticker: "DASH",
+    description: "Payments focused cryptocurrency. Privacy included",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_dash.png",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_defichain.png",
+    ticker: "DFI",
+    slug: "defichain",
+    description: "Native Decentralized Finance for Bitcoin",
+  },
+  {
+    description: "Metaverse Poker, Blackjack, Roulette and Slots",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_decentral-games-new.png",
+    ticker: "DG",
+    slug: "decentral-games-new",
+  },
+  {
     slug: "dogecoin",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_dogecoin.png",
     description: "An open source peer-to-peer digital currency",
+    ticker: "DOGE",
   },
   {
+    description: "Enables blockchain networks to operate together",
+    slug: "polkadot-new",
+    ticker: "DOT",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_polkadot-new.png",
-    ticker: "DOT",
-    slug: "polkadot-new",
-    description: "Enables blockchain networks to operate together",
   },
   {
     description: "The internet scale blockchain",
-    slug: "elrond-egld",
+    ticker: "EGLD",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_elrond-egld.png",
-    ticker: "EGLD",
+    slug: "elrond-egld",
   },
   {
+    description: "ERC1155 wallet, marketplace and gaming APIs",
+    ticker: "ENJ",
     slug: "enjin-coin",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_enjin-coin.png",
-    description: "ERC1155 wallet, marketplace and gaming APIs",
-    ticker: "ENJ",
   },
   {
-    slug: "ethereum-name-service",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ethereum-name-service.png",
-    ticker: "ENS",
     description: "Decentralised naming for wallets, websites and more",
+    ticker: "ENS",
+    slug: "ethereum-name-service",
   },
   {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_eos.png",
-    ticker: "EOS",
-    description: "Decentralized applications on WebAssembly",
     slug: "eos",
+    description: "Decentralized applications on WebAssembly",
+    ticker: "EOS",
   },
   {
-    slug: "ethereum-classic",
     ticker: "ETC",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ethereum-classic.png",
+    slug: "ethereum-classic",
     description: "Ethereum clone",
   },
   {
-    description: "Programmable contracts and money",
     ticker: "ETH",
+    slug: "ethereum",
+    description: "Programmable contracts and money",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ethereum.png",
-    slug: "ethereum",
+  },
+  {
+    description: "Hard fork of Ethereum before switching to PoS",
+    ticker: "ETHW",
+    slug: "ethereum-pow",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ethereum-pow.png",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_evmos.png",
+    description: "The Ethereum Virtual Machine (EVM) Hub on Cosmos",
+    slug: "evmos",
+    ticker: "EVMOS",
   },
   {
     description: "A decentralized storage system",
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/91240703bd6705edd410341f858e6ee3782adc65dbe9547f67bfe1d17201134c_1617286616355_filecoin.png",
     ticker: "FIL",
     slug: "file-coin",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_filecoin.png",
+  },
+  {
+    slug: "flowchain",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_flowchain.png",
+    description:
+      "Flowchain/IPFS: Distributed Storage using Blockchain Technology. Aims to implement the IoT blockchain technology and already proposed the virtual blocks technology that can ensure data stream transactions in a near real-time manner",
+    ticker: "FLC",
   },
   {
     slug: "floki-inu",
-    description: "Cross-chain community-driven token",
-    ticker: "FLOKI",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_floki-inu.png",
+    ticker: "FLOKI",
+    description: "Cross-chain community-driven token",
   },
   {
+    description: "Infrastructure for open, composable and permissionless apps",
+    slug: "flow",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_flow.png",
     ticker: "FLOW",
-    description: "Infrastructure for open, composable and permissionless apps",
-    slug: "flow",
   },
   {
-    description: "Generates dividends every 15 seconds",
-    slug: "flux",
     ticker: "FLUX",
+    slug: "flux",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_flux.png",
+    description: "Generates dividends every 15 seconds",
   },
   {
-    ticker: "FTM",
+    slug: "frax",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_frax.png",
+    description: "Fractional-algorithmic stablecoin",
+    ticker: "FRAX",
+  },
+  {
     description: "DAG based smart contract platform",
     slug: "fantom",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_fantom.png",
+    ticker: "FTM",
   },
   {
-    slug: "ftx-token",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ftx-token.png",
-    ticker: "FTT",
+    slug: "ftx-token",
     description: "Cryptocurrency Derivatives Exchange",
+    ticker: "FTT",
   },
   {
+    ticker: "GALA",
     slug: "gala",
     description: "Gaming and NFT",
-    ticker: "GALA",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_gala.png",
   },
   {
-    description: "The nocode protocol for Blockchain development",
-    ticker: "GLQ",
-    slug: "graphlinq-protocol",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_graphlinq-protocol.png",
+    slug: "graphlinq-protocol",
+    description: "The nocode protocol for Blockchain development",
+    ticker: "GLQ",
   },
   {
-    slug: "green-metaverse-token",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_green-metaverse-token.png",
-    ticker: "GMT",
+    slug: "bnb-green-metaverse-token",
     description:
       "GMT is the governance token of STEPN with a limited supply of 6 billion tokens",
+    ticker: "GMT",
   },
   {
-    slug: "the-graph",
-    description: "An indexing protocol for querying networks",
     ticker: "GRT",
+    description: "An indexing protocol for querying networks",
+    slug: "the-graph",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_the-graph.png",
   },
   {
-    description: "A new form of distributed consensus",
-    slug: "hedera-hashgraph",
-    ticker: "HBAR",
+    slug: "gatechain-token",
     logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_hedera-hashgraph.png",
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_gatetoken.png",
+    ticker: "GT",
+    description: "Part of Gate.io ecosystem",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_hedera.png",
+    ticker: "HBAR",
+    slug: "hedera-hashgraph",
+    description: "A new form of distributed consensus",
   },
   {
     logoUrl:
@@ -327,186 +429,215 @@ let arr = [
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_helium.png",
     slug: "helium",
-    ticker: "HNT",
     description:
       "Helium is a digital currency and blockchain network that focuses on improving supply chain logistics in the construction and infrastructure sector.",
+    ticker: "HNT",
   },
   {
-    description: "Decentralized hosting platform",
-    ticker: "HOT",
-    slug: "holo",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_holo.png",
+    ticker: "HOT",
+    slug: "holo",
+    description: "Decentralized hosting platform",
   },
   {
-    ticker: "HT",
     description: "Blockchain-Powered Loyalty Point System",
+    ticker: "HT",
+    slug: "huobi-token",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_huobi-token.png",
-    slug: "huobi-token",
   },
   {
-    description: "Public decentralized cloud computing",
+    slug: "internet-computer",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_internet-computer.png",
+    description: "Public decentralized cloud computing",
     ticker: "ICP",
-    slug: "internet-computer",
   },
   {
-    description: "NFT scaling platform",
+    ticker: "IMX",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_immutable-x.png",
-    ticker: "IMX",
     slug: "immutable-x",
+    description: "NFT scaling platform",
   },
   {
-    slug: "injective-protocol",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_injective-protocol.png",
-    description: "Layer-2 DEX",
     ticker: "INJ",
+    description: "Layer-2 DEX",
+    slug: "injective-protocol",
   },
   {
+    description:
+      "A decentralized network for IoT powered by a privacy-centric blockchain",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_iotex.png",
     ticker: "IOTX",
-    description:
-      "A decentralized network for IoT powered by a privacy-centric blockchain",
     slug: "iotex",
   },
   {
-    slug: "kucoin-shares",
+    ticker: "KAVA",
+    description: "Cross-blockchain DeFi platform",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_kava.png",
+    slug: "kava",
+  },
+  {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_kucoin-shares.png",
-    description: "Exchange shares",
     ticker: "KCS",
+    slug: "kucoin-shares",
+    description: "Exchange shares",
   },
   {
-    slug: "kadena",
-    description: "Scalable smart-contract blockchain",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_kadena.png",
+    description: "Scalable smart-contract blockchain",
     ticker: "KDA",
+    slug: "kadena",
   },
   {
-    slug: "klaytn",
+    description: "Blockchain network for everyone",
+    ticker: "KLAY",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_klaytn.png",
-    ticker: "KLAY",
-    description: "Blockchain network for everyone",
+    slug: "klaytn",
   },
   {
-    ticker: "KSM",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_kusama.png",
-    description: "An early, unaudited, and unrefined release of Polkadot",
     slug: "kusama",
+    ticker: "KSM",
+    description: "An early, unaudited, and unrefined release of Polkadot",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_leocoin.png",
+    ticker: "LC4",
+    slug: "leocoin",
+    description: "A revolutionary new digital currency",
+  },
+  {
+    slug: "lido-dao",
+    description: "Liquid staking solution for Ethereum",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_lido-dao.png",
+    ticker: "LDO",
   },
   {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_unus-sed-leo.png",
+    ticker: "LEO",
     slug: "unus-sed-leo",
     description: "Digital asset trading platform",
-    ticker: "LEO",
   },
   {
-    ticker: "LINK",
     description: "External data for contracts",
+    ticker: "LINK",
+    slug: "chainlink",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_chainlink.png",
-    slug: "chainlink",
   },
   {
+    slug: "litentry",
     logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_lition.png",
-    slug: "lition",
-    description: "Blockchain with deletable data features",
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_litentry.png",
+    description:
+      "Decentralized identity authentication and user activity data management Infrastructure",
     ticker: "LIT",
   },
   {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_loopring.png",
-    description: "Decentralized exchange",
     ticker: "LRC",
     slug: "loopring",
+    description: "Decentralized exchange",
   },
   {
     slug: "litecoin",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_litecoin.png",
-    ticker: "LTC",
     description: "Faster bitcoin",
+    ticker: "LTC",
   },
   {
-    ticker: "MANA",
-    description: "Virtual reality platform",
-    slug: "decentraland",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_decentraland.png",
+    slug: "decentraland",
+    ticker: "MANA",
+    description: "Virtual reality platform",
   },
   {
-    slug: "matic-network",
+    ticker: "MATIC",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_matic-network.png",
     description: "Ethereum scaling solution (previously Matic)",
-    ticker: "MATIC",
+    slug: "matic-network",
   },
   {
-    description: "DeFi and Gaming NFT",
     slug: "mobox",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_mobox.png",
     ticker: "MBOX",
+    description: "DeFi and Gaming NFT",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_mina.png",
+    slug: "mina",
+    description: "The world's lightest blockchain",
+    ticker: "MINA",
   },
   {
     slug: "iota",
+    description: "Internet-of-Things payments",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_iota.png",
-    description: "Internet-of-Things payments",
     ticker: "MIOTA",
   },
   {
-    description: "Stablecoin governance on Ethereum",
+    ticker: "MKR",
     slug: "maker",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_maker.png",
-    ticker: "MKR",
+    description: "Stablecoin governance on Ethereum",
   },
   {
+    slug: "machine-xchange-coin",
     description:
       "MXC IoT solutions provide a wide scope of essential data services, measuring everything from air-quality, water purity & even commuter traffic",
-    ticker: "MXC",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_machine-xchange-coin.png",
-    slug: "machine-xchange-coin",
+    ticker: "MXC",
   },
   {
+    slug: "near-protocol",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_near-protocol.png",
-    slug: "near-protocol",
     ticker: "NEAR",
     description: "The Developer Platform for the Open Web",
   },
   {
     ticker: "NEO",
-    slug: "neo",
-    description: "Chinese Ethereum",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_neo.png",
+    description: "Chinese Ethereum",
+    slug: "neo",
   },
   {
-    ticker: "NEXO",
     slug: "nexo",
+    description: "The World’s First Instant Crypto Overdrafts",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_nexo.png",
-    description: "The World’s First Instant Crypto Overdrafts",
+    ticker: "NEXO",
   },
   {
+    slug: "ocean-protocol",
     description: "Decentralized data exchange protocol ",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ocean-protocol.png",
     ticker: "OCEAN",
-    slug: "ocean-protocol",
   },
   {
     description: "Trusted Digital Asset Exchange",
@@ -516,166 +647,266 @@ let arr = [
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_okb.png",
   },
   {
-    ticker: "ONE",
     slug: "harmony",
+    ticker: "ONE",
+    description: "A high-throughput and low-latency platform",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_harmony.png",
-    description: "A high-throughput and low-latency platform",
   },
   {
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ontology.png",
     slug: "ontology",
     description: "Identity and data",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ontology.png",
     ticker: "ONT",
   },
   {
+    description: "Ethereum, scaled",
+    slug: "o-optimism",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_optimism-ethereum.png",
     ticker: "OP",
-    description: "Ethereum, scaled",
-    slug: "optimism-ethereum",
   },
   {
-    description: "A Blockchain monitoring and compliance platform",
+    slug: "osmosis",
+    description: "The Interchain AMM",
+    ticker: "OSMO",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_osmosis.png",
+  },
+  {
+    description: "Each token is backed by an ounce of allocated gold",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_pax-gold.png",
+    slug: "pax-gold",
+    ticker: "PAXG",
+  },
+  {
     slug: "parsiq",
-    ticker: "PRQ",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_parsiq.png",
+    ticker: "PRQ",
+    description: "A Blockchain monitoring and compliance platform",
   },
   {
+    slug: "epns",
+    description: "Decentralized Notification Protocol on Ethereum",
     ticker: "PUSH",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_epns.png",
-    slug: "epns",
-    description: "Decentralized Notification Protocol on Ethereum",
   },
   {
-    ticker: "RARI",
-    slug: "rarible",
+    ticker: "QNT",
+    description: "Bridging existing networks to new blockchains",
+    slug: "quant",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_quant.png",
+  },
+  {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_rarible.png",
+    slug: "rarible",
     description: "Create and sell digital collectibles",
+    ticker: "RARI",
   },
   {
-    ticker: "RNDR",
-    slug: "render-token",
     description: "Utilizes GPUs across the world",
+    slug: "render-token",
+    ticker: "RNDR",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_render-token.png",
   },
   {
-    description: "A lightning fast liquidity network protocol",
     logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_thorchain.png",
-    ticker: "RUNE",
-    slug: "thorchain",
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_oasis-network.png",
+    ticker: "ROSE",
+    description: "Blockchain network for DeFi and Open Data",
+    slug: "oasis-network",
   },
   {
-    description: "Monetizing gaming experience",
-    ticker: "SAND",
+    description: "A lightning fast liquidity network protocol",
+    ticker: "RUNE",
+    slug: "thorchain",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_thorchain.png",
+  },
+  {
+    description: "Bitcoin fork, a digital peer to peer network",
+    ticker: "RVN",
+    slug: "ravencoin",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ravencoin.png",
+  },
+  {
     slug: "the-sandbox",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_the-sandbox.png",
+    ticker: "SAND",
+    description: "Monetizing gaming experience",
   },
   {
+    ticker: "SC",
+    slug: "siacoin",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_siacoin.png",
-    slug: "siacoin",
     description: "Rent disk space",
-    ticker: "SC",
   },
   {
+    ticker: "SHIB",
     slug: "shiba-inu",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_shiba-inu.png",
     description:
       "Half tokens sent to Vitalik, another half locked in LP, keys burned",
-    ticker: "SHIB",
   },
   {
-    ticker: "SOL",
-    slug: "solana",
+    description: "Enables the creation of on-chain synthetic assets",
+    ticker: "SNX",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_synthetix-network-token.png",
+    slug: "synthetix-network-token",
+  },
+  {
+    description: "High-speed blockchain without sharding",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_solana.png",
-    description: "High-speed blockchain without sharding",
+    ticker: "SOL",
+    slug: "solana",
   },
   {
+    ticker: "SRM",
+    slug: "serum",
+    description: "Decentralized derivatives exchange",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_serum.png",
-    ticker: "SRM",
-    description: "Decentralized derivatives exchange",
-    slug: "serum",
   },
   {
-    description: "An evolution of Uniswap with SUSHI tokenomics",
+    ticker: "STX",
+    description: "A new decentralized internet",
+    slug: "blockstack",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_blockstack.png",
+  },
+  {
+    slug: "sushi",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_sushi.png",
+    description: "An evolution of Uniswap with SUSHI tokenomics",
     ticker: "SUSHI",
-    slug: "sushi",
   },
   {
-    slug: "telos",
+    description: "Next generation video delivery powered by you",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_theta.png",
+    slug: "theta",
+    ticker: "THETA",
+  },
+  {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_telos.png",
     ticker: "TLOS",
+    slug: "telos",
     description: "A smart contract blockchain running on EOSIO software",
   },
   {
+    slug: "toncoin",
     logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_tron.png",
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_toncoin.png",
+    description:
+      "The next gen network to unite all blockchains and the existing Internet",
+    ticker: "TON",
+  },
+  {
     description: "Content entertainment protocol",
     ticker: "TRX",
     slug: "tron",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_tron.png",
   },
   {
+    slug: "bnb-trust-wallet-token",
     logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_uniswap.png",
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_trust-wallet-token.png",
+    description: "Crypto wallet",
+    ticker: "TWT",
+  },
+  {
     slug: "uniswap",
+    ticker: "UNI",
     description:
       "Governance system on highly decentralized financial infrastructure",
-    ticker: "UNI",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_uniswap.png",
   },
   {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_vechain.png",
-    description: "Blockchain platform for products",
-    ticker: "VET",
     slug: "vechain",
+    ticker: "VET",
+    description: "Blockchain platform for products",
   },
   {
     description: "Decentralized exchange and crowdfunding",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_waves.png",
-    ticker: "WAVES",
     slug: "waves",
+    ticker: "WAVES",
   },
   {
+    description: "Super fast NFT exchange",
     slug: "wax",
     ticker: "WAXP",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_wax.png",
-    description: "Super fast NFT exchange",
   },
   {
+    description: "Launch your blockchain in minutes",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_chain.png",
+    slug: "chain",
+    ticker: "XCN",
+  },
+  {
+    slug: "ecash",
+    description: "Rebranded Bitcoin Cash ABC (BCHA)",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ecash.png",
+    ticker: "XEC",
+  },
+  {
+    slug: "nem",
+    description:
+      "NEM is a smart asset blockchain that offers highly customizable blockchain solutions to businesses in a cost-effective way. NEM in full stands for New Economic Movement, though the name has been dropped in favor of the shorter version – NEM",
+    ticker: "XEM",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_nem.png",
+  },
+  {
+    description: "Digital IOUs",
     slug: "stellar",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_stellar.png",
-    description: "Digital IOUs",
     ticker: "XLM",
   },
   {
     slug: "monero",
+    ticker: "XMR",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_monero.png",
     description: "Private digital cash",
-    ticker: "XMR",
+  },
+  {
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_radix-protocol.png",
+    description: "Layer 1 DeFi done right",
+    ticker: "XRD",
+    slug: "radix-protocol",
   },
   {
     slug: "ripple",
-    logoUrl:
-      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_ripple.png",
     ticker: "XRP",
+    logoUrl:
+      "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_xrp.png",
     description: "Enterprise payment settlement network",
   },
   {
@@ -686,32 +917,29 @@ let arr = [
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_tezos.png",
   },
   {
+    ticker: "XYO",
     description:
       "The location-verifying proof of origin protocol that connects the blockchain to the real world",
-    slug: "xyo",
-    ticker: "XYO",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_xyo.png",
+    slug: "xyo",
   },
   {
+    ticker: "ZEC",
     slug: "zcash",
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_zcash.png",
     description: "Private digital cash",
-    ticker: "ZEC",
   },
   {
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_zilliqa.png",
     ticker: "ZIL",
-    description: "Blockchain platform designed to scale",
     slug: "zilliqa",
-  },
-  {
-    logoUrl: require("../../src/assets/usdt.png"),
-    ticker: "USDT",
+    description: "Blockchain platform designed to scale",
   },
 ];
+
 function getCoinMeta(ticker) {
   let obj = arr.find((o) => o.ticker === ticker);
   return obj;
