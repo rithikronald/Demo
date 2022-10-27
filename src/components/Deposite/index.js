@@ -25,7 +25,7 @@ export const Deopsite = ({balance}) => {
 
   useEffect(() => {
     axios({
-      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/generateDepositAddress/QrUR3ejnnTY9mgTOLN4dqMwttVP2/${ticker}`,
+      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/generateDepositAddress/QrUR3ejnnTY9mgTOLN4dqMwttVP2/USDC`,
       method: "get",
     })
       .then((res) => {
