@@ -84,7 +84,9 @@ const CoinDesc = (props) => {
         );
         setTransactionVolumePerct(
           oneDayPercentage(
-            response?.data?.transaction_volume?.value,
+            response?.data?.transaction_volume?.change_1d[
+              response?.data?.transaction_volume?.change_1d.length - 1
+            ]?.value,
             response.data?.transaction_volume?.change_1d
           )
         );
