@@ -59,7 +59,7 @@ const AccountDetails1 = (props) => {
             {">"}
           </p>
         </div>
-        <div className="flex mt-[20px]">
+        {/* <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
             className="font-mont text-white font-bold text-[32px]"
@@ -69,7 +69,7 @@ const AccountDetails1 = (props) => {
           <p className="font-mont text-white opacity-40 font-bold text-[32px]">
             {">"}
           </p>
-        </div>
+        </div> */}
       </div>
     </>
   );

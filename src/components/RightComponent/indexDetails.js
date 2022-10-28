@@ -65,7 +65,7 @@ export const IndexDetails = (props) => {
                 height={"50%"}
               />
             )}
-            <div className="coinList grid grid-cols-2 p-[20px_10px_40px_20px] overflow-scroll pb-2">
+            <div className="coinList h-[50%] px-6 grid grid-cols-2 overflow-scroll pb-2">
               {props?.indexData?.coins?.map((item, index) => {
                 const data = getCoinMeta(item);
                 return (
@@ -87,8 +87,8 @@ export const IndexDetails = (props) => {
                       <p className="font-semibold text-white text-sm 3xl:text-xl">
                         {Number(
                           (100 / props?.indexData?.coins.length).toFixed(2)
-                        )}%
-                        {/* {data?.ticker} */}
+                        )}
+                        %{/* {data?.ticker} */}
                       </p>
                     </div>
                   </div>

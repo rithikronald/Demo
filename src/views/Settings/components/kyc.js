@@ -18,14 +18,14 @@ const Kyc1 = (props) => {
       <div className="w-full h-[98%] flex">
         <Persona.Inquiry
           templateId="itmpl_jn1nNDs3wMGuoBajLvmT5t5h"
-          environment='sandbox'
+          environment="sandbox"
           onLoad={() => {
             console.log("Loaded inline");
           }}
-          onComplete={({ inquiryId, status, fields }) => {
+          onComplete={(response) => {
             // Inquiry completed. Optionally tell your server about it.
-            console.log(`Sending finished inquiry ${inquiryId} to backend`);
-            setBeginKYC(false)
+            console.log("KYC response", response);
+            setBeginKYC(false);
           }}
         />
       </div>
@@ -50,23 +50,22 @@ const Kyc1 = (props) => {
             <div className="flex items-center min-h-screen px-4 py-8">
               <div className="relative h-[700px] p-4 mx-auto bg-white rounded-md shadow-lg">
                 <div className="w-full flex justify-end">
-                <svg
-                  onClick={() => setBeginKYC(false)}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-8 h-8"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                  <svg
+                    onClick={() => setBeginKYC(false)}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-8 h-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
                 </div>
-                
 
                 <InlineInquiry />
               </div>

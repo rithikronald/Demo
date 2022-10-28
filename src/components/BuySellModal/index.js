@@ -225,7 +225,7 @@ export const BuySellModal = (props) => {
 
   return (
     <div className="flex items-center flex-col p-4 px-6 w-full h-full">
-      <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
+      <ToastContainer hideProgressBar autoClose={3000} closeOnClick />
       <Tabs
         onClick={(val) => setTradeMode(val === 1 ? "limit" : "market")}
         data={innertabsData}

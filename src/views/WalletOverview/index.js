@@ -1,30 +1,21 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
-import { GradientContainer } from "../../components/GradientContainer";
-// import { Table } from "../../components/Table";
-import {
-  data02,
-  dummyChartData,
-  indBgImgList,
-} from "../../constants/constants";
-import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { RightContainer } from "../CoinList";
-import "./style.css";
-import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
-import { maximumInstance } from "../../setup";
-import { Table } from "../../components/TransactionsHistoryTable";
-import { numFormatter } from "../../utility/kFormatter";
-import { propTypesSelected } from "@material-tailwind/react/types/components/select";
-import types from "../../store/types";
-import { connect } from "react-redux";
-import { Tabs } from "../../components/Tabs";
-import { Withdraw } from "../../components/Withdraw";
-import { Deopsite } from "../../components/Deposite";
-import { ComingSoonCard } from "../../components/ComingSoonCard";
 import moment from "moment";
-import { Failed } from "../TransactionSummary/popovers";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
+import { Deopsite } from "../../components/Deposite";
+import { GradientContainer } from "../../components/GradientContainer";
+import { Tabs } from "../../components/Tabs";
+import { Table } from "../../components/TransactionsHistoryTable";
+import { Withdraw } from "../../components/Withdraw";
+import { dummyChartData, indBgImgList } from "../../constants/constants";
+import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
+import { useWindowDimensions } from "../../hooks/useWindowDimension";
+import types from "../../store/types";
+import { numFormatter } from "../../utility/kFormatter";
+import "./style.css";
+
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://ws.gate.io/v3/";
 
@@ -49,6 +40,7 @@ const WalletOverView = (props) => {
   const [openIndex, setOpenIndex] = useState(-1);
   const [transactions, setTransactions] = useState();
   const [failed, setFailed] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios({
@@ -135,7 +127,6 @@ const WalletOverView = (props) => {
   useEffect(() => {
     let sum = 0;
     let usdtSum = 0;
-    // console.log("BALANCE", coinList);
     coinList?.map((i) => {
       if (i.currency !== "USDT") {
         let first = i.available || 0;
@@ -251,7 +242,14 @@ const WalletOverView = (props) => {
                   <div className="assetsContainer flex flex-col h-full  overflow-y-scroll pt-8">
                     {coinList?.map((ele) => (
                       <div className="flex mt-1 justify-between my-1">
-                        <div className="flex">
+                        <button
+                          onClick={() => {
+                            navigate(`/coin-desc/${ele.currency}`, {
+                              state: { coin: ele.currency },
+                            });
+                          }}
+                          className="flex"
+                        >
                           <img
                             alt="btc"
                             className="h-8 w-8 rounded-full bg-white"
@@ -268,7 +266,7 @@ const WalletOverView = (props) => {
                             </div>
                             <div className="h-[6px] w-full rounded-lg bg-yellow-400" />
                           </div>
-                        </div>
+                        </button>
                         <div className="mr-1">
                           <p
                             style={{ textAlign: "right" }}

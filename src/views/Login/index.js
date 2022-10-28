@@ -103,9 +103,9 @@ const Login = () => {
       });
   };
 
-  useEffect(()=>{
-    OTP.length === 6 && verifyOTP()
-  },[OTP])
+  useEffect(() => {
+    OTP.length === 6 && verifyOTP();
+  }, [OTP]);
 
   return (
     <div className="App flex h-screen w-full font-mont">
@@ -187,6 +187,25 @@ const Login = () => {
                   </div>
                 }
               />
+              <GradientContainer
+                height="h-20"
+                width="w-full"
+                className={"mt-4"}
+                children={
+                  <div className="rounded-2xl h-full flex flex-row items-center justify-between">
+                    <div className="flex flex-col h-full w-full">
+                      <input
+                        type="text"
+                        class="form-control text-xl text-white w-full h-full  rounded-2xl flex  px-3 py-1.5 placeholder-gray-600 font-semibold bg-clip-padding transition ease-in-out bg-transparent `focus:text-gray-700 focus:border-blue-600 focus:outline-none"
+                        id="referalCode"
+                        placeholder="Referal Code*(Optional)"
+                        // value={phoneNumber}
+                        // onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                }
+              />
             </div>
             <div className="termsAndConditions justify-center flex flex-col mt-8">
               <div className="checkboxRow justify-between items-center flex m-1">
@@ -260,7 +279,8 @@ const Login = () => {
                   borderRadius: 10,
                   width: "50px",
                   height: "50px",
-                  fontWeight:600
+                  fontWeight: 600,
+                  // marginLeft:5
                 }}
               />
             </div>
@@ -269,14 +289,18 @@ const Login = () => {
                 <p className="text-base text-center text-white font-normal 4xl:text-2xl">
                   Didn’t get the code?
                 </p>
-              </div>
-              <button
+                <button
                   onClick={resendOTP}
-                  className="text-white bg-primaryButton rounded-xl px-4 py-2 mt-2 ml-2 text-sm font-semibold"
+                  className="rounded-xl text-purple-600 ml-1 text-sm font-semibold"
                 >
                   Resend OTP
                 </button>
-              {/* <ThemeButton text="Verify" onClick={verifyOTP} /> */}
+              </div>
+              <ThemeButton
+                text="Verify"
+                //  onClick={verifyOTP}
+                className="mt-3 w-[70%]"
+              />
             </div>
           </div>
         )}

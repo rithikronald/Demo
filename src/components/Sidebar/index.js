@@ -12,9 +12,7 @@ import { TabItem } from "flowbite-react/lib/esm/components/Tab/TabItem";
 const noSidebar = ["/", "/login", "/otpVerification"];
 
 const Sidebar = () => {
-  // const [open, setOpen] = useState(false);
   const open = false;
-  const setOpen = () => {};
   const navigate = useNavigate();
   const location = useLocation();
 

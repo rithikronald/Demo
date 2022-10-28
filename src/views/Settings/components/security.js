@@ -41,7 +41,7 @@ const Security1 = (props) => {
             style={{ flex: 1 }}
             className="font-mont text-white font-bold text-[32px]"
           >
-            Advanced
+            Maximum Password
           </p>
         </div>
       </div>
@@ -112,7 +112,10 @@ const Security3 = (props) => {
       </p>
       <div className="absolute top-1/2 -translate-y-1/2 w-[90%] flex items-center">
         <div className="flex items-center mt-[20px]">
-          <img className="w-[72x] h-[72px] " src={require("../../../assets/greenVerifiedIcon2.png")} />
+          <img
+            className="w-[72x] h-[72px] "
+            src={require("../../../assets/greenVerifiedIcon2.png")}
+          />
           <div>
             <p className="font-mont text-white font-bold text-[32px] ml-[10px]">
               Link sent successfully!
