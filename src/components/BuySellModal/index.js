@@ -6,7 +6,7 @@ import { ws } from "../../App";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { GradientContainer } from "../GradientContainer";
 import { Tabs } from "../Tabs";
-import { ThemeButton } from "../themeButton";
+import { ThemeButton } from "../themeButton/themeButtonWithLoader";
 
 const innertabsData = [
   {

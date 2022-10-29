@@ -340,7 +340,7 @@ const CoinDesc = (props) => {
               },
               {
                 name: "Active Wallets",
-                value: data?.active_addresses,
+                value: data?.active_addresses || data?.unique_social_volume,
                 annotation: "activeaddresses",
               },
             ].map((ele) => (
@@ -379,7 +379,7 @@ const CoinDesc = (props) => {
               <CustomAreaChart
                 width={"100%"}
                 height={"98%"}
-                data={arrGen(data?.active_addresses[`change_${priceIndex}`])}
+                data={data?.active_addresses?.value ? arrGen(data?.active_addresses[`change_${priceIndex}`]) : arrGen(data?.unique_social_volume[`change_${priceIndex}`])}
               />
             )}
           </GradientContainer>
@@ -485,7 +485,7 @@ const CoinDesc = (props) => {
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
-            <p style={{ transform: "translateX(20px)" }}>Active Holders Distribution Total</p>
+            <p style={{ transform: "translateX(20px)" }}>{data?.active_holders_distribution_total?.change_1d?.length > 0 ?"Active Holders Distribution Total" : "Social Volume Twitter"}</p>
           </div>
           <GradientContainer
             height={"h-[130px]"}
@@ -493,7 +493,7 @@ const CoinDesc = (props) => {
             className={`flex items-center mt-2 `}
           >
             <CustomAreaChart
-              data={arrGen(data?.active_holders_distribution_total[`change_${priceIndex}`])}
+              data={data?.active_holders_distribution_total?.change_1d?.length > 0 ? arrGen(data?.active_holders_distribution_total[`change_${priceIndex}`]) : arrGen(data?.twitter_followers[`change_${priceIndex}`])}
               width={"100%"}
               height={"98%"}
             />

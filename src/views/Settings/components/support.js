@@ -21,7 +21,7 @@ const AccountDetails = () => {
               Email
             </p>
             <p className="font-mont text-white opacity-40 text-[20px]">
-              support@gmail.com
+              contact@m3p.io
             </p>
           </div>
         </div>
@@ -31,7 +31,7 @@ const AccountDetails = () => {
               Phone Number
             </p>
             <p className="font-mont text-white opacity-40 text-[20px]">
-              +0 113-08000-900
+              +91 95383 20888
             </p>
           </div>
         </div>
