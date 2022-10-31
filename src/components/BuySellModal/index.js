@@ -23,59 +23,35 @@ export const BuySellModal = (props) => {
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
   const [tradeMode, setTradeMode] = useState("market");
-  // useEffect(() => {
-  //   console.log("Trade", props?.trade);
-  //   console.log("TradeMode", tradeMode);
-  // }, [props?.trade, tradeMode]);
-
-  // useEffect(() => {
-  //   console.log("isOpen", props?.isOpen);
-  //   if (props?.isOpen === false) {
-  //     setAmount("");
-  //     setPrice("");
-  //     console.log("......................................", props?.ticker);
-  //     var array = JSON.stringify({
-  //       time: new Date().getTime,
-  //       channel: "spot.tickers",
-  //       event: "unsubscribe",
-  //       payload: [`${props?.ticker}_USDT`],
-  //     });
-  //     if (ws.readyState) {
-  //       console.log("Buy/Sell Un Sub");
-  //       ws.send(array);
-  //     }
-  //   }
-  // }, [props?.isOpen]);
-
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName && coinName === props?.ticker) {
-      if (props?.isAllCoins) {
-        setCurrentPrice(data?.result?.last);
-      }
+      setCurrentPrice(data?.result?.last);
     }
   }
 
   useEffect(() => {
-    setCurrentPrice(props?.price);
-  }, [props?.price]);
+    getCurrentPrice(props?.ticker)
+      .then((res) => {
+        setCurrentPrice(res);
+      })
+      .catch((e) => console.log("Error", e));
+  }, []);
 
   useEffect(() => {
-    if (props?.isAllCoins) {
-      var array = JSON.stringify({
-        time: new Date().getTime,
-        channel: "spot.tickers",
-        event: "subscribe",
-        payload: [`${props?.ticker}_USDT`],
-      });
-      if (ws.readyState) {
-        console.log("Buy/Sell Sub");
-        ws.send(array);
-        ws.onmessage = onmessage;
-      }
+    var array = JSON.stringify({
+      time: new Date().getTime,
+      channel: "spot.tickers",
+      event: "subscribe",
+      payload: [`${props?.ticker}_USDT`],
+    });
+    if (ws.readyState) {
+      console.log("Buy/Sell Sub");
+      ws.send(array);
+      ws.onmessage = onmessage;
     }
   }, []);
 
@@ -285,19 +261,6 @@ export const BuySellModal = (props) => {
             }
           />
         </div>
-        {/* <div className="mt-4">
-          <p className="text-white font-medium text-xs ml-2 mb-1">Total</p>
-          <GradientContainer
-            height="h-16"
-            width="w-full"
-            children={
-              <input
-                type="text"
-                className="h-full w-full bg-transparent text-white text-2xl rounded-2xl text-center form-control "
-              />
-            }
-          />
-        </div> */}
       </div>
       <ThemeButton
         onClick={createOrder}
