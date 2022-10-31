@@ -8,6 +8,7 @@ import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
+import { getCurrentPrice } from "../../utility/getCurrentPrice";
 import { numFormatter } from "../../utility/kFormatter";
 import Modal from "./modal";
 // var WebSocketClient = require("websocket").w3cwebsocket;
@@ -26,6 +27,7 @@ const CoinDesc = (props) => {
   const [firstBoxAnnotation, setFirstBoxAnnotation] = useState("socialvolume");
   const [modalOpen, setModalOpen] = useState(false);
   const [currentPrice, setCurrentPrice] = useState();
+  const [tempPrice, setTempPrice] = useState();
   const location = useLocation();
   const params = useParams();
 
@@ -62,6 +64,14 @@ const CoinDesc = (props) => {
       }
     }
   }, [ws.readyState, modalOpen]);
+
+  useEffect(() => {
+    getCurrentPrice(location?.state?.coin)
+      .then((res) => {
+        setTempPrice(res);
+      })
+      .catch((e) => console.log("Error", e));
+  }, []);
 
   useEffect(() => {
     props.openLoader();
@@ -169,17 +179,14 @@ const CoinDesc = (props) => {
                 <div className="bg-bgl1 font-mont flex justify-center items-baseline py-[13px] px-[23px] priceBorderOnly">
                   {/* <p className="text-[12px] ">Price</p> */}
                   <p className="text-[18px] ml-[5px]">$</p>
-                  <p className="text-[25px] font-bold">
-                    {currentPrice == null
-                      ? Math.floor(data?.price?.value)
-                      : Number(currentPrice)?.toFixed(0)}
+                  <p className="text-lg font-bold">
+                    {currentPrice == null ? tempPrice : Number(currentPrice)}
                   </p>
-                  <p className="text-[15px] font-bold">
-                    .
+                  {/* <p className="text-[15px] font-bold">
                     {currentPrice == null
-                      ? getAfterDecimalValue(data?.price?.value)
+                      ? getAfterDecimalValue(tempPrice)
                       : currentPrice?.split(".")[1]}
-                  </p>
+                  </p> */}
                 </div>
               </div>
               <div className="flex">
@@ -485,7 +492,9 @@ const CoinDesc = (props) => {
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
-            <p style={{ transform: "translateX(20px)" }}>Active Holders Distribution Total</p>
+            <p style={{ transform: "translateX(20px)" }}>
+              Active Holders Distribution Total
+            </p>
           </div>
           <GradientContainer
             height={"h-[130px]"}
@@ -493,7 +502,9 @@ const CoinDesc = (props) => {
             className={`flex items-center mt-2 `}
           >
             <CustomAreaChart
-              data={arrGen(data?.active_holders_distribution_total[`change_${priceIndex}`])}
+              data={arrGen(
+                data?.active_holders_distribution_total[`change_${priceIndex}`]
+              )}
               width={"100%"}
               height={"98%"}
             />
