@@ -5,13 +5,16 @@ import React from "react";
 const hostv2 = "https://data.gateapi.io/api2/1/ticker/";
 
 export const getCurrentPrice = (ticker) => {
+  let response;
   // const url = `${host}${ticker}_USDT`;
   console.log("URL", hostv2 + ticker.toLowerCase() + "_usdt");
   axios
     .get(hostv2 + ticker.toLowerCase() + "_usdt")
     .then((res) => {
       console.log("GET CURRENT PRICE", res?.data);
-      return res?.data?.last
+      response = res?.data?.last;
     })
     .catch((e) => console.log("Error", e));
+
+  return response;
 };

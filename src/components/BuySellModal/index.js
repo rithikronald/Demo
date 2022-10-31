@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ws } from "../../App";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { getCurrentPrice } from "../../utility/getCurrentPrice";
 import { GradientContainer } from "../GradientContainer";
 import { Tabs } from "../Tabs";
 import { ThemeButton } from "../themeButton";
@@ -46,6 +47,7 @@ export const BuySellModal = (props) => {
   //   }
   // }, [props?.isOpen]);
 
+
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
@@ -60,10 +62,6 @@ export const BuySellModal = (props) => {
   useEffect(() => {
     setCurrentPrice(props?.price);
   }, [props?.price]);
-
-  useEffect(() => {
-    console.log("Current Price", currentPrice);
-  }, [currentPrice]);
 
   useEffect(() => {
     if (props?.isAllCoins) {
