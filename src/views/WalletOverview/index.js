@@ -240,55 +240,60 @@ const WalletOverView = (props) => {
                 <div className="w-full h-full rounded-2xl flex p-4 flex-col px-4">
                   <p className="text-white text-sm font-medium">Assets</p>
                   <div className="assetsContainer flex flex-col h-full  overflow-y-scroll pt-8">
-                    {coinList?.map((ele) => (
-                      <div className="flex mt-1 justify-between my-1">
-                        <button
-                          onClick={() => {
-                            navigate(`/coin-desc/${ele.currency}`, {
-                              state: { coin: ele.currency },
-                            });
-                          }}
-                          className="flex"
-                        >
-                          <img
-                            alt="btc"
-                            className="h-8 w-8 rounded-full bg-white"
-                            src={getCoinMeta(ele.currency)?.logoUrl}
-                          />
-                          <div className="ml-2">
-                            <div className="flex items-center">
-                              <p className=" text-white text-sm font-semibold">
-                                {ele.currency}
+                    {coinList?.map(
+                      (ele) =>
+                        ele?.available != 0 && (
+                          <div className="flex mt-1 justify-between my-1">
+                            <button
+                              onClick={() => {
+                                navigate(`/coin-desc/${ele.currency}`, {
+                                  state: { coin: ele.currency },
+                                });
+                              }}
+                              className="flex"
+                            >
+                              <img
+                                alt="btc"
+                                className="h-8 w-8 rounded-full bg-white"
+                                src={getCoinMeta(ele.currency)?.logoUrl}
+                              />
+                              <div className="ml-2">
+                                <div className="flex items-center">
+                                  <p className=" text-white text-sm font-semibold">
+                                    {ele.currency}
+                                  </p>
+                                  <p className=" text-white font-semibold text-[10px] ml-2">
+                                    {getCoinMeta(ele.currency)?.slug}
+                                  </p>
+                                </div>
+                                <div className="h-[6px] w-full rounded-lg bg-yellow-400" />
+                              </div>
+                            </button>
+                            <div className="mr-1">
+                              <p
+                                style={{ textAlign: "right" }}
+                                className="font-bold text-sm text-white"
+                              >
+                                {Number(ele?.available).toFixed(7)}
                               </p>
-                              <p className=" text-white font-semibold text-[10px] ml-2">
-                                {getCoinMeta(ele.currency)?.slug}
-                              </p>
+                              <div className=" text-white text-[9px] flex items-end justify-end">
+                                <p>
+                                  $
+                                  {ele.currency == "USDT"
+                                    ? Number(ele.available).toFixed(8)
+                                    : ele.available != 0 &&
+                                      currentPrice[ele.currency] &&
+                                      Number(
+                                        ele.available *
+                                          currentPrice[ele.currency]
+                                      ).toFixed(8)}
+                                </p>
+                                {/* <p className="text-[7px]">(+{24}%)</p> */}
+                              </div>
                             </div>
-                            <div className="h-[6px] w-full rounded-lg bg-yellow-400" />
                           </div>
-                        </button>
-                        <div className="mr-1">
-                          <p
-                            style={{ textAlign: "right" }}
-                            className="font-bold text-sm text-white"
-                          >
-                            {numFormatter(ele.available)}
-                          </p>
-                          <div className=" text-white text-[9px] flex items-center">
-                            <p>
-                              $
-                              {ele.available &&
-                                currentPrice[ele.currency] &&
-                                numFormatter(
-                                  numFormatter(ele.available) *
-                                    numFormatter(currentPrice[ele.currency])
-                                )}
-                            </p>
-                            <p className="text-[7px]">(+{24}%)</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                        )
+                    )}
                   </div>
                 </div>
               }

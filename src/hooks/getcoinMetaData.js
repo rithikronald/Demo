@@ -938,6 +938,12 @@ let arr = [
     slug: "zilliqa",
     description: "Blockchain platform designed to scale",
   },
+  {
+    logoUrl: require("../../src/assets/usdt.png"),
+    ticker: "USDT",
+    slug: "usdt",
+    description: "usdt",
+  },
 ];
 
 function getCoinMeta(ticker) {
