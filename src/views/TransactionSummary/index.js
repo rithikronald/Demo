@@ -1,18 +1,17 @@
-import "./style.css";
-import React, { useEffect, useState } from "react";
-import { ws } from "../../App";
-import { useLocation } from "react-router-dom";
-import { getCoinMeta } from "../../hooks/getcoinMetaData";
-import { GradientContainer } from "../../components/GradientContainer";
-import { CustomPieChart } from "../../components/Charts/CustomPieChart";
-import { pieColors } from "../../constants/constants";
-import { Deopsite } from "../../components/Deposite";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { maximumInstance } from "../../setup";
-import { TransactionModal } from "./popovers";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ws } from "../../App";
+import { CustomPieChart } from "../../components/Charts/CustomPieChart";
+import { Deopsite } from "../../components/Deposite";
+import { GradientContainer } from "../../components/GradientContainer";
+import { pieColors } from "../../constants/constants";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { TransactionModal } from "./popovers";
+import "./style.css";
 
 const TransactionSummary = () => {
   const location = useLocation();
@@ -24,11 +23,11 @@ const TransactionSummary = () => {
   const [isOpen, setisOpen] = useState(false);
   const [counter, setCounter] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [failedCounter, setFailedCounter] = useState(0);
 
   const socketPayload = location?.state?.indexData?.coins?.map(
     (ticker) => `${ticker}_USDT`
   );
+
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
     const coinName = data?.result?.currency_pair;

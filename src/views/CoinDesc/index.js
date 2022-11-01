@@ -75,7 +75,7 @@ const CoinDesc = (props) => {
 
   useEffect(() => {
     props.openLoader();
-    maximumInstance(localStorage.getItem("accessToken"))
+    maximumInstance
       .get(`/getCoin?ticker=${params.coinId}`)
       .then((response) => {
         setData(response?.data);

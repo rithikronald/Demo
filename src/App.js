@@ -55,7 +55,7 @@ function App() {
       localStorage.setItem("accessToken", user.accessToken);
       localStorage.setItem("uid", user.uid);
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {
-        maximumInstance(user?.accessToken)
+        maximumInstance
           .get(`/setRole/${user.uid}`)
           .then((response) => {
             console.log("CUSTOM ROLE SET", response?.data);

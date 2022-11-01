@@ -107,7 +107,7 @@ const Home = (props) => {
 
   useEffect(() => {
     props.openLoader();
-    maximumInstance(localStorage.getItem("accessToken"))
+    maximumInstance
       .get(`/dashboard`)
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
@@ -122,7 +122,7 @@ const Home = (props) => {
 
   const getSmartSuggestList = (val) => {
     if (tenureIndex != null && riskIndex != null) {
-      maximumInstance(localStorage.getItem("accessToken"))
+      maximumInstance
         .get(`/smartSuggest/${val}`)
         .then((response) => {
           console.log("RESPONSE", response?.data);

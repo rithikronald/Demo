@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./kyc.css";
 import Persona from "persona";
 import Modal from "react-bootstrap/Modal";
+import { maximumInstance } from "../../../setup";
 
 const stages = {
   INTRO: "INTRO",
@@ -22,9 +23,15 @@ const Kyc1 = (props) => {
           onLoad={() => {
             console.log("Loaded inline");
           }}
-          onComplete={(response) => {
-            // Inquiry completed. Optionally tell your server about it.
-            console.log("KYC response", response);
+          onComplete={({ inquiryId, status }) => {
+            maximumInstance
+              .post(`/kycUserMap/${localStorage.getItem("uid")}`, {
+                inquiryId,
+              })
+              .then((res) =>
+                console.log("KYC Response", res?.data, "Status", status)
+              )
+              .catch((err) => console.log("error", err));
             setBeginKYC(false);
           }}
         />
