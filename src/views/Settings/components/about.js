@@ -12,10 +12,10 @@ const About1 = (props) => {
       <div className="absolute top-1/2 -translate-y-1/3 w-[90%]">
         <div className="flex">
           <div style={{ flex: 1 }}>
-            <p className="font-mont text-white font-bold text-[32px]">
+            <p className="font-mont text-white font-bold text-[22px]">
               Whitepaper
             </p>
-            <p className="font-mont text-white font-bold opacity-40 text-[20px]">
+            <p className="font-mont text-white font-bold opacity-40 text-[18px]">
               Learn More about Maximum Protocol Here
             </p>
           </div>
@@ -37,7 +37,7 @@ const About1 = (props) => {
         <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px] cursor-pointer"
+            className="font-mont text-white font-bold text-[22px] cursor-pointer"
             onClick={() => props.setStage(stages.HELPDESK)}
           >
             Helpdesk

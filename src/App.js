@@ -20,7 +20,7 @@ const makeRoutes = () => {
           path={route.path}
           element={
             <Suspense
-              fallback={<div className="font-mono text-base">Loading...</div>}
+              fallback={<div data-stage></div>}
             >
               <route.component />
             </Suspense>

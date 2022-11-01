@@ -7,40 +7,40 @@ const AccountDetails = () => {
       <div className="absolute top-1/2 -translate-y-[140px] w-[90%]">
         <div className="flex">
           <div style={{ flex: 1 }}>
-            <p className="font-mont text-white font-bold text-[32px]">
+            <p className="font-mont text-white font-bold text-[22px]">
               Contact Us
             </p>
-            <p className="font-mont text-white opacity-40 text-[20px]">
+            <p className="font-mont text-white opacity-40 text-[18px]">
               Please reach out to us if you face any issues
             </p>
           </div>
         </div>
         <div className="flex mt-[20px]">
           <div style={{ flex: 1 }}>
-            <p className="font-mont text-white font-bold text-[26px]">
+            <p className="font-mont text-white font-bold text-[22px]">
               Email
             </p>
-            <p className="font-mont text-white opacity-40 text-[20px]">
-              support@gmail.com
+            <p className="font-mont text-white opacity-40 text-[18px]">
+              contact@m3p.io
             </p>
           </div>
         </div>
         <div className="flex mt-[20px]">
           <div style={{ flex: 1 }}>
-            <p className="font-mont text-white font-bold text-[26px]">
+            <p className="font-mont text-white font-bold text-[22px]">
               Phone Number
             </p>
-            <p className="font-mont text-white opacity-40 text-[20px]">
-              +0 113-08000-900
+            <p className="font-mont text-white opacity-40 text-[18px]">
+              +91 95383 20888
             </p>
           </div>
         </div>
         <div className="flex mt-[20px]">
           <div style={{ flex: 1 }}>
-            <p className="font-mont text-white font-bold text-[32px]">
+            <p className="font-mont text-white font-bold text-[22px]">
               Lets Connect
             </p>
-            <p className="font-mont text-white opacity-40 text-[20px]">
+            <p className="font-mont text-white opacity-40 text-[18px]">
               Follow us on social media for more!
             </p>
           </div>

@@ -103,7 +103,7 @@ const Settings = () => {
             },
             {
               type: types.SUPPORT,
-              name: "Support",
+              name: "Reach out to us",
             },
           ].map((item, index) => (
             <div

@@ -105,8 +105,8 @@ const Kyc1 = (props) => {
           </div>
         )
       ) : (
-        <div className="absolute top-1/2 -translate-y-1/2">
-          <p className="font-mont text-white font-bold text-[32px]">
+        <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
+          <p className="font-mont text-white font-bold text-[22px]">
             Help us confirm your identity
           </p>
           <button
