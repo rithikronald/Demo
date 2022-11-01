@@ -9491,6 +9491,11 @@
     "fast-equals" "^2.0.0"
     "react-transition-group" "2.9.0"
 
+"react-spinners@^0.13.6":
+  "integrity" "sha512-+VoSs1wN6oMhJy7PzCPiHUt6zUi9fvnGQizem8q/NzXhGovbdXFDWNhspk6KEKXQEafInUtpvtDlp/zJ5sES/A=="
+  "resolved" "https://registry.npmjs.org/react-spinners/-/react-spinners-0.13.6.tgz"
+  "version" "0.13.6"
+
 "react-stepper-horizontal@^1.0.11":
   "integrity" "sha512-Sn6BM9+5Y0QW3K6SR49HeZzDJ/GYbzSrRKZ4TTjI58V7y4HwnAvY9tjVIK5kjAdHfR8hJJSHKfTazXmqZ/iPIQ=="
   "resolved" "https://registry.npmjs.org/react-stepper-horizontal/-/react-stepper-horizontal-1.0.11.tgz"

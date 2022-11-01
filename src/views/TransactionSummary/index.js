@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { maximumInstance } from "../../setup";
 import { TransactionModal } from "./popovers";
+import { ScaleLoader } from "react-spinners";
 
 const TransactionSummary = () => {
   const location = useLocation();
@@ -22,9 +23,9 @@ const TransactionSummary = () => {
   const [buyPrice, setBuyPrice] = useState(location?.state?.amount || 0);
   const [isOpen, setisOpen] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [failedCounter, setFailedCounter] = useState(0);
 
-  // const socketPayload = ["ADA_USDT", "XRP_USDT", "DOT_USDT", "MATIC_USDT"];
   const socketPayload = location?.state?.indexData?.coins?.map(
     (ticker) => `${ticker}_USDT`
   );
@@ -145,6 +146,7 @@ const TransactionSummary = () => {
   }, [buyPrice, currentPrice]);
 
   const createBatchOrder = async () => {
+    setIsLoading(true);
     await socketPayload.map(async (item, index) => {
       createOrder({
         currency_pair: item,
@@ -206,6 +208,8 @@ const TransactionSummary = () => {
     if (Object.keys(status).length == socketPayload.length) {
       console.log("condition passed");
       setisOpen(true);
+      setIsLoading(false);
+      // setBuyPrice("");
     } else {
       console.log("condition failed");
     }
@@ -327,9 +331,13 @@ const TransactionSummary = () => {
               <button
                 // onClick={createBatchOrder}
                 onClick={createBatchOrder}
-                className="bg-primaryButton text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
+                className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
               >
-                Pay Now
+                {isLoading ? (
+                  <ScaleLoader height={20} color="#fff" />
+                ) : (
+                  "Pay Now"
+                )}
               </button>
             </div>
           </div>
