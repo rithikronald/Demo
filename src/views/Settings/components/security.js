@@ -4,6 +4,7 @@ const stages = {
   INTRO: "INTRO",
   RESET: "RESET",
   VERIFIFED: "VERIFIED",
+  MAX_PASSWORD: 'MAX_PASSWORD'
 };
 
 const Security1 = (props) => {
@@ -14,7 +15,7 @@ const Security1 = (props) => {
         <div className="flex">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px] cursor-pointer"
+            className="font-mont text-white font-bold text-[22px] cursor-pointer"
             onClick={() => props.setStage(stages.RESET)}
           >
             Reset Password
@@ -23,7 +24,7 @@ const Security1 = (props) => {
         <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[22px]"
           >
             2 Factor Authentication
           </p>
@@ -31,7 +32,7 @@ const Security1 = (props) => {
         <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[22px]"
           >
             Devices and Activity
           </p>
@@ -39,7 +40,8 @@ const Security1 = (props) => {
         <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[22px] cursor-pointer"
+            onClick={() => props.setStage(stages.MAX_PASSWORD)}
           >
             Maximum Password
           </p>
@@ -130,6 +132,79 @@ const Security3 = (props) => {
   );
 };
 
+const Security4 = (props) => {
+  return (
+    <>
+      <p
+        onClick={() => props.setStage(stages.INTRO)}
+        style={{ flex: 1, cursor: "pointer" }}
+        className="text-white opacity-40 font-mont text-[24px]"
+      >
+        {"<"} Security
+      </p>
+      <div className="absolute top-1/2 -translate-y-[140px] w-[90%]">
+        <p className="font-mont text-white font-bold text-[22px]">Password</p>
+        <div className="inputCard w-[450px] mt-4 h-[60px]  rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
+          <div className="bg-bg rounded-2xl h-full flex flex-row items-center justify-between">
+            <div className="flex flex-col h-full w-full">
+              <input
+                className="
+                    rounded-2xl
+                    bg-transparent
+                    form-control
+                    block
+                    w-full
+                    h-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-mont
+                    text-white
+                    transition
+                    ease-in-out
+                    m-0
+                    focus:text-white focus:bg-transparent focus:border-none focus:outline-none"
+                id="nameInput"
+              />
+            </div>
+          </div>
+        </div>
+        <p className="font-mont text-white font-bold text-[22px] mt-[20px]">Confirm Password</p>
+        <div className="inputCard w-[450px] mt-4 h-[60px]  rounded-2xl bg-gradient-to-b from-fuchsia-500 to-cyan-500 p-0.5 3xl:h-20">
+          <div className="bg-bg rounded-2xl h-full flex flex-row items-center justify-between">
+            <div className="flex flex-col h-full w-full">
+              <input
+                className="
+                    rounded-2xl
+                    bg-transparent
+                    form-control
+                    block
+                    w-full
+                    h-full
+                    px-3
+                    py-1.5
+                    text-base
+                    font-mont
+                    text-white
+                    transition
+                    ease-in-out
+                    m-0
+                    focus:text-white focus:bg-transparent focus:border-none focus:outline-none"
+                id="nameInput"
+              />
+            </div>
+          </div>
+        </div>
+        <button
+          className="mt-[50px] bg-primaryButton w-[330px] text-white text-[20px] font-bold font-mont flex justify-center items-baseline rounded-xl py-[24px]"
+        >
+          Create Maximum Password
+        </button>
+      </div>
+    </>
+  )
+}
+
 const Security = () => {
   const [stage, setStage] = useState(stages.INTRO);
 
@@ -143,6 +218,9 @@ const Security = () => {
       )}
       {stage === stages.VERIFIFED && (
         <Security3 stage={stage} setStage={setStage} />
+      )}
+      {stage === stages.MAX_PASSWORD && (
+        <Security4 stage={stage} setStage={setStage} />
       )}
     </>
   );

@@ -17,6 +17,11 @@ export const ThemeButton = ({ text, width = "", className,onClick }) => {
         setTimeout(() => {
             setClicked(true)
         }, 1000)
+        setTimeout(() => {
+          buttonRef.current.classList.remove('w-full')
+          buttonRef.current.classList.add('w-0')
+          setClicked(false)
+        }, 3000)
     }}
     >
         <div ref={buttonRef} className="transition-all ease-out duration-1000 h-full rounded-lg bg-green-500 absolute left-0 top-0 w-0"></div>

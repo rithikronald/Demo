@@ -15,22 +15,22 @@ const AccountDetails1 = (props) => {
         <div className="flex">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[22px]"
           >
             First Name
           </p>
-          <p className="font-mont text-white opacity-40 font-bold text-[32px]">
+          <p className="font-mont text-white opacity-40 font-bold text-[22px]">
             first name
           </p>
         </div>
         <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[22px]"
           >
             Last Name
           </p>
-          <p className="font-mont text-white opacity-40 font-bold text-[32px]">
+          <p className="font-mont text-white opacity-40 font-bold text-[22px]">
             last name
           </p>
         </div>
@@ -40,22 +40,22 @@ const AccountDetails1 = (props) => {
         >
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[22px]"
           >
             Email
           </p>
-          <p className="font-mont text-white opacity-40 font-bold text-[32px]">
+          <p className="font-mont text-white opacity-40 font-bold text-[22px]">
             {">"}
           </p>
         </div>
         <div className="flex mt-[20px]">
           <p
             style={{ flex: 1 }}
-            className="font-mont text-white font-bold text-[32px]"
+            className="font-mont text-white font-bold text-[22px]"
           >
             Phone Number
           </p>
-          <p className="font-mont text-white opacity-40 font-bold text-[32px]">
+          <p className="font-mont text-white opacity-40 font-bold text-[22px]">
             {">"}
           </p>
         </div>
