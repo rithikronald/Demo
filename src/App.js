@@ -12,9 +12,6 @@ var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://api.gateio.ws/ws/v4/";
 export const ws = new WebSocketClient(WS_URL);
 
-
-
-
 const makeRoutes = () => {
   return (
     <Routes>
@@ -62,7 +59,6 @@ function App() {
           })
           .catch((err) => console.log("Error", err));
       }
-      navigate("/dashboard");
     } else {
       navigate("/login");
     }

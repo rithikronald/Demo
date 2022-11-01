@@ -13,6 +13,7 @@ const stages = {
 
 const Kyc1 = (props) => {
   const [beginKYC, setBeginKYC] = useState(false);
+  const [kycStatus, setKycStatus] = useState("");
 
   const InlineInquiry = () => {
     return (
@@ -28,11 +29,13 @@ const Kyc1 = (props) => {
               .post(`/kycUserMap/${localStorage.getItem("uid")}`, {
                 inquiryId,
               })
-              .then((res) =>
-                console.log("KYC Response", res?.data, "Status", status)
-              )
+              .then((res) => {
+                console.log("KYC Response", res?.data, "Status", status);
+                setKycStatus(status);
+                localStorage.setItem("kycStatus", status);
+                setBeginKYC(false);
+              })
               .catch((err) => console.log("error", err));
-            setBeginKYC(false);
           }}
         />
       </div>
@@ -79,6 +82,28 @@ const Kyc1 = (props) => {
             </div>
           </div>
         </>
+      ) : kycStatus ? (
+        kycStatus == "completed" ? (
+          <div className="p-4 justify-center">
+            <img
+              className="w-40 h-40"
+              src={require("../../../assets/greenVerifiedIcon2.png")}
+            />
+            <p className="font-mont text-white text-xl font-semibold mt-4">
+              Verified Successfully
+            </p>
+          </div>
+        ) : (
+          <div className="p-4 justify-center">
+            <img src={require("../../../assets/cil_face-dead.png")} />
+            <p className="font-mont text-white text-xl font-semibold mt-4">
+              Verification Failed
+            </p>
+            <button className="bg-primaryButton mt-2 text-white font-mont font-semibold p-4 px-6 rounded-xl">
+              Contact Support
+            </button>
+          </div>
+        )
       ) : (
         <div className="absolute top-1/2 -translate-y-1/2">
           <p className="font-mont text-white font-bold text-[32px]">

@@ -72,6 +72,7 @@ const Login = () => {
       .confirm(OTP)
       .then((result) => {
         const user = result.user;
+        navigate("/dashboard");
         console.log("USER VERIFIED", user);
         toast.success("Logged in successfully !!", {
           position: toast.POSITION.TOP_RIGHT,
