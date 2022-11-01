@@ -68,7 +68,7 @@ const CoinDesc = (props) => {
   useEffect(() => {
     getCurrentPrice(location?.state?.coin)
       .then((res) => {
-        setTempPrice(res);
+        setTempPrice(res?.price);
       })
       .catch((e) => console.log("Error", e));
   }, []);

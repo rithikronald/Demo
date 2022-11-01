@@ -36,7 +36,7 @@ export const BuySellModal = (props) => {
   useEffect(() => {
     getCurrentPrice(props?.ticker)
       .then((res) => {
-        setCurrentPrice(res);
+        setCurrentPrice(res?.price);
       })
       .catch((e) => console.log("Error", e));
   }, []);

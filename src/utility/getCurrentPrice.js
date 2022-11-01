@@ -11,10 +11,8 @@ export const getCurrentPrice = async (ticker) => {
   response = await axios
     .get(hostv2 + ticker.toLowerCase() + "_usdt")
     .then((res) => {
-      console.log("GET CURRENT PRICE", res?.data);
-      return res.data?.last;
+      return { coinName: ticker + "_USDT", price: res?.data?.last };
     })
     .catch((e) => console.log("Error", e));
-
   return response;
 };

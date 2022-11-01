@@ -10,6 +10,7 @@ import { Deopsite } from "../../components/Deposite";
 import { GradientContainer } from "../../components/GradientContainer";
 import { pieColors } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { getCurrentPrice } from "../../utility/getCurrentPrice";
 import { TransactionModal } from "./popovers";
 import "./style.css";
 
@@ -42,6 +43,31 @@ const TransactionSummary = () => {
     }
   }
 
+  const getCoinPrice = async (arr) => {
+    let tempArr = [];
+    arr?.map((item, index) => {
+      getCurrentPrice(item)
+        .then((res) => {
+          setCurrentPrice((prev) => {
+            return {
+              ...prev,
+              [res?.coinName]: res?.price,
+            };
+          });
+        })
+        .catch((err) => console.log("Error", err));
+    });
+    return tempArr;
+  };
+
+  useEffect(() => {
+    getCoinPrice(location?.state?.indexData?.coins)
+      .then((res) => {
+        setCurrentPrice(res);
+      })
+      .catch((err) => console.log("Error", err));
+  }, []);
+
   useEffect(() => {
     return () => {
       setCurrentPrice({});
@@ -50,8 +76,6 @@ const TransactionSummary = () => {
   }, []);
 
   useEffect(() => {
-    console.log("ReadyState transSumm", ws.readyState);
-    console.log("socketPayload", socketPayload);
     if (socketPayload) {
       var array = JSON.stringify({
         time: new Date().getTime,
@@ -111,14 +135,12 @@ const TransactionSummary = () => {
         finalBid = (Number(currentPrice) + Number(bid)).toFixed(
           decimals?.length
         );
-        console.log(finalBid);
         // return Number(currentPrice) + Number("0.".concat(bidQuote?.join("")));
         return finalBid;
       case "sell":
         finalBid = (Number(currentPrice) - Number(bid)).toFixed(
           decimals?.length
         );
-        console.log(finalBid);
         // return Number(currentPrice) - Number("0.".concat(bidQuote?.join("")));
         return finalBid;
       default:
@@ -203,14 +225,10 @@ const TransactionSummary = () => {
 
   useEffect(() => {
     console.log("length", Object.keys(status).length, socketPayload.length);
-    console.log("Counter", counter);
     if (Object.keys(status).length == socketPayload.length) {
-      console.log("condition passed");
       setisOpen(true);
       setIsLoading(false);
       // setBuyPrice("");
-    } else {
-      console.log("condition failed");
     }
   }, [counter, status]);
 
