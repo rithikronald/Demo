@@ -5,7 +5,7 @@ import "./style.css";
 const Splash = () => {
   // const navigate = useNavigate();
   // useEffect(() => {
-  //   setTimeout(() => navigate("/loigin"), 2000);
+  //   setTimeout(() => navigate("/dash"), 2000);
   // }, []);
   return (
     <div className="App flex flex-col h-screen w-full bg-gradient-to-tr from-slate-900 to-purple-800  items-center justify-center">

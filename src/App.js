@@ -19,9 +19,7 @@ const makeRoutes = () => {
         <Route
           path={route.path}
           element={
-            <Suspense
-              fallback={<div data-stage></div>}
-            >
+            <Suspense fallback={<div data-stage></div>}>
               <route.component />
             </Suspense>
           }
@@ -59,6 +57,7 @@ function App() {
           })
           .catch((err) => console.log("Error", err));
       }
+      navigate("/dashboard");
     } else {
       navigate("/login");
     }
