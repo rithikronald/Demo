@@ -84,7 +84,7 @@ const Kyc1 = (props) => {
         </>
       ) : kycStatus ? (
         kycStatus == "completed" ? (
-          <div className="p-4 justify-center">
+          <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
             <img
               className="w-40 h-40"
               src={require("../../../assets/greenVerifiedIcon2.png")}
@@ -94,7 +94,7 @@ const Kyc1 = (props) => {
             </p>
           </div>
         ) : (
-          <div className="p-4 justify-center">
+          <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
             <img src={require("../../../assets/cil_face-dead.png")} />
             <p className="font-mont text-white text-xl font-semibold mt-4">
               Verification Failed
