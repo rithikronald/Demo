@@ -57,7 +57,7 @@ function App() {
           })
           .catch((err) => console.log("Error", err));
       }
-      navigate("/dashboard");
+      // navigate("/dashboard");
     } else {
       navigate("/login");
     }

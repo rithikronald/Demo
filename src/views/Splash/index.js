@@ -3,10 +3,20 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 const Splash = () => {
+  const navigate = useNavigate();
   // const navigate = useNavigate();
   // useEffect(() => {
   //   setTimeout(() => navigate("/dash"), 2000);
   // }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("uid")) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
   return (
     <div className="App flex flex-col h-screen w-full bg-gradient-to-tr from-slate-900 to-purple-800  items-center justify-center">
       <p className="text-xl text-center text-white font-medium 3xl:text-3xl ">
