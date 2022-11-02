@@ -175,6 +175,7 @@ const TransactionSummary = () => {
         current_price: getBidPrice("buy", currentPrice[item]),
       });
     });
+    setFirstRequest(true)
   };
 
   const retryOrders = async () => {
@@ -232,6 +233,10 @@ const TransactionSummary = () => {
     }
   }, [counter, status]);
 
+  const [inputTouched, setInputTouched] = useState(false);
+  const [firstRequest, setFirstRequest] = useState(false)
+  const [requestStatus, setRequestStatus] = useState(location?.state?.indexData?.coins?.map(() => false))
+
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
       {isOpen && (
@@ -268,7 +273,8 @@ const TransactionSummary = () => {
                       <GradientContainer
                         className={"mt-4"}
                         children={
-                          <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4">
+                          <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4 relative">
+                             {firstRequest && <div className={`bg-${status[`${item}_USDT`] !== 400 ? 'green' : 'red'}-500 rounded-full h-[20px] w-[20px] absolute right-[10px] top-1/2 -translate-y-1/2`} ></div>}
                             <img
                               alt="btc"
                               className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
@@ -314,7 +320,12 @@ const TransactionSummary = () => {
                         <div className="w-full h-full flex justify-center items-center px-2">
                           <p className="text-3xl text-white font-semibold">$</p>
                           <input
-                            onChange={(e) => setBuyPrice(e.target.value)}
+                            onChange={(e) => {
+                              if (!inputTouched) {
+                                setInputTouched(true);
+                              }
+                              setBuyPrice(e.target.value);
+                            }}
                             value={buyPrice}
                             type="text"
                             className="h-full w-full bg-transparent font-semibold focus:outline-none text-white text-2xl rounded-2xl text-center form-control"
@@ -323,6 +334,16 @@ const TransactionSummary = () => {
                       }
                     />
                   </div>
+                  {inputTouched &&
+                  parseFloat(buyPrice) <
+                    location?.state?.indexData?.coins?.length * 10 + 5 ? (
+                    <p className="w-full pl-[20px] mt-[10px] font-mont font-bold text-red-500 text-[14px]">
+                      Minimum Input Amount is $
+                      {location?.state?.indexData?.coins?.length * 10 + 5}
+                    </p>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>

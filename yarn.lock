@@ -9426,22 +9426,15 @@ react-smooth@^2.0.1:
     fast-equals "^2.0.0"
     react-transition-group "2.9.0"
 
-<<<<<<< HEAD
-"react-spinners@^0.13.6":
-  "integrity" "sha512-+VoSs1wN6oMhJy7PzCPiHUt6zUi9fvnGQizem8q/NzXhGovbdXFDWNhspk6KEKXQEafInUtpvtDlp/zJ5sES/A=="
-  "resolved" "https://registry.npmjs.org/react-spinners/-/react-spinners-0.13.6.tgz"
-  "version" "0.13.6"
+react-spinners@^0.13.6:
+  version "0.13.6"
+  resolved "https://registry.npmjs.org/react-spinners/-/react-spinners-0.13.6.tgz"
+  integrity sha512-+VoSs1wN6oMhJy7PzCPiHUt6zUi9fvnGQizem8q/NzXhGovbdXFDWNhspk6KEKXQEafInUtpvtDlp/zJ5sES/A==
 
-"react-stepper-horizontal@^1.0.11":
-  "integrity" "sha512-Sn6BM9+5Y0QW3K6SR49HeZzDJ/GYbzSrRKZ4TTjI58V7y4HwnAvY9tjVIK5kjAdHfR8hJJSHKfTazXmqZ/iPIQ=="
-  "resolved" "https://registry.npmjs.org/react-stepper-horizontal/-/react-stepper-horizontal-1.0.11.tgz"
-  "version" "1.0.11"
-=======
 react-stepper-horizontal@^1.0.11:
   version "1.0.11"
   resolved "https://registry.npmjs.org/react-stepper-horizontal/-/react-stepper-horizontal-1.0.11.tgz"
   integrity sha512-Sn6BM9+5Y0QW3K6SR49HeZzDJ/GYbzSrRKZ4TTjI58V7y4HwnAvY9tjVIK5kjAdHfR8hJJSHKfTazXmqZ/iPIQ==
->>>>>>> 19c45eb394f8b50223f3c61b23506eedf46d5b99
   dependencies:
     prop-types "^15.5.10"
     react "^15.3.2"
