@@ -6,6 +6,7 @@ import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { FilterComponent } from "./filterComponent";
 import { numFormatter } from "../../utility/kFormatter";
 import { ws } from "../../App";
+import { coinTickerList } from "../../constants/SocketCoinTickerList";
 
 export const Table = ({ openModal, data, title, price }) => {
   const navigate = useNavigate();
@@ -14,21 +15,12 @@ export const Table = ({ openModal, data, title, price }) => {
   const [coinData, setCoinData] = useState();
   const [currentPrice, setCurrentPrice] = useState(0);
 
-  // function onmessage(evt) {
-  //   const data = JSON.parse(evt?.data);
-  //   // console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
-  //   const coinName = data?.result?.currency_pair?.split("_")[0];
-  //   if (coinName && coinName === ) {
-  //     // setCurrentPrice(data?.result?.last);
-  //   }
-  // }
-
-  const getSocketData = (val) => {
+  useEffect(() => {
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.tickers",
       event: "subscribe",
-      payload: [`${val}_USDT`],
+      payload:[],
     });
     if (ws.readyState) {
       console.log("Buy/Sell Sub");
@@ -37,18 +29,13 @@ export const Table = ({ openModal, data, title, price }) => {
         const data = JSON.parse(evt?.data);
         const coinName = data?.result?.currency_pair?.split("_")[0];
         console.log("CoinList", coinName, data?.result?.last);
-        if (coinName && coinName === val) {
-          // setCurrentPrice(data?.result?.last);
-          price(data?.result?.last);
-        }
+        // if (coinName && coinName === val) {
+        //   // setCurrentPrice(data?.result?.last);
+        //   price(data?.result?.last);
+        // }
       };
     }
-    openModal(val);
-  };
-
-  // useEffect(()=>{
-  //   if(openModal)
-  // },[openModal])
+  }, []);
 
   const columns = [
     {
@@ -80,7 +67,6 @@ export const Table = ({ openModal, data, title, price }) => {
     {
       name: "PRICE",
       selector: (row) => {
-        const coinData = getCoinMeta(row.ticker);
         return (
           <p className="font-mont text-white text-lg">
             {"$" + Number(row?.price?.value).toFixed(10)}
@@ -160,13 +146,13 @@ export const Table = ({ openModal, data, title, price }) => {
       selector: (row) => (
         <div className="flex gap-x-3">
           <button
-            onClick={() => getSocketData(row?.ticker)}
+            onClick={() => openModal(row?.ticker)}
             className="p-2.5 px-5 font-semibold rounded-xl text-white font-mont bg-green-600"
           >
             Buy
           </button>
           <button
-            onClick={() => getSocketData(row?.ticker)}
+            onClick={() => openModal(row?.ticker)}
             className="p-1.5 px-5 font-semibold rounded-xl text-white font-mont bg-red-600"
           >
             Sell

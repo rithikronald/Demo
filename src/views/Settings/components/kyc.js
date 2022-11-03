@@ -30,7 +30,14 @@ const Kyc1 = (props) => {
                 inquiryId,
               })
               .then((res) => {
-                console.log("KYC Response", res?.data, "Status", status);
+                console.log(
+                  "KYC Response",
+                  res?.data,
+                  "Status :",
+                  status,
+                  "InquiryId :",
+                  inquiryId
+                );
                 setKycStatus(status);
                 localStorage.setItem("kycStatus", status);
                 setBeginKYC(false);
