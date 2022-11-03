@@ -21,9 +21,6 @@ const Kyc1 = (props) => {
         <Persona.Inquiry
           templateId="itmpl_jn1nNDs3wMGuoBajLvmT5t5h"
           environment="production"
-          onLoad={() => {
-            console.log("Loaded inline");
-          }}
           onComplete={({ inquiryId, status }) => {
             maximumInstance
               .post(`/kycUserMap/${localStorage.getItem("uid")}`, {

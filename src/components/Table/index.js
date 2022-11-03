@@ -14,6 +14,7 @@ export const Table = ({ openModal, data, title, price }) => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [coinData, setCoinData] = useState();
   const [currentPrice, setCurrentPrice] = useState(0);
+  const [percentage, setPercentage] = useState();
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
@@ -26,148 +27,27 @@ export const Table = ({ openModal, data, title, price }) => {
           [`${coinName}`]: data?.result?.last,
         };
       });
+      setPercentage((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.change_percentage,
+        };
+      });
     }
   }
 
-  useEffect(() => {
-    console.log("CoinList", Object.keys(currentPrice)?.length);
-  }, [currentPrice]);
+  // useEffect(() => {
+  //   console.log("CoinList", currentPrice);
+  // }, [currentPrice]);
 
   useEffect(() => {
     console.log(ws.readyState);
-    setCurrentPrice([]);
+    // setCurrentPrice([]);
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.tickers",
       event: "subscribe",
-      payload: [
-        "1INCH_USDT",
-        "AAVE_USDT",
-        "ADA_USDT",
-        "AKT_USDT",
-        "ALGO_USDT",
-        "AURORA_USDT",
-        "APE_USDT",
-        "API3_USDT",
-        "AR_USDT",
-        "ATOM_USDT",
-        "AUDIO_USDT",
-        "AURORA_USDT",
-        "AVAX_USDT",
-        "AXS_USDT",
-        "BAL_USDT",
-        "BAT_USDT",
-        "BCH_USDT",
-        "BIT_USDT",
-        "BLZ_USDT",
-        "BNB_USDT",
-        "BTC_USDT",
-        "BTT_USDT",
-        "CAKE_USDT",
-        "CELO_USDT",
-        "CHZ_USDT",
-        "CKB_USDT",
-        "COMP_USDT",
-        "CQT_USDT",
-        "CRO_USDT",
-        "CRV_USDT",
-        "CSPR_USDT",
-        "DASH_USDT",
-        "DFI_USDT",
-        "DG_USDT",
-        "DOGE_USDT",
-        "DOT_USDT",
-        "EGLD_USDT",
-        "ENJ_USDT",
-        "ENS_USDT",
-        "EOS_USDT",
-        "ETC_USDT",
-        "ETH_USDT",
-        "ETHW_USDT",
-        "FIL_USDT",
-        "FLOKI_USDT",
-        "FLOW_USDT",
-        "FLUX_USDT",
-        "FRAX_USDT",
-        "FTM_USDT",
-        "FTT_USDT",
-        "GALA_USDT",
-        "GLQ_USDT",
-        "GMT_USDT",
-        "GRT_USDT",
-        "GT_USDT",
-        "HBAR_USDT",
-        "HNS_USDT",
-        "HNT_USDT",
-        "HOT_USDT",
-        "HT_USDT",
-        "ICP_USDT",
-        "IMX_USDT",
-        "INJ_USDT",
-        "IOTX_USDT",
-        "KAVA_USDT",
-        "KDA_USDT",
-        "KLAY_USDT",
-        "KSM_USDT",
-        "LDO_USDT",
-        "LEO_USDT",
-        "LINK_USDT",
-        "LIT_USDT",
-        "LRC_USDT",
-        "LTC_USDT",
-        "MANA_USDT",
-        "MATIC_USDT",
-        "MBOX_USDT",
-        "MINA_USDT",
-        "IOTA_USDT",
-        "MKR_USDT",
-        "MXC_USDT",
-        "NEAR_USDT",
-        "NEO_USDT",
-        "NEXO_USDT",
-        "OCEAN_USDT",
-        "OKB_USDT",
-        "ONE_USDT",
-        "ONT_USDT",
-        "OP_USDT",
-        "OSMO_USDT",
-        "PRQ_USDT",
-        "PUSH_USDT",
-        "QNT_USDT",
-        "RARI_USDT",
-        "RNDR_USDT",
-        "ROSE_USDT",
-        "RUNE_USDT",
-        "RVN_USDT",
-        "SAND_USDT",
-        "SC_USDT",
-        "SHIB_USDT",
-        "SNX_USDT",
-        "SOL_USDT",
-        "SRM_USDT",
-        "STX_USDT",
-        "SUSHI_USDT",
-        "THETA_USDT",
-        "TLOS_USDT",
-        "TON_USDT",
-        "TRX_USDT",
-        "TWT_USDT",
-        "UNI_USDT",
-        "VET_USDT",
-        "WAVES_USDT",
-        "WAXP_USDT",
-        "XCN_USDT",
-        "XEC_USDT",
-        "XEM_USDT",
-        "XLM_USDT",
-        "XMR_USDT",
-        "XRD_USDT",
-        "XRP_USDT",
-        "XTZ_USDT",
-        "XYO_USDT",
-        "ZEC_USDT",
-        "ZIL_USDT",
-      ],
+      payload: coinTickerList,
     });
     if (ws.readyState) {
       console.log("CLEARED");
@@ -175,25 +55,25 @@ export const Table = ({ openModal, data, title, price }) => {
     }
     ws.onmessage = onmessage;
 
-    // return () => {
-    //   if (ws.readyState) {
-    //     var array = JSON.stringify({
-    //       time: Date.now(),
-    //       channel: "spot.tickers",
-    //       event: "unsubscribe",
-    //       payload: [
-    //         "ETH_USDT",
-    //         "BNB_USDT",
-    //         "XRP_USDT",
-    //         "ADA_USDT",
-    //         "SOL_USDT",
-    //         "DOGE_USDT",
-    //         "DOT_USDT",
-    //       ],
-    //     });
-    //     ws.send(array);
-    //   }
-    // };
+    //   // return () => {
+    //   //   if (ws.readyState) {
+    //   //     var array = JSON.stringify({
+    //   //       time: Date.now(),
+    //   //       channel: "spot.tickers",
+    //   //       event: "unsubscribe",
+    //   //       payload: [
+    //   //         "ETH_USDT",
+    //   //         "BNB_USDT",
+    //   //         "XRP_USDT",
+    //   //         "ADA_USDT",
+    //   //         "SOL_USDT",
+    //   //         "DOGE_USDT",
+    //   //         "DOT_USDT",
+    //   //       ],
+    //   //     });
+    //   //     ws.send(array);
+    //   //   }
+    //   // };
   }, [ws.readyState]);
 
   const columns = [
@@ -228,7 +108,10 @@ export const Table = ({ openModal, data, title, price }) => {
       selector: (row) => {
         return (
           <p className="font-mont text-white text-lg">
-            {"$" + Number(row?.price?.value).toFixed(10)}
+            $
+            {currentPrice?.[row?.ticker]
+              ? currentPrice?.[row?.ticker]
+              : row?.price?.value}
           </p>
         );
       },
@@ -243,7 +126,11 @@ export const Table = ({ openModal, data, title, price }) => {
       name: "24h CHANGE",
       selector: (row) => {
         return (
-          <p className="font-mont text-lg">{row.percent_change_24h + "%"}</p>
+          <p className="font-mont text-lg">
+            {percentage?.[row?.ticker]
+              ? percentage?.[row?.ticker]
+              : row.percent_change_24h}%
+          </p>
         );
       },
       sortable: true,
