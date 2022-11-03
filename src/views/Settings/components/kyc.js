@@ -20,7 +20,7 @@ const Kyc1 = (props) => {
       <div className="w-full h-[98%] flex">
         <Persona.Inquiry
           templateId="itmpl_jn1nNDs3wMGuoBajLvmT5t5h"
-          environment="sandbox"
+          environment="production"
           onLoad={() => {
             console.log("Loaded inline");
           }}
