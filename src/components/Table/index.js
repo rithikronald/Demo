@@ -6,6 +6,7 @@ import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { FilterComponent } from "./filterComponent";
 import { numFormatter } from "../../utility/kFormatter";
 import { ws } from "../../App";
+import { coinTickerList } from "../../constants/SocketCoinTickerList";
 
 export const Table = ({ openModal, data, title, price }) => {
   const navigate = useNavigate();
@@ -13,42 +14,67 @@ export const Table = ({ openModal, data, title, price }) => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [coinData, setCoinData] = useState();
   const [currentPrice, setCurrentPrice] = useState(0);
+  const [percentage, setPercentage] = useState();
 
-  // function onmessage(evt) {
-  //   const data = JSON.parse(evt?.data);
-  //   // console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
-  //   const coinName = data?.result?.currency_pair?.split("_")[0];
-  //   if (coinName && coinName === ) {
-  //     // setCurrentPrice(data?.result?.last);
-  //   }
-  // }
+  function onmessage(evt) {
+    const data = JSON.parse(evt?.data);
+    // console.log("CoinList", data?.result?.currency_pair, data?.result?.last);
+    const coinName = data?.result?.currency_pair?.split("_")[0];
+    if (coinName) {
+      setCurrentPrice((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.last,
+        };
+      });
+      setPercentage((prev) => {
+        return {
+          ...prev,
+          [`${coinName}`]: data?.result?.change_percentage,
+        };
+      });
+    }
+  }
 
-  const getSocketData = (val) => {
+  // useEffect(() => {
+  //   console.log("CoinList", currentPrice);
+  // }, [currentPrice]);
+
+  useEffect(() => {
+    console.log(ws.readyState);
+    // setCurrentPrice([]);
     var array = JSON.stringify({
       time: new Date().getTime,
       channel: "spot.tickers",
       event: "subscribe",
-      payload: [`${val}_USDT`],
+      payload: coinTickerList,
     });
     if (ws.readyState) {
-      console.log("Buy/Sell Sub");
+      console.log("CLEARED");
       ws.send(array);
-      ws.onmessage = (evt) => {
-        const data = JSON.parse(evt?.data);
-        const coinName = data?.result?.currency_pair?.split("_")[0];
-        console.log("CoinList", coinName, data?.result?.last);
-        if (coinName && coinName === val) {
-          // setCurrentPrice(data?.result?.last);
-          price(data?.result?.last);
-        }
-      };
     }
-    openModal(val);
-  };
+    ws.onmessage = onmessage;
 
-  // useEffect(()=>{
-  //   if(openModal)
-  // },[openModal])
+    //   // return () => {
+    //   //   if (ws.readyState) {
+    //   //     var array = JSON.stringify({
+    //   //       time: Date.now(),
+    //   //       channel: "spot.tickers",
+    //   //       event: "unsubscribe",
+    //   //       payload: [
+    //   //         "ETH_USDT",
+    //   //         "BNB_USDT",
+    //   //         "XRP_USDT",
+    //   //         "ADA_USDT",
+    //   //         "SOL_USDT",
+    //   //         "DOGE_USDT",
+    //   //         "DOT_USDT",
+    //   //       ],
+    //   //     });
+    //   //     ws.send(array);
+    //   //   }
+    //   // };
+  }, [ws.readyState]);
 
   const columns = [
     {
@@ -80,10 +106,12 @@ export const Table = ({ openModal, data, title, price }) => {
     {
       name: "PRICE",
       selector: (row) => {
-        const coinData = getCoinMeta(row.ticker);
         return (
           <p className="font-mont text-white text-lg">
-            {"$" + Number(row?.price?.value).toFixed(10)}
+            $
+            {currentPrice?.[row?.ticker]
+              ? currentPrice?.[row?.ticker]
+              : Number(row?.price?.value).toFixed(5)}
           </p>
         );
       },
@@ -98,7 +126,11 @@ export const Table = ({ openModal, data, title, price }) => {
       name: "24h CHANGE",
       selector: (row) => {
         return (
-          <p className="font-mont text-lg">{row.percent_change_24h + "%"}</p>
+          <p className="font-mont text-lg">
+            {percentage?.[row?.ticker]
+              ? percentage?.[row?.ticker]
+              : row.percent_change_24h}%
+          </p>
         );
       },
       sortable: true,
@@ -160,13 +192,13 @@ export const Table = ({ openModal, data, title, price }) => {
       selector: (row) => (
         <div className="flex gap-x-3">
           <button
-            onClick={() => getSocketData(row?.ticker)}
+            onClick={() => openModal(row?.ticker)}
             className="p-2.5 px-5 font-semibold rounded-xl text-white font-mont bg-green-600"
           >
             Buy
           </button>
           <button
-            onClick={() => getSocketData(row?.ticker)}
+            onClick={() => openModal(row?.ticker)}
             className="p-1.5 px-5 font-semibold rounded-xl text-white font-mont bg-red-600"
           >
             Sell

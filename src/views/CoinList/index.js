@@ -32,7 +32,7 @@ const CoinList = (props) => {
         <div className="TableWithOptions">
           {coinList && currentPrice != {} && (
             <Table
-              title={"All Coins"}
+              title="All Coins"
               data={coinList}
               currentPrice={currentPrice}
               openModal={(val) => {

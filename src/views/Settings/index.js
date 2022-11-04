@@ -23,9 +23,8 @@ const Settings = () => {
 
   const logout = () => {
     signOut(auth)
-      .then((res) => {
-        console.log("USER LOGGED OUT", res);
-        // setPageRightIndex(1);
+      .then(() => {
+        console.log("USER LOGGED OUT");
       })
       .catch((error) => {
         console.log("Error", error);

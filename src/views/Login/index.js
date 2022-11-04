@@ -19,6 +19,13 @@ const Login = () => {
   const [OTP, setOTP] = useState("");
   const [countryCode, setCountryCode] = useState("🇮🇳 (+91) India");
 
+  useEffect(() => {
+    window.history.pushState(null, document.title, window.location.href);
+    window.addEventListener("popstate", function (event) {
+      window.history.pushState(null, document.title, window.location.href);
+    });
+  }, []);
+
   const generateRecaptcha = () => {
     return (window.recaptchaVerifier = new RecaptchaVerifier(
       "sign-in-button",

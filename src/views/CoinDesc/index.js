@@ -6,6 +6,7 @@ import { ws } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { CustomLineChart } from "../../components/Charts/CustomLineChart";
 import { GradientContainer } from "../../components/GradientContainer";
+import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import { getCurrentPrice } from "../../utility/getCurrentPrice";
@@ -28,6 +29,7 @@ const CoinDesc = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentPrice, setCurrentPrice] = useState();
   const [tempPrice, setTempPrice] = useState();
+  const [metaData, setMetaData] = useState();
   const location = useLocation();
   const params = useParams();
 
@@ -72,6 +74,13 @@ const CoinDesc = (props) => {
       })
       .catch((e) => console.log("Error", e));
   }, []);
+
+  useEffect(() => {
+    if (location?.state?.coin) {
+      let data = getCoinMeta(location?.state?.coin);
+      setMetaData(data);
+    }
+  }, [location?.state?.coin]);
 
   useEffect(() => {
     props.openLoader();
@@ -164,14 +173,14 @@ const CoinDesc = (props) => {
             <div style={{ flex: 1 }}>
               <div className="flex items-center">
                 <p className="text-3xl font-mont text-white font-bold">
-                  {data?.slug}
+                  {metaData?.slug}
                 </p>
                 <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
-                  {data?.ticker}
+                  {metaData?.ticker}
                 </p>
               </div>
               <p className="font-mont text-white text-sm mt-8 pr-[40px]">
-                {data?.description}
+                {metaData?.description}
               </p>
             </div>
             <div className="flex-col justify-between text-white flex justify-">
@@ -264,14 +273,14 @@ const CoinDesc = (props) => {
             <div style={{ flex: 1 }}>
               <div className="flex items-center">
                 <p className="text-3xl font-mont text-white font-bold">
-                  {data?.slug}
+                  {metaData?.slug}
                 </p>
                 <p className="text-[29px] ml-[10px] font-bold font-mont text-white opacity-20">
-                  {data?.ticker}
+                  {metaData?.ticker}
                 </p>
               </div>
               <p className="font-mont text-white text-sm mt-8 pr-[40px]">
-                {data?.description}
+                {metaData?.description}
               </p>
             </div>
             <div className="flex-col justify-between text-white flex justify-">
@@ -386,7 +395,11 @@ const CoinDesc = (props) => {
               <CustomAreaChart
                 width={"100%"}
                 height={"98%"}
-                data={data?.active_addresses?.value ? arrGen(data?.active_addresses[`change_${priceIndex}`]) : arrGen(data?.unique_social_volume[`change_${priceIndex}`])}
+                data={
+                  data?.active_addresses?.value
+                    ? arrGen(data?.active_addresses[`change_${priceIndex}`])
+                    : arrGen(data?.unique_social_volume[`change_${priceIndex}`])
+                }
               />
             )}
           </GradientContainer>
@@ -492,7 +505,11 @@ const CoinDesc = (props) => {
           <div
             className={`text-[15px] text-white font-mont flex space-x-4 items-center`}
           >
-            <p style={{ transform: "translateX(20px)" }}>{data?.active_holders_distribution_total?.change_1d?.length > 0 ?"Active Holders Distribution Total" : "Social Volume Twitter"}</p>
+            <p style={{ transform: "translateX(20px)" }}>
+              {data?.active_holders_distribution_total?.change_1d?.length > 0
+                ? "Active Holders Distribution Total"
+                : "Social Volume Twitter"}
+            </p>
           </div>
           <GradientContainer
             height={"h-[130px]"}
@@ -500,7 +517,15 @@ const CoinDesc = (props) => {
             className={`flex items-center mt-2 `}
           >
             <CustomAreaChart
-              data={data?.active_holders_distribution_total?.change_1d?.length > 0 ? arrGen(data?.active_holders_distribution_total[`change_${priceIndex}`]) : arrGen(data?.twitter_followers[`change_${priceIndex}`])}
+              data={
+                data?.active_holders_distribution_total?.change_1d?.length > 0
+                  ? arrGen(
+                      data?.active_holders_distribution_total[
+                        `change_${priceIndex}`
+                      ]
+                    )
+                  : arrGen(data?.twitter_followers[`change_${priceIndex}`])
+              }
               width={"100%"}
               height={"98%"}
             />

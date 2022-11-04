@@ -20,17 +20,21 @@ const Kyc1 = (props) => {
       <div className="w-full h-[98%] flex">
         <Persona.Inquiry
           templateId="itmpl_jn1nNDs3wMGuoBajLvmT5t5h"
-          environment="sandbox"
-          onLoad={() => {
-            console.log("Loaded inline");
-          }}
+          environment="production"
           onComplete={({ inquiryId, status }) => {
             maximumInstance
               .post(`/kycUserMap/${localStorage.getItem("uid")}`, {
                 inquiryId,
               })
               .then((res) => {
-                console.log("KYC Response", res?.data, "Status", status);
+                console.log(
+                  "KYC Response",
+                  res?.data,
+                  "Status :",
+                  status,
+                  "InquiryId :",
+                  inquiryId
+                );
                 setKycStatus(status);
                 localStorage.setItem("kycStatus", status);
                 setBeginKYC(false);
