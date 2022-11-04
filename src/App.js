@@ -9,7 +9,7 @@ import axios from "axios";
 import { maximumInstance } from "./setup";
 import Loader from "./components/Loader";
 import { useWindowDimensions } from "./hooks/useWindowDimension";
-import logo from './assets/logo.svg'
+import logo from "./assets/logo.svg";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://api.gateio.ws/ws/v4/";
 export const ws = new WebSocketClient(WS_URL);
@@ -69,7 +69,7 @@ function App() {
     auth.onAuthStateChanged(onAuthStateChanged);
   }, []);
 
-  const {width} = useWindowDimensions()
+  const { width } = useWindowDimensions();
   const small = width < 1100;
 
   return !small ? (
@@ -78,11 +78,25 @@ function App() {
       <Sidebar />
       {makeRoutes()}
     </div>
-  ) : (<div className="">
-    <img src={require("./assets/chadBackground.png")} className="fixed top-0 left-0 h-screen w-screen object-cover " />
-    <img src={logo} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-[200px] h-[200px]" />
-    <p className="font-mont text-white text-[20px] fixed top-1/2 left-1/2 -translate-x-1/2 text-center">Please use a larger screen to view <span className="font-bold text-[22px]">Maximum Protocol</span></p>
-  </div>)
+  ) : (
+    <div className="">
+      <img
+        src={require("./assets/chadBackground.png")}
+        className="fixed top-0 left-0 h-screen w-screen object-cover "
+      />
+      <img
+        src={logo}
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-[200px] h-[200px]"
+      />
+      <p className="font-mont text-white text-[20px] fixed top-1/2 left-1/2 -translate-x-1/2 text-center">
+        Maximum Protocol is only available on web version.
+        <span className="font-bold text-[22px]">
+          {" "}
+          Mobile version comming soon.
+        </span>
+      </p>
+    </div>
+  );
 }
 
 export default App;
