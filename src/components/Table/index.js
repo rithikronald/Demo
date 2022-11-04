@@ -111,7 +111,7 @@ export const Table = ({ openModal, data, title, price }) => {
             $
             {currentPrice?.[row?.ticker]
               ? currentPrice?.[row?.ticker]
-              : row?.price?.value}
+              : Number(row?.price?.value).toFixed(5)}
           </p>
         );
       },

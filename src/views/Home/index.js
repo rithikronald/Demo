@@ -201,7 +201,7 @@ const Home = (props) => {
           <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
             <Stepper
               steps={[{ title: "" }, { title: "" }, { title: "" }]}
-              activeStep={1}
+              activeStep={"none"}
             />
             <div className="px-[15%] flex justify-between">
               <p className="font-mont text-white text-[13px]">Step 1</p>
@@ -224,7 +224,7 @@ const Home = (props) => {
             </div>
             <div className="px-[15%]">
               <p className="font-mont text-white font-bold text-[14px] pt-[10px]">
-                36% Completed
+                0% Completed
               </p>
             </div>
           </div>

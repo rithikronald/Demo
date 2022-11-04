@@ -70,7 +70,7 @@ function App() {
   }, []);
 
   const { width } = useWindowDimensions();
-  const small = width < 1100;
+  const small = width < 900;
 
   return !small ? (
     <div className="App flex">
@@ -89,7 +89,7 @@ function App() {
         className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-[200px] h-[200px]"
       />
       <p className="font-mont text-white text-[20px] fixed top-1/2 left-1/2 -translate-x-1/2 text-center">
-        Maximum Protocol is only available on web version.
+        Maximum Protocol is only available on desktop version.
         <span className="font-bold text-[22px]">
           {" "}
           Mobile version comming soon.
