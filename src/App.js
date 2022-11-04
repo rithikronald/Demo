@@ -79,7 +79,7 @@ function App() {
       {makeRoutes()}
     </div>
   ) : (
-    <div className="">
+    <div className="flex w-full h-full justify-center items-center">
       <img
         src={require("./assets/chadBackground.png")}
         className="fixed top-0 left-0 h-screen w-screen object-cover "
@@ -88,13 +88,10 @@ function App() {
         src={logo}
         className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-[200px] h-[200px]"
       />
-      <p className="font-mont text-white text-[20px] fixed top-1/2 left-1/2 -translate-x-1/2 text-center">
-        Maximum Protocol is only available on desktop version.
-        <span className="font-bold text-[22px]">
-          {" "}
-          Mobile version comming soon.
-        </span>
-      </p>
+      <div className="font-mont text-white w-[80%] text-[20px] fixed top-1/2  text-center">
+        <p>Maximum Protocol is only available on desktop version.</p>
+        <p className="font-semibold">Mobile version comming soon.</p>
+      </div>
     </div>
   );
 }

@@ -23,8 +23,8 @@ const Settings = () => {
 
   const logout = () => {
     signOut(auth)
-      .then((res) => {
-        console.log("USER LOGGED OUT", res);
+      .then(() => {
+        console.log("USER LOGGED OUT");
       })
       .catch((error) => {
         console.log("Error", error);
