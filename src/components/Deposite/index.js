@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import { GradientContainer } from "../GradientContainer";
 
-export const Deopsite = ({balance}) => {
+export const Deopsite = ({ balance }) => {
   const [currencyChain, setCurrencyChain] = useState();
   const [ticker, setTicker] = useState();
   const [walletAddress, setWalletAddress] = useState();
@@ -25,11 +25,14 @@ export const Deopsite = ({balance}) => {
 
   useEffect(() => {
     axios({
-      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/generateDepositAddress/QrUR3ejnnTY9mgTOLN4dqMwttVP2/USDC`,
+      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/getDepositAddress/${localStorage.getItem(
+        "uid"
+      )}/USDT`,
       method: "get",
     })
       .then((res) => {
-        setCurrencyChain(res?.data);
+        console.log("####################", res?.data);
+        setCurrencyChain(res?.data?.USDT);
       })
       .catch((err) => {
         console.log(err);
@@ -57,7 +60,7 @@ export const Deopsite = ({balance}) => {
                   Select Token
                 </p>
                 <div className="flex mt-2 space-x-1 justify-between">
-                  <button
+                  {/* <button
                     onClick={() => setTicker("USDC")}
                     className={`rounded-3xl p-2 w-[30%] ${
                       ticker == "USDC" && "ring-2"
@@ -71,12 +74,12 @@ export const Deopsite = ({balance}) => {
                     <p className="text-white ml-1 font-semibold text-xs">
                       USDC
                     </p>
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => setTicker("USDT")}
                     className={`rounded-3xl p-2 w-[30%] ${
                       ticker == "USDT" && "ring-2"
-                    } bg-maxPurple focus:ring-2 ring-white flex justify-center items-center`}
+                    } bg-maxPurple ring-2 ring-white flex justify-center items-center ml-2`}
                   >
                     <img
                       alt="vector"
@@ -87,7 +90,7 @@ export const Deopsite = ({balance}) => {
                       USDT
                     </p>
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => setTicker("BUSD")}
                     className={`rounded-3xl p-2 w-[30%] gap-2 ${
                       ticker == "BUSD" && "ring-2"
@@ -101,7 +104,7 @@ export const Deopsite = ({balance}) => {
                     <p className="text-white ml-1 text-xs font-semibold">
                       BUSD
                     </p>
-                  </button>
+                  </button> */}
                 </div>
                 <p className="text-white font-semibold text-xs ml-2 mb-1 mt-6">
                   Select Chain
@@ -203,7 +206,8 @@ export const Deopsite = ({balance}) => {
             <div className="rounded-3xl h-full flex flex-col p-4">
               <p className="text-gray-400 text-sm">Available Balance</p>
               <p className="text-white font-bold text-2xl 2xl:text-3xl 3xl:text-5xl">
-                <span className="font-normal">$</span>{balance}
+                <span className="font-normal">$</span>
+                {balance}
               </p>
             </div>
           }

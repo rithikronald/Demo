@@ -9,10 +9,10 @@ import SetupSIP from "../../components/RightComponent/setupSIP";
 import { indBgImgList } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
 import moment from "moment";
+import { maximumInstance } from "../../App";
 
 const Indexes = (props) => {
   const navigate = useNavigate();

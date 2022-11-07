@@ -108,7 +108,7 @@ const TransactionSummary = () => {
   useEffect(() => {
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/${localStorage.getItem('uid')}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -205,7 +205,7 @@ const TransactionSummary = () => {
     };
     await axios
       .post(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/${localStorage.getItem('uid')}`,
         body
       )
       .then((response) => {

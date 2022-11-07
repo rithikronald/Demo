@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { maximumInstance } from "../../App";
 import { Table } from "../../components/Table";
-import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import Modal from "../CoinDesc/modal";
 import "./style.css";

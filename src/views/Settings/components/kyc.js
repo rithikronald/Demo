@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./kyc.css";
 import Persona from "persona";
 import Modal from "react-bootstrap/Modal";
-import { maximumInstance } from "../../../setup";
+import { maximumInstance } from "../../../App";
 
 const stages = {
   INTRO: "INTRO",

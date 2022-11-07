@@ -60,7 +60,9 @@ const WalletOverView = (props) => {
     setTicker(arr[0].ticker);
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/${localStorage.getItem(
+          "uid"
+        )}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -103,12 +105,15 @@ const WalletOverView = (props) => {
           "ticker.subscribe",
           response?.data?.map((item) => `${item?.currency}_USDT`)
         );
+        props?.closeLoader();
       })
       .catch((err) => console.log("error", err));
 
     // transaction history
     axios({
-      url: "https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/tradingHistory/QrUR3ejnnTY9mgTOLN4dqMwttVP2",
+      url: `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/tradingHistory/${localStorage.getItem(
+        "uid"
+      )}`,
       method: "get",
       headers: { "Content-Type": "application/json" },
     })
@@ -151,11 +156,11 @@ const WalletOverView = (props) => {
     setUsdtSum(usdtSum);
   }, [coinList, currentPrice]);
 
-  useEffect(() => {
-    if (availableBal) {
-      props.closeLoader();
-    }
-  }, [availableBal]);
+  // useEffect(() => {
+  //   if (availableBal) {
+  //     props.closeLoader();
+  //   }
+  // }, [availableBal]);
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
@@ -240,59 +245,65 @@ const WalletOverView = (props) => {
                 <div className="w-full h-full rounded-2xl flex p-4 flex-col px-4">
                   <p className="text-white text-sm font-medium">Assets</p>
                   <div className="assetsContainer flex flex-col h-full  overflow-y-scroll pt-8">
-                    {coinList?.map(
-                      (ele) =>
-                        ele?.available != 0 && (
-                          <div className="flex mt-1 justify-between my-1">
-                            <button
-                              onClick={() => {
-                                navigate(`/coin-desc/${ele.currency}`, {
-                                  state: { coin: ele.currency },
-                                });
-                              }}
-                              className="flex"
-                            >
-                              <img
-                                alt="btc"
-                                className="h-8 w-8 rounded-full bg-white"
-                                src={getCoinMeta(ele.currency)?.logoUrl}
-                              />
-                              <div className="ml-2">
-                                <div className="flex items-center">
-                                  <p className=" text-white text-sm font-semibold">
-                                    {ele.currency}
-                                  </p>
-                                  <p className=" text-white font-semibold text-[10px] ml-2">
-                                    {getCoinMeta(ele.currency)?.slug}
-                                  </p>
-                                </div>
-                                <div className="h-[6px] w-full rounded-lg bg-yellow-400" />
-                              </div>
-                            </button>
-                            <div className="mr-1">
-                              <p
-                                style={{ textAlign: "right" }}
-                                className="font-bold text-sm text-white"
+                    {coinList && coinList.length > 1 ? (
+                      coinList?.map(
+                        (ele) =>
+                          ele?.available != 0 && (
+                            <div className="flex mt-1 justify-between my-1">
+                              <button
+                                onClick={() => {
+                                  navigate(`/coin-desc/${ele.currency}`, {
+                                    state: { coin: ele.currency },
+                                  });
+                                }}
+                                className="flex"
                               >
-                                {Number(ele?.available).toFixed(7)}
-                              </p>
-                              <div className=" text-white text-[9px] flex items-end justify-end">
-                                <p>
-                                  $
-                                  {ele.currency == "USDT"
-                                    ? Number(ele.available).toFixed(8)
-                                    : ele.available != 0 &&
-                                      currentPrice[ele.currency] &&
-                                      Number(
-                                        ele.available *
-                                          currentPrice[ele.currency]
-                                      ).toFixed(8)}
+                                <img
+                                  alt="btc"
+                                  className="h-8 w-8 rounded-full bg-white"
+                                  src={getCoinMeta(ele.currency)?.logoUrl}
+                                />
+                                <div className="ml-2">
+                                  <div className="flex items-center">
+                                    <p className=" text-white text-sm font-semibold">
+                                      {ele.currency}
+                                    </p>
+                                    <p className=" text-white font-semibold text-[10px] ml-2">
+                                      {getCoinMeta(ele.currency)?.slug}
+                                    </p>
+                                  </div>
+                                  <div className="h-[6px] w-full rounded-lg bg-yellow-400" />
+                                </div>
+                              </button>
+                              <div className="mr-1">
+                                <p
+                                  style={{ textAlign: "right" }}
+                                  className="font-bold text-sm text-white"
+                                >
+                                  {Number(ele?.available).toFixed(7)}
                                 </p>
-                                {/* <p className="text-[7px]">(+{24}%)</p> */}
+                                <div className=" text-white text-[9px] flex items-end justify-end">
+                                  <p>
+                                    $
+                                    {ele.currency == "USDT"
+                                      ? Number(ele.available).toFixed(8)
+                                      : ele.available != 0 &&
+                                        currentPrice[ele.currency] &&
+                                        Number(
+                                          ele.available *
+                                            currentPrice[ele.currency]
+                                        ).toFixed(8)}
+                                  </p>
+                                  {/* <p className="text-[7px]">(+{24}%)</p> */}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )
+                          )
+                      )
+                    ) : (
+                      <p className="text-white font-mont text-xl font-semibold text-center">
+                        No assets found !!
+                      </p>
                     )}
                   </div>
                 </div>

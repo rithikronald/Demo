@@ -6,13 +6,21 @@ import Sidebar from "./components/Sidebar";
 import { auth } from "./firebas-config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { maximumInstance } from "./setup";
 import Loader from "./components/Loader";
 import { useWindowDimensions } from "./hooks/useWindowDimension";
 import logo from "./assets/logo.svg";
+import { MAXIMUM_BASE_URL } from "./setup/index";
 var WebSocketClient = require("websocket").w3cwebsocket;
 const WS_URL = "wss://api.gateio.ws/ws/v4/";
 export const ws = new WebSocketClient(WS_URL);
+
+export const maximumInstance = axios.create({
+  baseURL: MAXIMUM_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  },
+});
 
 const makeRoutes = () => {
   return (
@@ -51,14 +59,9 @@ function App() {
     if (user) {
       localStorage.setItem("accessToken", user.accessToken);
       localStorage.setItem("uid", user.uid);
-      if (user.metadata.creationTime === user.metadata.lastSignInTime) {
-        maximumInstance
-          .get(`/setRole/${user.uid}`)
-          .then((response) => {
-            console.log("CUSTOM ROLE SET", response?.data);
-          })
-          .catch((err) => console.log("Error", err));
-      }
+      maximumInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${user?.accessToken}`;
       // navigate("/dashboard");
     } else {
       navigate("/login");

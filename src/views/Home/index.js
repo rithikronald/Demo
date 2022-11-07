@@ -14,7 +14,6 @@ import {
 } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
-import { maximumInstance } from "../../setup";
 import types from "../../store/types";
 import "./style.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -22,7 +21,7 @@ import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import Stepper from "react-stepper-horizontal";
 import Slider from "../../components/Slider";
-import { ws } from "../../App";
+import { maximumInstance, ws } from "../../App";
 import { getCurrentPrice } from "../../utility/getCurrentPrice";
 
 const Home = (props) => {
@@ -39,6 +38,7 @@ const Home = (props) => {
   const [smartSuggestList, setSmartSuggestList] = useState();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [percentageChange, setPercentageChange] = useState();
+  const [kycStatus, setKycStatus] = useState();
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
@@ -108,10 +108,11 @@ const Home = (props) => {
   useEffect(() => {
     props.openLoader();
     maximumInstance
-      .get(`/dashboard`)
+      .get(`/dashboard/${localStorage?.getItem("uid")}`)
       .then((response) => {
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
+        setKycStatus(response?.data?.KycStatus?.status);
         props.closeLoader();
       })
       .catch((err) => {
@@ -201,7 +202,7 @@ const Home = (props) => {
           <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
             <Stepper
               steps={[{ title: "" }, { title: "" }, { title: "" }]}
-              activeStep={"none"}
+              activeStep={kycStatus == "completed" ? 0 : "none"}
             />
             <div className="px-[15%] flex justify-between">
               <p className="font-mont text-white text-[13px]">Step 1</p>
@@ -220,11 +221,11 @@ const Home = (props) => {
               </p>
             </div>
             <div className="px-[15%] pt-[20px]">
-              <Slider />
+              <Slider value={kycStatus == "completed" ? 30 : 0} />
             </div>
             <div className="px-[15%]">
               <p className="font-mont text-white font-bold text-[14px] pt-[10px]">
-                0% Completed
+                {kycStatus == "completed" ? 30 : 0}% Completed
               </p>
             </div>
           </div>

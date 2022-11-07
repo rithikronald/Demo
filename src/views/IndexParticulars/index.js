@@ -16,8 +16,7 @@ import SetupSIP from "../../components/RightComponent/setupSIP";
 import axios from "axios";
 import { numFormatter } from "../../utility/kFormatter";
 import moment from "moment";
-import { maximumInstance } from "../../setup";
-import { userIdContext } from "../../App";
+import { maximumInstance, userIdContext } from "../../App";
 import types from "../../store/types";
 import { connect } from "react-redux";
 
