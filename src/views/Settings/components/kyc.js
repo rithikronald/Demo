@@ -14,6 +14,7 @@ const stages = {
 const Kyc1 = (props) => {
   const [beginKYC, setBeginKYC] = useState(false);
   const [kycStatus, setKycStatus] = useState("");
+  const [embedStatus, setEmbedStatus] = useState();
 
   const InlineInquiry = () => {
     return (
@@ -35,9 +36,9 @@ const Kyc1 = (props) => {
                   "InquiryId :",
                   inquiryId
                 );
-                setKycStatus(status);
-                localStorage.setItem("kycStatus", status);
+                setKycStatus(localStorage.getItem("isKycVerified"));
                 setBeginKYC(false);
+                setEmbedStatus(status);
               })
               .catch((err) => console.log("error", err));
           }}
@@ -87,7 +88,7 @@ const Kyc1 = (props) => {
           </div>
         </>
       ) : kycStatus ? (
-        kycStatus == "completed" ? (
+        embedStatus == "completed" ? (
           <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
             <img
               className="w-40 h-40"

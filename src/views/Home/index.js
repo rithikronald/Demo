@@ -110,9 +110,13 @@ const Home = (props) => {
     maximumInstance
       .get(`/dashboard/${localStorage?.getItem("uid")}`)
       .then((response) => {
+        console.log("KYC Response", response?.data?.KycStatus);
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
-        setKycStatus(response?.data?.KycStatus?.status);
+        setKycStatus(response?.data?.KycStatus);
+        if (response?.data?.KycStatus == "completed") {
+          localStorage.setItem("isKycVerified", true);
+        }
         props.closeLoader();
       })
       .catch((err) => {

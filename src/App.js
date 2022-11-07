@@ -57,6 +57,7 @@ function App() {
 
   function onAuthStateChanged(user) {
     if (user) {
+      localStorage.setItem("isKycVerified", false);
       localStorage.setItem("accessToken", user.accessToken);
       localStorage.setItem("uid", user.uid);
       maximumInstance.defaults.headers.common[
