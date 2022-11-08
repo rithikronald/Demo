@@ -120,6 +120,27 @@ const WalletOverView = (props) => {
       });
   }, []);
 
+  const [refresh, setRefresh] = useState(0)
+  const [showRefresh, setShowRefresh] = useState(true)
+  const [balance, setBalance] = useState(0)
+
+  useEffect(() => {
+    setShowRefresh(false)
+    axios
+      .get(
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((response) => {
+        const bal = response?.data?.find((o) => o.currency === "USDT");
+        setBalance(Number(bal?.available).toFixed(2));
+        setShowRefresh(true)
+      })
+      .catch((e) => {console.log("Error", e); setShowRefresh(true)});
+  }, [refresh]);
+
   const [currentPrice, setCurrentPrice] = useState({});
 
   const [availableBal, setAvailableBal] = useState(0);
@@ -496,7 +517,7 @@ const WalletOverView = (props) => {
         <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
         <div className="mt-[8%] flex flex-col justify-between">
           {transactionMode == 0 ? (
-            <Deopsite balance={Number(usdtSum).toFixed(2)} />
+            <Deopsite balance={balance} onRefresh={() => setRefresh(prev => prev + 1)} showRefresh={showRefresh} />
           ) : (
             <Withdraw currencyChain={currentCurrencyChain} />
           )}

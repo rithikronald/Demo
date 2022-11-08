@@ -105,7 +105,11 @@ const TransactionSummary = () => {
     };
   }, [ws.readyState]);
 
+  const [refresh, setRefresh] = useState(0)
+  const [showRefresh, setShowRefresh] = useState(true)
+
   useEffect(() => {
+    setShowRefresh(false)
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -116,9 +120,10 @@ const TransactionSummary = () => {
       .then((response) => {
         const bal = response?.data?.find((o) => o.currency === "USDT");
         setBalance(Number(bal?.available).toFixed(2));
+        setShowRefresh(true)
       })
-      .catch((e) => console.log("Error", e));
-  }, []);
+      .catch((e) => {console.log("Error", e); setShowRefresh(true)});
+  }, [refresh]);
 
   useEffect(() => {
     console.log("status", status);
@@ -449,7 +454,7 @@ const TransactionSummary = () => {
         className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-center items-center flex flex-col sm:hidden xl:flex"
       >
         <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
-        <Deopsite balance={balance} />
+        <Deopsite balance={balance} onRefresh={() => setRefresh(prev => prev + 1)} showRefresh={showRefresh} />
       </div>
     </div>
   );
