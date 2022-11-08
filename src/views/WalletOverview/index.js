@@ -15,6 +15,7 @@ import { arr, getCoinMeta } from "../../hooks/getcoinMetaData";
 import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import types from "../../store/types";
 import { numFormatter } from "../../utility/kFormatter";
+
 import "./style.css";
 
 var WebSocketClient = require("websocket").w3cwebsocket;
@@ -41,6 +42,7 @@ const WalletOverView = (props) => {
   const [openIndex, setOpenIndex] = useState(-1);
   const [transactions, setTransactions] = useState();
   const [failed, setFailed] = useState(false);
+  const [indexData, setIndexData] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,6 +63,13 @@ const WalletOverView = (props) => {
       .get(`/getIndexTransactions/${localStorage?.getItem("uid")}`)
       .then((res) => {
         console.log("IndexTransaction", res?.data);
+        // setIndexData(res?.data);
+        const transactions = [];
+        for (let key in res?.data) {
+          // const element = res?.data[key];
+          transactions.push({ ...res?.data[key], key });
+        }
+        setIndexData(transactions);
       })
       .catch((err) => {
         console.log("Error", err);
@@ -168,11 +177,9 @@ const WalletOverView = (props) => {
     setUsdtSum(usdtSum);
   }, [coinList, currentPrice]);
 
-  // useEffect(() => {
-  //   if (availableBal) {
-  //     props.closeLoader();
-  //   }
-  // }, [availableBal]);
+  useEffect(() => {
+    console.log("indexData", indexData);
+  }, [indexData]);
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont pl-[60px]">
@@ -327,48 +334,63 @@ const WalletOverView = (props) => {
               children={
                 <div className="w-full h-full rounded-2xl flex p-4 flex-col">
                   <p className="text-white text-sm font-medium">Indexes</p>
-                  <div className="flex w-full h-full items-center blur-sm">
-                    <GradientContainer
-                      width="w-1/5"
-                      height="h-[90%]"
-                      children={
-                        <div className="w-full h-full rounded-2xl p-1">
-                          <div
-                            style={{
-                              backgroundImage: `url('/${indBgImgList[12]}')`,
-                            }}
-                            className="bg-no-repeat bg-cover bg-center flex h-full w-full rounded-xl justify-center items-center p-3"
-                          >
-                            <p className="text-white font-bold text-sm text-center">
-                              Gaming Index
-                            </p>
-                          </div>
-                        </div>
-                      }
-                    />
-                    <div className="flex flex-col h-[90%] justify-between items-center py-1">
-                      {[1, 2, 3].map((ele) => (
-                        <div className="flex ml-6">
-                          <img
-                            alt="btc"
-                            className="h-8 w-8 border-[3px] border-yellow-400 rounded-full"
-                            src={require("../../assets/btcLight.png")}
-                          />
-                          <div className="pl-[10px]">
-                            <p className="text-white font-semibold text-sm">
-                              ETH
-                            </p>
-                            <p className=" text-white text-[8px]">Ethereum</p>
-                          </div>
-                          <div className="ml-4">
-                            <p className="text-white font-semibold text-sm">
-                              2.53243
-                            </p>
-                            <p className=" text-white text-[8px]">$232243 </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="flex w-full h-full items-center">
+                    {indexData &&
+                      indexData.map((d) => {
+                        return (
+                          <>
+                            <GradientContainer
+                              width="w-1/5"
+                              height="h-[90%]"
+                              children={
+                                <div className="w-full h-full rounded-2xl p-1">
+                                  <div
+                                    style={{
+                                      backgroundImage: `url('/${indBgImgList[12]}')`,
+                                    }}
+                                    className="bg-no-repeat bg-cover bg-center flex h-full w-full rounded-xl justify-center items-center p-3"
+                                  >
+                                    <p className="text-white font-bold text-sm text-center">
+                                      {d?.indexName}
+                                    </p>
+                                  </div>
+                                </div>
+                              }
+                            />
+                            <div className="flex flex-col h-[90%] flex-wrap  items-center py-1">
+                              {d?.transactionSummary.map((ele) => {
+                                const ticker =
+                                  ele?.currency_pair?.split("_")[0];
+                                return (
+                                  <div className="flex ml-5 m-1">
+                                    <img
+                                      alt="btc"
+                                      className="h-8 w-8 border-[3px] border-yellow-400 rounded-full"
+                                      src={getCoinMeta(ticker)?.logoUrl}
+                                    />
+                                    <div className="pl-[10px]">
+                                      <p className="text-white font-semibold text-sm">
+                                        {ticker}
+                                      </p>
+                                      <p className=" text-white text-[8px]">
+                                        {getCoinMeta(ticker)?.slug}
+                                      </p>
+                                    </div>
+                                    <div className="ml-4">
+                                      <p className="text-white font-semibold text-sm">
+                                        {ele?.amount}
+                                      </p>
+                                      <p className=" text-white text-[8px]">
+                                        {(currentPrice[ticker] *ele?.amount).toFixed(3)}
+                                      </p>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </>
+                        );
+                      })}
                   </div>
                 </div>
               }
