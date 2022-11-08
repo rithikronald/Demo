@@ -26,11 +26,11 @@ const Sidebar = () => {
   return noSidebar.includes(location.pathname) ? (
     ""
   ) : (
-    <div className="bg-bgl1">
+    <div style={{zIndex: 999}} className="fixed left-0 top-0 ">
       <div
         className={` ${
           open ? "w-96" : "w-[58px]"
-        } background h-screen pt-8 relative duration-300 sidebar`}
+        } h-screen pt-8 relative duration-300 `}
       >
         <div className="absolute top-1/2 left-[29px] -translate-y-1/2 h-[450px] w-[55px] rounded-3xl" style={{background: 'linear-gradient(180deg, rgba(91, 27, 114, 0.5) 0%, rgba(167, 76, 239, 0.165) 100%)'}}>
           <div className="flex gap-x-4 items-center translate-x-1 mt-[10px] flex-col mr-2">
@@ -65,7 +65,7 @@ const Sidebar = () => {
           ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"} w-[55px] `}
               >
                 <img src={Menu.src} className="h-[25px] w-[25px] mx-auto" />
-                <span class="absolute z-50 hidden px-6 py-2 left-10 text-center text-white bg-bgl2 rounded tooltip-text group-hover:block">
+                <span style={{zIndex: 999}} className="absolute hidden px-6 py-2 left-10 text-center text-white bg-bgl2 rounded tooltip-text group-hover:block">
                   {Menu.title}
                 </span>
                 <span

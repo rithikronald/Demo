@@ -153,7 +153,7 @@ const CoinDesc = (props) => {
 
   return (
     <div
-      className={`p-5 px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-gradient-to-tl from-bg via-bgl1 to-darkPurple justify-between flex flex-col ${
+      className={`p-5 pl-[110px] px-10 relative overflow-y-scroll overflow-x-hidden w-screen h-screen transitionClass bg-gradient-to-tl from-bg via-bgl1 to-darkPurple justify-between flex flex-col ${
         fakeModalOpen ? "pr-[31vw]" : "pr-[100px]"
       }`}
     >

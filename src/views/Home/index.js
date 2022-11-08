@@ -154,7 +154,7 @@ const Home = (props) => {
         style={{
           backgroundImage: `url('/images/mainbg.png')`,
         }}
-        className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4"
+        className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4 pl-[110px]"
       >
         {/* Banner */}
         {/* <div className="flex w-full h-1/3">
