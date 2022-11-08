@@ -42,7 +42,7 @@ const Home = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log("Home", data?.result?.currency_pair, data?.result?.last);
+    // console.log("Home", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName) {
       setCurrentPrice((prev) => {

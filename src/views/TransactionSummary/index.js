@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ws } from "../../App";
+import { maximumInstance, ws } from "../../App";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
 import { Deopsite } from "../../components/Deposite";
 import { GradientContainer } from "../../components/GradientContainer";
@@ -24,6 +24,8 @@ const TransactionSummary = () => {
   const [isOpen, setisOpen] = useState(false);
   const [counter, setCounter] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [transactionSummary, setTransactionSummary] = useState([]);
+  // const transactionSummary = [];
 
   const socketPayload = location?.state?.indexData?.coins?.map(
     (ticker) => `${ticker}_USDT`
@@ -68,6 +70,22 @@ const TransactionSummary = () => {
       .catch((err) => console.log("Error", err));
   }, []);
 
+  const storeIndexTransaction = () => {
+    maximumInstance
+      .post(`/storeIndexTransactions/${localStorage?.getItem("uid")}`, {
+        transactionSummary: transactionSummary,
+        timestamp: Date.now(),
+        indexName: location?.state?.indexData?.basketName,
+        totalAmount: buyPrice,
+      })
+      .then((res) => {
+        console.log("IndexTransaction", res?.data);
+      })
+      .catch((err) => {
+        console.log("Error", err);
+      });
+  };
+
   useEffect(() => {
     return () => {
       setCurrentPrice({});
@@ -108,7 +126,9 @@ const TransactionSummary = () => {
   useEffect(() => {
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/${localStorage.getItem('uid')}`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/${localStorage.getItem(
+          "uid"
+        )}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -175,7 +195,7 @@ const TransactionSummary = () => {
         current_price: getBidPrice("buy", currentPrice[item]),
       });
     });
-    setFirstRequest(true)
+    setFirstRequest(true);
   };
 
   const retryOrders = async () => {
@@ -205,7 +225,9 @@ const TransactionSummary = () => {
     };
     await axios
       .post(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/${localStorage.getItem('uid')}`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/${localStorage.getItem(
+          "uid"
+        )}`,
         body
       )
       .then((response) => {
@@ -216,8 +238,20 @@ const TransactionSummary = () => {
             [currency_pair]: response?.data?.status,
           };
         });
+
         if (response?.data?.status == "closed") {
           setCounter((prev) => prev + 1);
+          setTransactionSummary((prev) => {
+            return [
+              ...prev,
+              {
+                status: response?.data?.status,
+                amount: response?.data?.amount,
+                currency_pair: currency_pair,
+                fill_price: response?.data?.fill_price,
+              },
+            ];
+          });
         }
         return response?.data;
       })
@@ -231,11 +265,16 @@ const TransactionSummary = () => {
       setIsLoading(false);
       // setBuyPrice("");
     }
+    if (socketPayload.length == counter) {
+      storeIndexTransaction();
+    }
   }, [counter, status]);
 
   const [inputTouched, setInputTouched] = useState(false);
-  const [firstRequest, setFirstRequest] = useState(false)
-  const [requestStatus, setRequestStatus] = useState(location?.state?.indexData?.coins?.map(() => false))
+  const [firstRequest, setFirstRequest] = useState(false);
+  const [requestStatus, setRequestStatus] = useState(
+    location?.state?.indexData?.coins?.map(() => false)
+  );
 
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
@@ -274,7 +313,17 @@ const TransactionSummary = () => {
                         className={"mt-4"}
                         children={
                           <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4 relative">
-                             {firstRequest && <img src={status[`${item}_USDT`] !== 400 && status[`${item}_USDT`] !== 'cancelled' ? require('../../assets/greenVerifiedIcon2.png') : require('../../assets/erroricon.png')} className="absolute right-2 h-[25px] w-[25px]" />}
+                            {firstRequest && (
+                              <img
+                                src={
+                                  status[`${item}_USDT`] !== 400 &&
+                                  status[`${item}_USDT`] !== "cancelled"
+                                    ? require("../../assets/greenVerifiedIcon2.png")
+                                    : require("../../assets/erroricon.png")
+                                }
+                                className="absolute right-2 h-[25px] w-[25px]"
+                              />
+                            )}
                             <img
                               alt="btc"
                               className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
@@ -361,7 +410,10 @@ const TransactionSummary = () => {
             <div className="flex w-full justify-between">
               <div
                 className="flex items-end"
-                onClick={() => console.log(currentPrice)}
+                onClick={() => {
+                  console.log("transactionSummary", transactionSummary);
+                  console.log(currentPrice);
+                }}
               >
                 <p className="font-semibold text-white text-5xl">{buyPrice}</p>
                 <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>

@@ -26,7 +26,7 @@ export const BuySellModal = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
+    // console.log("Buy/Sell", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
     if (coinName && coinName === props?.ticker) {
       setCurrentPrice(data?.result?.last);

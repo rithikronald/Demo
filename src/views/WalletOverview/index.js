@@ -3,6 +3,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { maximumInstance } from "../../App";
 import { CustomAreaChart } from "../../components/Charts/CustomAreaChart";
 import { Deopsite } from "../../components/Deposite";
 import { GradientContainer } from "../../components/GradientContainer";
@@ -54,6 +55,17 @@ const WalletOverView = (props) => {
         console.log(err);
       });
   }, [ticker]);
+
+  useEffect(() => {
+    maximumInstance
+      .get(`/getIndexTransactions/${localStorage?.getItem("uid")}`)
+      .then((res) => {
+        console.log("IndexTransaction", res?.data);
+      })
+      .catch((err) => {
+        console.log("Error", err);
+      });
+  }, []);
 
   useEffect(() => {
     props.openLoader();

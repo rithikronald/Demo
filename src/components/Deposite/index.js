@@ -31,7 +31,6 @@ export const Deopsite = ({ balance }) => {
       method: "get",
     })
       .then((res) => {
-        console.log("####################", res?.data);
         setCurrencyChain(res?.data?.USDT);
       })
       .catch((err) => {

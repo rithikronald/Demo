@@ -33,7 +33,6 @@ export const Table = ({ openModal, data, title, price }) => {
           [`${coinName}`]: data?.result?.change_percentage,
         };
       });
-      console.log("################", data?.result?.change_percentage);
     }
   }
 
