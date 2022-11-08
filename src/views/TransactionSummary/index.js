@@ -274,7 +274,7 @@ const TransactionSummary = () => {
                         className={"mt-4"}
                         children={
                           <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4 relative">
-                             {firstRequest && <div className={`bg-${status[`${item}_USDT`] !== 400 ? 'green' : 'red'}-500 rounded-full h-[20px] w-[20px] absolute right-[10px] top-1/2 -translate-y-1/2`} ></div>}
+                             {firstRequest && <img src={status[`${item}_USDT`] !== 400 && status[`${item}_USDT`] !== 'cancelled' ? require('../../assets/greenVerifiedIcon2.png') : require('../../assets/erroricon.png')} className="absolute right-2 h-[25px] w-[25px]" />}
                             <img
                               alt="btc"
                               className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"

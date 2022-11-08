@@ -27,7 +27,7 @@ const CoinList = (props) => {
   }, []);
 
   return (
-    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full">
+    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple font-mont flex h-screen w-full pl-[60px]">
       <div className="Left p-10 px-14 flex w-[96%] flex-col sm:flex overflow-y-scroll">
         <div className="TableWithOptions">
           {coinList && currentPrice != {} && (

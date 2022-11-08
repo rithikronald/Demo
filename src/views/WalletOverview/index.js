@@ -163,7 +163,7 @@ const WalletOverView = (props) => {
   // }, [availableBal]);
 
   return (
-    <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
+    <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont pl-[60px]">
       <div className="Left p-10 px-14 flex flex-col justify-around overflow-y-hidden sm:flex xl:basis-3/4 h-[100%]">
         <div className="overflow-y-scroll something">
           <div className="flex flex-col w-full">

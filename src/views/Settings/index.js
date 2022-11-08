@@ -50,7 +50,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="Settings bg-bgl1 flex h-screen w-full p-20 flex-col font-mont">
+    <div className="Settings bg-bgl1 flex h-screen w-full p-20 flex-col font-mont pl-[110px]">
       <div className="flex justify-between">
         <p className="text-white font-semibold text-5xl">Settings</p>
         <button

@@ -122,6 +122,8 @@ export const BuySellModal = (props) => {
     }
   };
 
+  const [status, setStatus] = useState('')
+
   const createOrder = () => {
     let body = {
       text: "t-123",
@@ -145,16 +147,25 @@ export const BuySellModal = (props) => {
             toast.success("order successful", {
               position: toast.POSITION.TOP_RIGHT,
             });
+            setStatus('Success')
             break;
           case "open":
             toast.success("order created - open", {
               position: toast.POSITION.TOP_RIGHT,
             });
+            setStatus('Success')
             break;
           case "cancelled":
             toast.warn("order cancelled - try again", {
               position: toast.POSITION.TOP_RIGHT,
             });
+            setStatus('Failed')
+            break;
+          case 400:
+            toast.error("invalid order - try again", {
+              position: toast.POSITION.TOP_RIGHT
+            })
+            setStatus('Failed')
             break;
           default:
             break;
@@ -263,6 +274,8 @@ export const BuySellModal = (props) => {
         </div>
       </div>
       <ThemeButton
+      status={status}
+      setStatus={setStatus}
         onClick={createOrder}
         text={props?.trade?.charAt(0).toUpperCase() + props?.trade?.slice(1)}
         className="w-[75%] mt-10"
