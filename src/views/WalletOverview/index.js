@@ -381,7 +381,7 @@ const WalletOverView = (props) => {
                 className="ml-2 cursor-pointer"
               />
             </div>
-            <div
+            {/* <div
               className="h-[50px] font-mont text-white text-[24px] rounded-3xl px-8 flex items-center ml-[20px]"
               style={{ background: "rgba(255, 255, 255, 0.2" }}
             >
@@ -398,7 +398,7 @@ const WalletOverView = (props) => {
                 style={openIndex === 1 ? {} : { transform: "rotate(-90deg)" }}
                 className="ml-2 cursor-pointer"
               />
-            </div>
+            </div> */}
           </div>
           <div className="w-[100%] mt-[10px]">
             {openIndex === 0 && (

@@ -289,20 +289,33 @@ const Home = (props) => {
                           </p>
                           <p
                             className={`${
-                              Number(item?.percent_change_24h) > 0 ||
-                              percentageChange?.[data?.ticker] > 0
+                              percentageChange?.[data?.ticker]
+                                ? percentageChange?.[data?.ticker] > 0
+                                  ? "text-green-500"
+                                  : "text-red-500"
+                                : Number(item?.percent_change_24h) > 0
                                 ? "text-green-500"
                                 : "text-red-500"
                             } text-[10px] font-semibold`}
                           >
                             <i
                               class={`fa-sharp fa-solid ${
-                                Number(item?.percent_change_24h) > 0 ||
-                                percentageChange?.[data?.ticker] > 0
+                                percentageChange?.[data?.ticker]
+                                  ? percentageChange?.[data?.ticker] > 0
+                                    ? "text-green-500 fa-caret-up"
+                                    : "text-red-500 fa-caret-down"
+                                  : Number(item?.percent_change_24h) > 0
                                   ? "text-green-500 fa-caret-up"
                                   : "text-red-500 fa-caret-down"
                               } mr-[1px]`}
                             />{" "}
+                            {percentageChange?.[data?.ticker]
+                              ? percentageChange?.[data?.ticker] > 0
+                                ? "+"
+                                : ""
+                              : Number(item?.percent_change_24h)
+                              ? "+"
+                              : ""}
                             {percentageChange?.[data?.ticker] == null
                               ? item?.percent_change_24h
                               : percentageChange?.[data?.ticker]}

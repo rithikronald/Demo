@@ -33,6 +33,7 @@ export const Table = ({ openModal, data, title, price }) => {
           [`${coinName}`]: data?.result?.change_percentage,
         };
       });
+      console.log("################", data?.result?.change_percentage);
     }
   }
 
@@ -128,8 +129,16 @@ export const Table = ({ openModal, data, title, price }) => {
         return (
           <p className="font-mont text-lg">
             {percentage?.[row?.ticker]
+              ? percentage?.[row?.ticker] > 0
+                ? "+"
+                : ""
+              : row.percent_change_24h > 0
+              ? "+"
+              : ""}
+            {percentage?.[row?.ticker]
               ? percentage?.[row?.ticker]
-              : row.percent_change_24h}%
+              : row.percent_change_24h}
+            %
           </p>
         );
       },
@@ -139,13 +148,15 @@ export const Table = ({ openModal, data, title, price }) => {
       },
       conditionalCellStyles: [
         {
-          when: (row) => row.percent_change_24h > 0,
+          when: (row) =>
+            percentage?.[row?.ticker] > 0 || row.percent_change_24h > 0,
           style: {
             color: "#3fa34d",
           },
         },
         {
-          when: (row) => row.percent_change_24h < 0,
+          when: (row) =>
+            percentage?.[row?.ticker] < 0 || row.percent_change_24h < 0,
           style: {
             color: "red",
           },
