@@ -403,53 +403,19 @@ const WalletOverView = (props) => {
           <div className="w-[100%] mt-[10px]">
             {openIndex === 0 && (
               <Table
-                data={
-                  transactions?.map((item) => ({
+                data={transactions?.map((item) => {
+                  return {
                     transactionId: item.id,
                     type: item.side,
                     coin: getCoinMeta(item.currencyPair.split("_")[0]).slug,
-                    date: moment(item.createTime).format("DD/MM/YYYY"),
+                    date: item?.createTime,
                     amount: item.amount,
                     status: "Completed",
-                  }))
-                  // [
-                  //   {
-                  //     transactionId: "3343443433434",
-                  //     type: "Buy",
-                  //     coin: "Gaming Index",
-                  //     date: "June 22, 2022",
-                  //     amount: "$15",
-                  //     status: "Pending",
-                  //   },
-                  //   {
-                  //     transactionId: "3343443433434",
-                  //     type: "Buy",
-                  //     coin: "Gaming Index",
-                  //     date: "June 22, 2022",
-                  //     amount: "$15",
-                  //     status: "Pending",
-                  //   },
-                  //   {
-                  //     transactionId: "3343443433434",
-                  //     type: "Buy",
-                  //     coin: "Gaming Index",
-                  //     date: "June 22, 2022",
-                  //     amount: "$15",
-                  //     status: "Pending",
-                  //   },
-                  //   {
-                  //     transactionId: "3343443433434",
-                  //     type: "Buy",
-                  //     coin: "Gaming Index",
-                  //     date: "June 22, 2022",
-                  //     amount: "$15",
-                  //     status: "Pending",
-                  //   },
-                  // ]
-                }
+                  };
+                })}
               />
             )}
-            {openIndex === 1 && (
+            {/* {openIndex === 1 && (
               <Table
                 data={[
                   {
@@ -494,7 +460,7 @@ const WalletOverView = (props) => {
                   },
                 ]}
               />
-            )}
+            )} */}
           </div>
         </div>
       </div>

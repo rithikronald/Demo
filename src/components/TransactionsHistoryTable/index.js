@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
 import { FilterComponent } from "./filterComponent";
 import { numFormatter } from "../../utility/kFormatter";
+import moment from "moment";
 
 export const Table = (props) => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ export const Table = (props) => {
     {
       name: "DATE",
       selector: (row) => {
-        return row.date;
+        return moment(row?.date * 1000).format("MMM Do YYYY");
       },
       sortable: true,
       style: {
