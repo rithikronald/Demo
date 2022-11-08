@@ -175,7 +175,7 @@ const TransactionSummary = () => {
         current_price: getBidPrice("buy", currentPrice[item]),
       });
     });
-    setFirstRequest(true)
+    setFirstRequest(true);
   };
 
   const retryOrders = async () => {
@@ -234,19 +234,21 @@ const TransactionSummary = () => {
   }, [counter, status]);
 
   const [inputTouched, setInputTouched] = useState(false);
-  const [firstRequest, setFirstRequest] = useState(false)
-  const [requestStatus, setRequestStatus] = useState(location?.state?.indexData?.coins?.map(() => false))
+  const [firstRequest, setFirstRequest] = useState(false);
+  const [requestStatus, setRequestStatus] = useState(
+    location?.state?.indexData?.coins?.map(() => false)
+  );
 
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      {isOpen && (
+      {/* {isOpen && (
         <TransactionModal
           isOpen={(val) => setisOpen(val)}
           failedCounter={socketPayload.length - counter}
           retry={retryOrders}
           status={socketPayload.length > counter ? false : true}
         />
-      )}
+      )} */}
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
         <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
           Transaction Summary
@@ -274,7 +276,38 @@ const TransactionSummary = () => {
                         className={"mt-4"}
                         children={
                           <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4 relative">
-                             {firstRequest && <img src={status[`${item}_USDT`] !== 400 && status[`${item}_USDT`] !== 'cancelled' ? require('../../assets/greenVerifiedIcon2.png') : require('../../assets/erroricon.png')} className="absolute right-2 h-[25px] w-[25px]" />}
+                            {status[`${item}_USDT`] === "closed" && (
+                              <img
+                                src={require("../../assets/greenVerifiedIcon2.png")}
+                                className="absolute right-2 h-[25px] w-[25px]"
+                              />
+                            )}
+                            {(status[`${item}_USDT`] === "cancelled" ||
+                              status[`${item}_USDT`] === 400) && (
+                              <div
+                                style={{ backdropFilter: "blur(3px)" }}
+                                className="absolute right-2 h-[25px] flex"
+                              >
+                                <img
+                                  src={require("../../assets/erroricon.png")}
+                                />
+                                <img
+                                  src={require("../../assets/refresh icon.png")}
+                                  onClick={() => {
+                                    setStatus((prev) => ({
+                                      ...prev,
+                                      [`${item}_USDT`]: null,
+                                    }));
+                                    setIsLoading(true)
+                                    createOrder({
+                                      currency_pair: `${item}_USDT`,
+                                      amount: split[`${item}_USDT`],
+                                      current_price: getBidPrice("buy", currentPrice[`${item}_USDT`]),
+                                    })
+                                  }}
+                                />
+                              </div>
+                            )}
                             <img
                               alt="btc"
                               className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
