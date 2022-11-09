@@ -87,21 +87,21 @@ export const BuySellModal = (props) => {
     let bidQuote = []; // decimals strateg
     let decimals = currentPrice?.split(".")[1]; // console.log("decimals length", decimals?.length); // for (let index = 1; index <= decimals?.length; index++) { //   if (index === decimals.length - 1) { //     bidQuote?.push("1"); //   } else { //     bidQuote?.push("0"); //   } // } // // bidQuote.length = decimals.length; // console.log("0.".concat(bidQuote?.join(""))); // return bidQuote?.join("");
     // % strategy
-    let bid = currentPrice * 0.001;
+    let bid = currentPrice * 0.01;
     let finalBid;
     // console.log(bid);
     switch (type) {
       case "buy":
-        finalBid = (Number(currentPrice) + Number(bid)).toFixed(
+        finalBid = (Number(currentPrice) + Number(currentPrice * 0.01)).toFixed(
           decimals?.length
         );
         console.log(finalBid);
         // return Number(currentPrice) + Number("0.".concat(bidQuote?.join("")));
         return finalBid;
       case "sell":
-        finalBid = (Number(currentPrice) - Number(bid)).toFixed(
-          decimals?.length
-        );
+        finalBid = (
+          Number(currentPrice) - Number(currentPrice * 0.001)
+        ).toFixed(decimals?.length);
         console.log(finalBid);
         // return Number(currentPrice) - Number("0.".concat(bidQuote?.join("")));
         return finalBid;
@@ -122,7 +122,7 @@ export const BuySellModal = (props) => {
     }
   };
 
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState("");
 
   const createOrder = () => {
     let body = {
@@ -135,7 +135,9 @@ export const BuySellModal = (props) => {
     };
     axios
       .post(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/${localStorage.getItem('uid')}`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/createOrder/${localStorage.getItem(
+          "uid"
+        )}`,
         body
       )
       .then((response) => {
@@ -147,25 +149,25 @@ export const BuySellModal = (props) => {
             toast.success("order successful", {
               position: toast.POSITION.TOP_RIGHT,
             });
-            setStatus('Success')
+            setStatus("Success");
             break;
           case "open":
             toast.success("order created - open", {
               position: toast.POSITION.TOP_RIGHT,
             });
-            setStatus('Success')
+            setStatus("Success");
             break;
           case "cancelled":
             toast.warn("order cancelled - try again", {
               position: toast.POSITION.TOP_RIGHT,
             });
-            setStatus('Failed')
+            setStatus("Failed");
             break;
           case 400:
             toast.error("invalid order - try again", {
-              position: toast.POSITION.TOP_RIGHT
-            })
-            setStatus('Failed')
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            setStatus("Failed");
             break;
           default:
             break;
@@ -274,8 +276,8 @@ export const BuySellModal = (props) => {
         </div>
       </div>
       <ThemeButton
-      status={status}
-      setStatus={setStatus}
+        status={status}
+        setStatus={setStatus}
         onClick={createOrder}
         text={props?.trade?.charAt(0).toUpperCase() + props?.trade?.slice(1)}
         className="w-[75%] mt-10"
