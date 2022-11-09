@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./kyc.css";
 import Persona from "persona";
 import Modal from "react-bootstrap/Modal";
@@ -13,8 +13,20 @@ const stages = {
 
 const Kyc1 = (props) => {
   const [beginKYC, setBeginKYC] = useState(false);
-  const [kycStatus, setKycStatus] = useState("");
+  const [kycStatus, setKycStatus] = useState();
   const [embedStatus, setEmbedStatus] = useState();
+
+  useEffect(() => {
+    maximumInstance
+      .get(`/dashboard/${localStorage?.getItem("uid")}`)
+      .then((response) => {
+        console.log("KYC Response", response?.data?.KycStatus);
+        setKycStatus(response?.data?.KycStatus);
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  }, []);
 
   const InlineInquiry = () => {
     return (
@@ -36,7 +48,6 @@ const Kyc1 = (props) => {
                   "InquiryId :",
                   inquiryId
                 );
-                setKycStatus(localStorage.getItem("isKycVerified"));
                 setBeginKYC(false);
                 setEmbedStatus(status);
               })
@@ -49,13 +60,8 @@ const Kyc1 = (props) => {
 
   return (
     <>
-      {/* <button type="button"
-  class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-  Launch static backdrop modal
-</button> */}
       <p className="text-white opacity-40 font-mont text-[24px]">KYC</p>
-      {beginKYC ? (
+      {beginKYC && (
         <>
           <div className="fixed inset-0 z-10 overflow-y-auto">
             <div
@@ -87,28 +93,17 @@ const Kyc1 = (props) => {
             </div>
           </div>
         </>
-      ) : kycStatus ? (
-        embedStatus == "completed" ? (
-          <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
-            <img
-              className="w-40 h-40"
-              src={require("../../../assets/greenVerifiedIcon2.png")}
-            />
-            <p className="font-mont text-white text-xl font-semibold mt-4">
-              Verified Successfully
-            </p>
-          </div>
-        ) : (
-          <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
-            <img src={require("../../../assets/cil_face-dead.png")} />
-            <p className="font-mont text-white text-xl font-semibold mt-4">
-              Verification Failed
-            </p>
-            <button className="bg-primaryButton mt-2 text-white font-mont font-semibold p-4 px-6 rounded-xl">
-              Contact Support
-            </button>
-          </div>
-        )
+      )}
+      {kycStatus == "completed" || embedStatus == "completed" ? (
+        <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
+          <img
+            className="w-40 h-40"
+            src={require("../../../assets/greenVerifiedIcon2.png")}
+          />
+          <p className="font-mont text-white text-xl font-semibold mt-4">
+            Verified Successfully
+          </p>
+        </div>
       ) : (
         <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
           <p className="font-mont text-white font-bold text-[22px]">
@@ -127,6 +122,16 @@ const Kyc1 = (props) => {
           </button>
         </div>
       )}
+
+      {/* <div className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center flex-col w-[100%] translate-x-[-48px]">
+        <img src={require("../../../assets/cil_face-dead.png")} />
+        <p className="font-mont text-white text-xl font-semibold mt-4">
+          Verification Failed
+        </p>
+        <button className="bg-primaryButton mt-2 text-white font-mont font-semibold p-4 px-6 rounded-xl">
+          Contact Support
+        </button>
+      </div> */}
     </>
   );
 };

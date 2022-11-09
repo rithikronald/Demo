@@ -365,7 +365,7 @@ const WalletOverView = (props) => {
                           <>
                             <GradientContainer
                               width="w-1/5"
-                              height="h-[90%]"
+                              height="h-[85%]"
                               children={
                                 <div className="w-full h-full rounded-2xl p-1">
                                   <div
@@ -402,7 +402,7 @@ const WalletOverView = (props) => {
                                         </p>
                                       </div>
                                     </div>
-                                    <div className="ml-4">
+                                    <div className="ml-4 flex flex-col justify-end items-end">
                                       <p className="text-white font-semibold text-sm">
                                         {ele?.amount}
                                       </p>

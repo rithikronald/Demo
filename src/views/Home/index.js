@@ -202,7 +202,6 @@ const Home = (props) => {
             src={require("../../assets/smartSuggestFlowBackground.png")}
             className="w-full"
           />
-          {/* <img src={require('../../assets/smartSuggestFlow.png')} className="absolute top-1/2 left-1/2" style={{transform: 'translate(-55%, -90px)'}} /> */}
           <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
             <Stepper
               steps={[{ title: "" }, { title: "" }, { title: "" }]}
