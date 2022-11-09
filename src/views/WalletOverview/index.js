@@ -146,12 +146,12 @@ const WalletOverView = (props) => {
       });
   }, []);
 
-  const [refresh, setRefresh] = useState(0)
-  const [showRefresh, setShowRefresh] = useState(true)
-  const [balance, setBalance] = useState(0)
+  const [refresh, setRefresh] = useState(0);
+  const [showRefresh, setShowRefresh] = useState(true);
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    setShowRefresh(false)
+    setShowRefresh(false);
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -162,9 +162,12 @@ const WalletOverView = (props) => {
       .then((response) => {
         const bal = response?.data?.find((o) => o.currency === "USDT");
         setBalance(Number(bal?.available).toFixed(2));
-        setShowRefresh(true)
+        setShowRefresh(true);
       })
-      .catch((e) => {console.log("Error", e); setShowRefresh(true)});
+      .catch((e) => {
+        console.log("Error", e);
+        setShowRefresh(true);
+      });
   }, [refresh]);
 
   const [currentPrice, setCurrentPrice] = useState({});
@@ -378,31 +381,35 @@ const WalletOverView = (props) => {
                                 </div>
                               }
                             />
-                            <div className="flex flex-col h-[90%] flex-wrap  items-center py-1">
+                            <div className="flex flex-col flex-wrap h-[90%] items-center">
                               {d?.transactionSummary.map((ele) => {
                                 const ticker =
                                   ele?.currency_pair?.split("_")[0];
                                 return (
-                                  <div className="flex ml-5 m-1">
-                                    <img
-                                      alt="btc"
-                                      className="h-8 w-8 border-[3px] border-yellow-400 rounded-full"
-                                      src={getCoinMeta(ticker)?.logoUrl}
-                                    />
-                                    <div className="pl-[10px]">
-                                      <p className="text-white font-semibold text-sm">
-                                        {ticker}
-                                      </p>
-                                      <p className=" text-white text-[8px]">
-                                        {getCoinMeta(ticker)?.slug}
-                                      </p>
+                                  <div className="flex ml-5 m-1 min-w-[150px] justify-between">
+                                    <div className="flex">
+                                      <img
+                                        alt="btc"
+                                        className="h-8 w-8 border-[3px] border-yellow-400 rounded-full"
+                                        src={getCoinMeta(ticker)?.logoUrl}
+                                      />
+                                      <div className="pl-[10px]">
+                                        <p className="text-white font-semibold text-sm">
+                                          {ticker}
+                                        </p>
+                                        <p className=" text-white text-[8px]">
+                                          {getCoinMeta(ticker)?.slug}
+                                        </p>
+                                      </div>
                                     </div>
                                     <div className="ml-4">
                                       <p className="text-white font-semibold text-sm">
                                         {ele?.amount}
                                       </p>
                                       <p className=" text-white text-[8px]">
-                                        {(currentPrice[ticker] *ele?.amount).toFixed(3)}
+                                        {(
+                                          currentPrice[ticker] * ele?.amount
+                                        ).toFixed(3)}
                                       </p>
                                     </div>
                                   </div>
@@ -424,6 +431,7 @@ const WalletOverView = (props) => {
             >
               Transactions
               <img
+                alt="drop-down"
                 src={require("../../assets/dropdown.png")}
                 onClick={() => {
                   if (openIndex === 0) {
@@ -436,24 +444,6 @@ const WalletOverView = (props) => {
                 className="ml-2 cursor-pointer"
               />
             </div>
-            {/* <div
-              className="h-[50px] font-mont text-white text-[24px] rounded-3xl px-8 flex items-center ml-[20px]"
-              style={{ background: "rgba(255, 255, 255, 0.2" }}
-            >
-              Order History
-              <img
-                src={require("../../assets/dropdown.png")}
-                onClick={() => {
-                  if (openIndex === 1) {
-                    setOpenIndex(-1);
-                  } else {
-                    setOpenIndex(1);
-                  }
-                }}
-                style={openIndex === 1 ? {} : { transform: "rotate(-90deg)" }}
-                className="ml-2 cursor-pointer"
-              />
-            </div> */}
           </div>
           <div className="w-[100%] mt-[10px]">
             {openIndex === 0 && (
@@ -528,7 +518,11 @@ const WalletOverView = (props) => {
         <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
         <div className="mt-[8%] flex flex-col justify-between">
           {transactionMode == 0 ? (
-            <Deopsite balance={balance} onRefresh={() => setRefresh(prev => prev + 1)} showRefresh={showRefresh} />
+            <Deopsite
+              balance={balance}
+              onRefresh={() => setRefresh((prev) => prev + 1)}
+              showRefresh={showRefresh}
+            />
           ) : (
             <Withdraw currencyChain={currentCurrencyChain} />
           )}
