@@ -84,30 +84,19 @@ const CoinDesc = (props) => {
   useEffect(() => {
     props.openLoader();
     maximumInstance
-      .get(`/getCoin?ticker=${params.coinId}`)
+      .get(`/getCoin/${params.coinId}`)
       .then((response) => {
+        console.log("##################", response?.data);
         setData(response?.data);
         props.closeLoader();
         setActiveAddressPerct(
-          response?.data?.sentiment_balance_telegram?.change_1d[
-            response?.data?.sentiment_balance_telegram?.change_1d.length - 1
-          ]?.value
+          response?.data?.sentiment_balance_telegram?.value[1]?.value
         );
-        setDailyActivePerct(
-          response?.data?.trending_words_rank?.change_1d[
-            response?.data?.trending_words_rank?.change_1d.length - 1
-          ]?.value
-        );
+        setDailyActivePerct(response?.data?.trending_words_rank?.value);
         setTransactionVolumePerct(
-          response?.data?.sentiment_balance_reddit?.change_1d[
-            response?.data?.sentiment_balance_reddit?.change_1d.length - 1
-          ]?.value
+          response?.data?.sentiment_balance_reddit?.value[1]?.value
         );
-        setNvtRatioPerct(
-          response?.data?.twitter_followers?.change_1d[
-            response?.data?.twitter_followers?.change_1d.length - 1
-          ]?.value
-        );
+        setNvtRatioPerct(response?.data?.twitter_followers?.value[1]?.value);
         setMarketCap(response?.data?.marketcap_usd?.value);
         setTradingVolume(response?.data?.tradingVolume?.value);
         props.closeLoader();
