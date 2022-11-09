@@ -54,6 +54,7 @@ export const FilterComponent = ({ filterText, onFilter, onClear }) => (
             type="submit"
             onClick={onClear}
             className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-primaryButton rounded-r-lg border border-regularPurple hover:bg-regularPurple focus:ring-4 focus:outline-none "
+            style={{background: 'radial-gradient(86.8% 325.5% at 8% 0%, #D446F1 0%, #9A35EB 100%)'}}
           >
             <svg
               aria-hidden="true"

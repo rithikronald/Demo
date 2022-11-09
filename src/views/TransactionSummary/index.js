@@ -123,7 +123,11 @@ const TransactionSummary = () => {
     };
   }, [ws.readyState]);
 
+  const [refresh, setRefresh] = useState(0)
+  const [showRefresh, setShowRefresh] = useState(true)
+
   useEffect(() => {
+    setShowRefresh(false)
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/${localStorage.getItem(
@@ -136,9 +140,10 @@ const TransactionSummary = () => {
       .then((response) => {
         const bal = response?.data?.find((o) => o.currency === "USDT");
         setBalance(Number(bal?.available).toFixed(2));
+        setShowRefresh(true)
       })
-      .catch((e) => console.log("Error", e));
-  }, []);
+      .catch((e) => {console.log("Error", e); setShowRefresh(true)});
+  }, [refresh]);
 
   useEffect(() => {
     console.log("status", status);
@@ -278,14 +283,14 @@ const TransactionSummary = () => {
 
   return (
     <div className="TransactionSummary bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      {isOpen && (
+      {/* {isOpen && (
         <TransactionModal
           isOpen={(val) => setisOpen(val)}
           failedCounter={socketPayload.length - counter}
           retry={retryOrders}
           status={socketPayload.length > counter ? false : true}
         />
-      )}
+      )} */}
       <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll sm:flex xl:basis-3/4">
         <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
           Transaction Summary
@@ -313,16 +318,37 @@ const TransactionSummary = () => {
                         className={"mt-4"}
                         children={
                           <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4 relative">
-                            {firstRequest && (
+                            {status[`${item}_USDT`] === "closed" && (
                               <img
-                                src={
-                                  status[`${item}_USDT`] !== 400 &&
-                                  status[`${item}_USDT`] !== "cancelled"
-                                    ? require("../../assets/greenVerifiedIcon2.png")
-                                    : require("../../assets/erroricon.png")
-                                }
+                                src={require("../../assets/greenVerifiedIcon2.png")}
                                 className="absolute right-2 h-[25px] w-[25px]"
                               />
+                            )}
+                            {(status[`${item}_USDT`] === "cancelled" ||
+                              status[`${item}_USDT`] === 400) && (
+                              <div
+                                style={{ backdropFilter: "blur(3px)" }}
+                                className="absolute right-2 h-[25px] flex"
+                              >
+                                <img
+                                  src={require("../../assets/erroricon.png")}
+                                />
+                                <img
+                                  src={require("../../assets/refresh icon.png")}
+                                  onClick={() => {
+                                    setStatus((prev) => ({
+                                      ...prev,
+                                      [`${item}_USDT`]: null,
+                                    }));
+                                    setIsLoading(true)
+                                    createOrder({
+                                      currency_pair: `${item}_USDT`,
+                                      amount: split[`${item}_USDT`],
+                                      current_price: getBidPrice("buy", currentPrice[`${item}_USDT`]),
+                                    })
+                                  }}
+                                />
+                              </div>
                             )}
                             <img
                               alt="btc"
@@ -468,7 +494,7 @@ const TransactionSummary = () => {
         className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-center items-center flex flex-col sm:hidden xl:flex"
       >
         <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
-        <Deopsite balance={balance} />
+        <Deopsite balance={balance} onRefresh={() => setRefresh(prev => prev + 1)} showRefresh={showRefresh} />
       </div>
     </div>
   );

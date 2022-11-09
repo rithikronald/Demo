@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import { GradientContainer } from "../GradientContainer";
 
-export const Deopsite = ({ balance }) => {
+export const Deopsite = ({ balance, showRefresh, onRefresh }) => {
   const [currencyChain, setCurrencyChain] = useState();
   const [ticker, setTicker] = useState();
   const [walletAddress, setWalletAddress] = useState();
@@ -203,7 +203,24 @@ export const Deopsite = ({ balance }) => {
           className={"mt-3"}
           children={
             <div className="rounded-3xl h-full flex flex-col p-4">
-              <p className="text-gray-400 text-sm">Available Balance</p>
+              <div className="flex items-center">
+                <p className="text-gray-400 text-sm">Available Balance</p>
+                {showRefresh && <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="white"
+                    className="w-4 h-4 ml-3 cursor-pointer"
+                    onClick={() => onRefresh()}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                    />
+                  </svg>}
+              </div>
               <p className="text-white font-bold text-2xl 2xl:text-3xl 3xl:text-5xl">
                 <span className="font-normal">$</span>
                 {balance}
