@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ws } from "../../App";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
@@ -69,9 +69,13 @@ const TransactionSummary = () => {
   }, []);
 
   useEffect(() => {
+    setBuyPrice(0)
+      setFailed(null)
     return () => {
       setCurrentPrice({});
       setStatus({});
+      setBuyPrice(0)
+      setFailed(null)
     };
   }, []);
 
@@ -105,11 +109,11 @@ const TransactionSummary = () => {
     };
   }, [ws.readyState]);
 
-  const [refresh, setRefresh] = useState(0)
-  const [showRefresh, setShowRefresh] = useState(true)
+  const [refresh, setRefresh] = useState(0);
+  const [showRefresh, setShowRefresh] = useState(true);
 
   useEffect(() => {
-    setShowRefresh(false)
+    setShowRefresh(false);
     axios
       .get(
         `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
@@ -120,9 +124,12 @@ const TransactionSummary = () => {
       .then((response) => {
         const bal = response?.data?.find((o) => o.currency === "USDT");
         setBalance(Number(bal?.available).toFixed(2));
-        setShowRefresh(true)
+        setShowRefresh(true);
       })
-      .catch((e) => {console.log("Error", e); setShowRefresh(true)});
+      .catch((e) => {
+        console.log("Error", e);
+        setShowRefresh(true);
+      });
   }, [refresh]);
 
   useEffect(() => {
@@ -215,6 +222,30 @@ const TransactionSummary = () => {
       )
       .then((response) => {
         console.log(`response of ${currency_pair}`, response?.data);
+        switch (response?.data?.status) {
+          case "closed":
+            toast.success("order successful", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "open":
+            toast.success("order created - open", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "cancelled":
+            toast.warn("order cancelled - try again", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case 400:
+            toast.error("invalid order - try again", {
+              position: toast.POSITION.TOP_RIGHT
+            })
+            break;
+          default:
+            break;
+        }
         setStatus((prev) => {
           return {
             ...prev,
@@ -229,12 +260,25 @@ const TransactionSummary = () => {
       .catch((err) => console.log("Error", err));
   };
 
+  const [failed, setFailed] = useState('')
+
   useEffect(() => {
     console.log("length", Object.keys(status).length, socketPayload.length);
+
     if (Object.keys(status).length == socketPayload.length) {
-      setisOpen(true);
+      let failed = false;
+      Object.keys(status).map((item) => {
+        if (status[item] === "closed") {
+        } else {
+          failed = true;
+        }
+      });
+      if (failed) {
+        setFailed('Failed')
+      } else {
+        setFailed('Done')
+      }
       setIsLoading(false);
-      // setBuyPrice("");
     }
   }, [counter, status]);
 
@@ -303,12 +347,15 @@ const TransactionSummary = () => {
                                       ...prev,
                                       [`${item}_USDT`]: null,
                                     }));
-                                    setIsLoading(true)
+                                    setIsLoading(true);
                                     createOrder({
                                       currency_pair: `${item}_USDT`,
                                       amount: split[`${item}_USDT`],
-                                      current_price: getBidPrice("buy", currentPrice[`${item}_USDT`]),
-                                    })
+                                      current_price: getBidPrice(
+                                        "buy",
+                                        currentPrice[`${item}_USDT`]
+                                      ),
+                                    });
                                   }}
                                 />
                               </div>
@@ -404,7 +451,25 @@ const TransactionSummary = () => {
                 <p className="font-semibold text-white text-5xl">{buyPrice}</p>
                 <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
               </div>
-              <button
+              {
+                failed ? <button
+                onClick={() => {
+                  if(failed === "Failed") {
+                    return
+                  } 
+                  setBuyPrice(0)
+                  setStatus(prev => {
+                    let something
+                    Object.keys(prev).map(i => {
+                      something[i] = null
+                    })
+                    return something
+                  })
+                }}
+                className={`${failed === "Failed" ? 'bg-red-500' : 'bg-green-500'} flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg`}
+              >
+                  {failed}
+              </button> : <button
                 // onClick={createBatchOrder}
                 onClick={createBatchOrder}
                 className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
@@ -415,6 +480,7 @@ const TransactionSummary = () => {
                   "Pay Now"
                 )}
               </button>
+              }
             </div>
           </div>
         </div>
@@ -454,7 +520,11 @@ const TransactionSummary = () => {
         className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-center items-center flex flex-col sm:hidden xl:flex"
       >
         <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
-        <Deopsite balance={balance} onRefresh={() => setRefresh(prev => prev + 1)} showRefresh={showRefresh} />
+        <Deopsite
+          balance={balance}
+          onRefresh={() => setRefresh((prev) => prev + 1)}
+          showRefresh={showRefresh}
+        />
       </div>
     </div>
   );
