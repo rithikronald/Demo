@@ -68,14 +68,18 @@ const Indexes = (props) => {
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left p-10 px-28 flex flex-col justify-center sm:flex xl:basis-3/4">
+      <div
+        className={`Left xl:p-10 xl:px-28 lg1:pl-20 lg1:p-5 flex flex-col justify-center basis-3/4`}
+      >
         <div className="h-[25%] flex mt-[20px] w-full text-white">
           <div className="flex flex-col w-1/2">
             <p className="text-3xl  text-white font-bold">
               {location?.state?.indexData?.basketName}
             </p>
             <p className="text-purple-600 font-light text-sm">Index</p>
-            <p className=" text-white text-sm pr-[15px] mt-3">{description}</p>
+            <p className=" text-white lg1:text-xs 2xl:text-sm pr-[15px] mt-3">
+              {description}
+            </p>
           </div>
           <div className="grid grid-cols-2 gap-1 w-1/2">
             {location?.state?.indexData &&
@@ -194,7 +198,7 @@ const Indexes = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex"
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col"
       >
         {pageRightIndex == 0 && (
           <IndexDetails

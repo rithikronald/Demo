@@ -53,7 +53,7 @@ const Indexes = (props) => {
 
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
-      <div className="Left bg-yellow-40 p-10 px-[7%] flex flex-col justify-around sm:flex xl:basis-3/4">
+      <div className="Left basis-3/4 bg-yellow-40 p-10 px-[7%] flex flex-col justify-around">
         <div className="flex w-full justify-between">
           <p className="text-white font-bold  text-[29px] ">Indexes</p>
           <p className="text-white opacity-30 font-bold  text-[14px]">
@@ -142,7 +142,7 @@ const Indexes = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 items-center justify-around flex flex-col sm:hidden xl:flex"
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 items-center justify-around flex flex-col"
       >
         {pageRightIndex == 0 && (
           <IndexDetails

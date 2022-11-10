@@ -154,12 +154,12 @@ const Home = (props) => {
   };
 
   return (
-    <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
+    <div className="App bg-gradient-to-tl justify-center items-center from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
       <div
         style={{
           backgroundImage: `url('/images/mainbg.png')`,
         }}
-        className="Left bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around sm:flex xl:basis-3/4 pl-[110px]"
+        className="Left basis-3/4 items-center bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around h-screen pl-[90px]"
       >
         {/* Banner */}
         {/* <div className="flex w-full h-1/3">
@@ -197,230 +197,236 @@ const Home = (props) => {
             </div>
           </div>
         </div> */}
-        <div className="flex w-full h-1/3 relative">
-          <img
-            src={require("../../assets/smartSuggestFlowBackground.png")}
-            className="w-full"
-          />
-          <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
-            <Stepper
-              steps={[{ title: "" }, { title: "" }, { title: "" }]}
-              activeStep={kycStatus == "completed" ? 0 : "none"}
+        <div
+          className={`flex flex-col justify-between ${
+            height > 800 ? "h-[800px]" : "h-screen"
+          } ${width > 1440 ? "w-[90%]" : "w-full"}`}
+        >
+          <div className="flex w-full h-[230px] relative">
+            <img
+              src={require("../../assets/smartSuggestFlowBackground.png")}
+              className="w-full"
             />
-            <div className="px-[15%] flex justify-between">
-              <p className="font-mont text-white text-[13px]">Step 1</p>
-              <p className="font-mont text-white text-[13px]">Step 2</p>
-              <p className="font-mont text-white text-[13px]">Step 3</p>
-            </div>
-            <div className="px-[15%] flex justify-between">
-              <p className="font-mont text-white font-bold text-[16px]">
-                KYC Completed
-              </p>
-              <p className="font-mont text-white font-bold text-[16px]">
-                Smart Suggest
-              </p>
-              <p className="font-mont text-white font-bold text-[16px]">
-                Secure Account
-              </p>
-            </div>
-            <div className="px-[15%] pt-[20px]">
-              <Slider value={kycStatus == "completed" ? 30 : 0} />
-            </div>
-            <div className="px-[15%]">
-              <p className="font-mont text-white font-bold text-[14px] pt-[10px]">
-                {kycStatus == "completed" ? 30 : 0}% Completed
-              </p>
+            <div className="absolute top-0 left-0 w-full h-full pt-[20px]">
+              <Stepper
+                steps={[{ title: "" }, { title: "" }, { title: "" }]}
+                activeStep={kycStatus == "completed" ? 0 : "none"}
+              />
+              <div className="px-[15%] flex justify-between">
+                <p className="font-mont text-white text-[13px]">Step 1</p>
+                <p className="font-mont text-white text-[13px]">Step 2</p>
+                <p className="font-mont text-white text-[13px]">Step 3</p>
+              </div>
+              <div className="px-[15%] flex justify-between">
+                <p className="font-mont text-white font-bold text-[16px]">
+                  KYC Completed
+                </p>
+                <p className="font-mont text-white font-bold text-[16px]">
+                  Smart Suggest
+                </p>
+                <p className="font-mont text-white font-bold text-[16px]">
+                  Secure Account
+                </p>
+              </div>
+              <div className="px-[15%] pt-[20px]">
+                <Slider value={kycStatus == "completed" ? 30 : 0} />
+              </div>
+              <div className="px-[15%]">
+                <p className="font-mont text-white font-bold text-[14px] pt-[10px]">
+                  {kycStatus == "completed" ? 30 : 0}% Completed
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        {/* Coins */}
-        <div className="flex flex-col mt-4">
-          <div className="maxPicks flex flex-row justify-between">
-            <p className="text-white text-lg font-medium">Max Picks</p>
-            <button
-              onClick={() => navigate("/coinList")}
-              className="text-gray-400 text-xs"
-            >
-              View All
-            </button>
-          </div>
-          <div className="coinSection flex flex-row flex-wrap justify-between">
-            {/* xl-6 2xl-8 3xl-12(or)5 */}
-            {coinMetaData &&
-              coinMetaData.map((item, index) => {
-                const data = getCoinMeta(item?.ticker);
-                return index < 8 ? (
-                  <GradientContainer
-                    className="mt-4"
-                    key={index}
-                    width="w-[24%]"
-                    height="h-16"
-                    children={
-                      <button
-                        onClick={() => {
-                          navigate(`/coin-desc/${data?.ticker}`, {
-                            state: { coin: item?.ticker },
-                          });
-                        }}
-                        className="flex justify-between items-center p-4 px-4 w-full h-full"
-                      >
-                        <div className="flex flex-row items-center">
-                          <img
-                            alt="logo"
-                            className="w-8 h-8 bg-white rounded-full"
-                            src={data?.logoUrl}
-                          />
-                          <div className="ml-2 flex flex-col items-start">
-                            <p className="text-white font-semibold text-sm">
-                              {data?.ticker}
-                            </p>
-                            <p className="text-gray-400  text-xs">
-                              {data?.slug}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <p className="text-white font-semibold text-sm">
-                            {"$"}
-                            {currentPrice?.[data?.ticker] == null
-                              ? item?.price?.value.toFixed(4)
-                              : currentPrice?.[data?.ticker]}
-                          </p>
-                          <p
-                            className={`${
-                              percentageChange?.[data?.ticker]
-                                ? percentageChange?.[data?.ticker] > 0
-                                  ? "text-green-500"
-                                  : "text-red-500"
-                                : Number(item?.percent_change_24h) > 0
-                                ? "text-green-500"
-                                : "text-red-500"
-                            } text-[10px] font-semibold`}
-                          >
-                            <i
-                              class={`fa-sharp fa-solid ${
-                                percentageChange?.[data?.ticker]
-                                  ? percentageChange?.[data?.ticker] > 0
-                                    ? "text-green-500 fa-caret-up"
-                                    : "text-red-500 fa-caret-down"
-                                  : Number(item?.percent_change_24h) > 0
-                                  ? "text-green-500 fa-caret-up"
-                                  : "text-red-500 fa-caret-down"
-                              } mr-[1px]`}
-                            />{" "}
-                            {percentageChange?.[data?.ticker]
-                              ? percentageChange?.[data?.ticker] > 0
-                                ? "+"
-                                : ""
-                              : Number(item?.percent_change_24h)
-                              ? "+"
-                              : ""}
-                            {percentageChange?.[data?.ticker] == null
-                              ? item?.percent_change_24h
-                              : percentageChange?.[data?.ticker]}
-                            %
-                          </p>
-                        </div>
-                      </button>
-                    }
-                  />
-                ) : null;
-              })}
-          </div>
-        </div>
-        {/* Indexes */}
-        <div className="flex flex-col mt-4">
-          <div className="maxPicks flex flex-row justify-between">
-            <p className="text-white text-lg font-medium">Indexes</p>
-            <button
-              onClick={() => navigate("/indexes/")}
-              className="text-gray-400 text-xs"
-            >
-              View All
-            </button>
-          </div>
-          <div className="basketCard flex flex-row flex-wrap justify-between">
-            {/* xl-3 2xl-4 3xl-4(or)5 */}
-            {coinBasket?.map(
-              (item, index) =>
-                index < 4 && (
-                  <GradientContainer
-                    width="w-[24%]"
-                    key={index}
-                    height="h-56"
-                    className={"mt-4"}
-                    children={
-                      <button
-                        onClick={() =>
-                          navigate("/indexes/indexId", {
-                            state: { indexData: item },
-                          })
-                        }
-                        className="flex w-full h-full flex-col justify-between p-2"
-                      >
-                        <div
-                          style={{
-                            backgroundImage: `url('${
-                              indBgImgList[index + 4]
-                            }')`,
+          {/* Coins */}
+          <div className="flex flex-col mt-4">
+            <div className="maxPicks flex flex-row justify-between">
+              <p className="text-white text-lg font-medium">Max Picks</p>
+              <button
+                onClick={() => navigate("/coinList")}
+                className="text-gray-400 text-xs"
+              >
+                View All
+              </button>
+            </div>
+            <div className="coinSection flex flex-row flex-wrap justify-between">
+              {/* xl-6 2xl-8 3xl-12(or)5 */}
+              {coinMetaData &&
+                coinMetaData.map((item, index) => {
+                  const data = getCoinMeta(item?.ticker);
+                  return index < 8 ? (
+                    <GradientContainer
+                      className="mt-4"
+                      key={index}
+                      width="w-[24%]"
+                      height="h-16"
+                      children={
+                        <button
+                          onClick={() => {
+                            navigate(`/coin-desc/${data?.ticker}`, {
+                              state: { coin: item?.ticker },
+                            });
                           }}
-                          className={`bg-no-repeat bg-cover bg-center flex items-start justify-between flex-col h-5/6 w-full rounded-xl p-[6%]`}
+                          className="flex justify-between items-center p-4 px-4 w-full h-full"
                         >
-                          <p className="text-white text-md font-semibold">
-                            {item?.basketName}
-                          </p>
-                          <div className="flex w-full h-[90%] items-end">
-                            <CustomIndexChart
-                              grid={false}
-                              width={"100%"}
-                              height={"70%"}
-                              data={arrGen(
-                                item?.basketData?.price[`change_${"30d"}`]
-                              )}
+                          <div className="flex flex-row items-center">
+                            <img
+                              alt="logo"
+                              className="w-8 h-8 bg-white rounded-full"
+                              src={data?.logoUrl}
                             />
-                          </div>
-                        </div>
-                        <div className="flex w-full justify-between items-center mt-1">
-                          <div className="flex">
-                            {item?.coins?.map((item, index) => {
-                              const data = getCoinMeta(item);
-                              return (
-                                index < 3 && (
-                                  <div
-                                    key={index}
-                                    className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full"
-                                  >
-                                    <div className="flex w-full h-full justify-center items-center">
-                                      <img
-                                        className="w-6 rounded-full bg-white"
-                                        alt="btc"
-                                        src={data?.logoUrl}
-                                      />
-                                    </div>
-                                  </div>
-                                )
-                              );
-                            })}
-                            <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
-                              <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-col">
-                                <p className="text-white text-[7px] font-bold">
-                                  + {item?.coins.length - 3}
-                                </p>
-                                <p className="text-white text-[5px]">more</p>
-                              </div>
+                            <div className="ml-2 flex flex-col items-start">
+                              <p className="text-white font-semibold text-sm">
+                                {data?.ticker}
+                              </p>
+                              <p className="text-gray-400  text-xs">
+                                {data?.slug}
+                              </p>
                             </div>
                           </div>
-                          <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 h-6 w-14 rounded-2xl p-[1px]">
-                            <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center font-bold text-[8px]">
-                              VIEW
-                            </button>
+                          <div className="flex flex-col items-end">
+                            <p className="text-white font-semibold text-sm">
+                              {"$"}
+                              {currentPrice?.[data?.ticker] == null
+                                ? item?.price?.value.toFixed(4)
+                                : currentPrice?.[data?.ticker]}
+                            </p>
+                            <p
+                              className={`${
+                                percentageChange?.[data?.ticker]
+                                  ? percentageChange?.[data?.ticker] > 0
+                                    ? "text-green-500"
+                                    : "text-red-500"
+                                  : Number(item?.percent_change_24h) > 0
+                                  ? "text-green-500"
+                                  : "text-red-500"
+                              } text-[10px] font-semibold`}
+                            >
+                              <i
+                                class={`fa-sharp fa-solid ${
+                                  percentageChange?.[data?.ticker]
+                                    ? percentageChange?.[data?.ticker] > 0
+                                      ? "text-green-500 fa-caret-up"
+                                      : "text-red-500 fa-caret-down"
+                                    : Number(item?.percent_change_24h) > 0
+                                    ? "text-green-500 fa-caret-up"
+                                    : "text-red-500 fa-caret-down"
+                                } mr-[1px]`}
+                              />{" "}
+                              {percentageChange?.[data?.ticker]
+                                ? percentageChange?.[data?.ticker] > 0
+                                  ? "+"
+                                  : ""
+                                : Number(item?.percent_change_24h)
+                                ? "+"
+                                : ""}
+                              {percentageChange?.[data?.ticker] == null
+                                ? item?.percent_change_24h
+                                : percentageChange?.[data?.ticker]}
+                              %
+                            </p>
                           </div>
-                        </div>
-                      </button>
-                    }
-                  />
-                )
-            )}
+                        </button>
+                      }
+                    />
+                  ) : null;
+                })}
+            </div>
+          </div>
+          {/* Indexes */}
+          <div className="flex flex-col mt-4">
+            <div className="maxPicks flex flex-row justify-between">
+              <p className="text-white text-lg font-medium">Indexes</p>
+              <button
+                onClick={() => navigate("/indexes/")}
+                className="text-gray-400 text-xs"
+              >
+                View All
+              </button>
+            </div>
+            <div className="basketCard flex flex-row flex-wrap justify-between">
+              {/* xl-3 2xl-4 3xl-4(or)5 */}
+              {coinBasket?.map(
+                (item, index) =>
+                  index < 4 && (
+                    <GradientContainer
+                      width="w-[24%]"
+                      key={index}
+                      height="h-56"
+                      className={"mt-4"}
+                      children={
+                        <button
+                          onClick={() =>
+                            navigate("/indexes/indexId", {
+                              state: { indexData: item },
+                            })
+                          }
+                          className="flex w-full h-full flex-col justify-between p-2"
+                        >
+                          <div
+                            style={{
+                              backgroundImage: `url('${
+                                indBgImgList[index + 4]
+                              }')`,
+                            }}
+                            className={`bg-no-repeat bg-cover bg-center flex items-start justify-between flex-col h-5/6 w-full rounded-xl p-[6%]`}
+                          >
+                            <p className="text-white text-md font-semibold">
+                              {item?.basketName}
+                            </p>
+                            <div className="flex w-full h-[90%] items-end">
+                              <CustomIndexChart
+                                grid={false}
+                                width={"100%"}
+                                height={"70%"}
+                                data={arrGen(
+                                  item?.basketData?.price[`change_${"30d"}`]
+                                )}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex w-full justify-between items-center mt-1">
+                            <div className="flex">
+                              {item?.coins?.map((item, index) => {
+                                const data = getCoinMeta(item);
+                                return (
+                                  index < 3 && (
+                                    <div
+                                      key={index}
+                                      className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full"
+                                    >
+                                      <div className="flex w-full h-full justify-center items-center">
+                                        <img
+                                          className="w-6 rounded-full bg-white"
+                                          alt="btc"
+                                          src={data?.logoUrl}
+                                        />
+                                      </div>
+                                    </div>
+                                  )
+                                );
+                              })}
+                              <div className="bg-gradient-to-b from-fuchsia-500 to-cyan-500 w-6 h-6 p-[1px] rounded-full">
+                                <div className="bg-bg rounded-full flex w-full h-full justify-center items-center flex-col">
+                                  <p className="text-white text-[7px] font-bold">
+                                    + {item?.coins.length - 3}
+                                  </p>
+                                  <p className="text-white text-[5px]">more</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex bg-gradient-to-b from-fuchsia-500 to-cyan-500 h-6 w-14 rounded-2xl p-[1px]">
+                              <button className="flex h-full bg-bg rounded-2xl text-white w-full justify-center items-center font-bold text-[8px]">
+                                VIEW
+                              </button>
+                            </div>
+                          </div>
+                        </button>
+                      }
+                    />
+                  )
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -428,36 +434,41 @@ const Home = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col sm:hidden xl:flex"
+        className="Right basis-1/4 items-center bg-no-repeat bg-cover h-screen bg-center  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col"
       >
-        {pageRightIndex == 0 && (
-          <>
-            {/* pageIndex-0 */}
-            <div>
-              <p className="text-md text-center text-white font-medium 3xl:text-3xl ">
-                AI Powered financial manager
-              </p>
-              <p className="text-white font-semibold text-center mt-6  text-2xl 2xl:text-2xl 3xl:text-5xl">
-                Personalised portfolio for Maximum returns
-              </p>
-            </div>
-            <img
-              alt="img"
-              className="w-full h-[50%]"
-              src={require("../../assets/illustration.png")}
-            />
-            <button
-              onClick={() => {
-                setPageRightIndex(1);
-                // getCurrentPrice("BTC");
-              }}
-              className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
-            >
-              Start Now
-            </button>
-          </>
-        )}
-        {/* {pageRightIndex == 1 && (
+        <div
+          className={`flex flex-col justify-between  ${
+            width > 1440 ? "w-[80%]" : "w-full"
+          } ${height > 800 ? "h-[800px]" : "h-screen"}`}
+        >
+          {pageRightIndex == 0 && (
+            <>
+              {/* pageIndex-0 */}
+              <div>
+                <p className="text-md text-center text-white font-medium 3xl:text-3xl ">
+                  AI Powered financial manager
+                </p>
+                <p className="text-white font-semibold text-center mt-6  text-2xl 2xl:text-2xl 3xl:text-5xl">
+                  Personalised portfolio for Maximum returns
+                </p>
+              </div>
+              <img
+                alt="img"
+                className="w-full h-[50%]"
+                src={require("../../assets/illustration.png")}
+              />
+              <button
+                onClick={() => {
+                  setPageRightIndex(1);
+                  // getCurrentPrice("BTC");
+                }}
+                className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
+              >
+                Start Now
+              </button>
+            </>
+          )}
+          {/* {pageRightIndex == 1 && (
           <div className="flex flex-col justify-around w-full h-full">
             <div>
               <p className="text-white font-semibold text-center mt-5 text-3xl 3xl:text-5xl">
@@ -514,142 +525,142 @@ const Home = (props) => {
             </div>
           </div>
         )} */}
-        {pageRightIndex == 1 && (
-          <>
-            <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
-            <div>
-              <button
-                type="button"
-                class="text-white bg-primaryButton font-medium rounded-lg text-sm py-1 px-3 text-center items-center"
-                onClick={() => setPageRightIndex(0)}
-              >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+          {pageRightIndex == 1 && (
+            <>
+              <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
+              <div>
+                <button
+                  type="button"
+                  class="text-white bg-primaryButton font-medium rounded-lg text-sm py-1 px-3 text-center items-center"
+                  onClick={() => setPageRightIndex(0)}
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
-                  ></path>
-                </svg>
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 16l-4-4m0 0l4-4m-4 4h18"
+                    ></path>
+                  </svg>
+                </button>
+                <p className="text-sm text-center text-white font-medium 3xl:text-3xl mt-3">
+                  How much would you like to Invest?
+                </p>
+                <div className="text-white justify-center items-center flex font-bold text-center mt-5 text-2xl 2xl:text-4xl 3xl:text-5xl">
+                  <p className="font-normal">$</p>
+                  <input
+                    type="text"
+                    value={amount}
+                    onKeyPress={(event) => {
+                      if (!/[0-9]/.test(event.key)) {
+                        event.preventDefault();
+                      }
+                    }}
+                    onChange={(e) => {
+                      console.log(
+                        "comma",
+                        Number(e.target.value).toLocaleString()
+                      );
+                      setAmount(e.target.value);
+                    }}
+                    className="h-10 w-[80%] ring-1 bg-transparent text-white ring-purple-600 text-2xl ml-2 font-bold rounded-xl text-center form-control outline-0"
+                  />
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
+                  What is your investment Tenure?
+                </p>
+                <div className="flex flex-wrap flex-row justify-between items-center mt-3">
+                  {tenure.map((item, index) => (
+                    <GradientContainer
+                      width="w-[30%]"
+                      height="h-[150px]"
+                      key={index}
+                      className={"3xl:h-[250px]"}
+                      children={
+                        <button
+                          onClick={() => setTenureIndex(index)}
+                          className={`tenureCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start ${
+                            tenureIndex === index && `ring-2 ring-white`
+                          }`}
+                          tabIndex="1"
+                        >
+                          <img
+                            alt="img"
+                            className="w-4 h-4 3xl:w-6 3xl:h-6"
+                            src={require("../../assets/optionIcon.png")}
+                          />
+                          <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg text-start mr-3">
+                            {item.title}
+                          </p>
+                          <p className="text-[8px] text-center text-white font-bold 3xl:text-lg">
+                            {item.desc}
+                          </p>
+                        </button>
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
+                  What is your preferred Profile?
+                </p>
+                <div className="flex flex-wrap flex-row justify-between items-center mt-3">
+                  {risk.map((item, index) => (
+                    <GradientContainer
+                      width="w-[30%]"
+                      key={index}
+                      height="h-[150px]"
+                      className={"3xl:h-[250px]"}
+                      children={
+                        <button
+                          onClick={() => setRiskIndex(index + 1)}
+                          className={`riskCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start ${
+                            riskIndex === index + 1 && `ring-2 ring-white`
+                          }`}
+                          tabIndex="2"
+                        >
+                          <img
+                            alt="img"
+                            className="w-4 h-4 3xl:w-6 3xl:h-6"
+                            src={require("../../assets/optionIcon.png")}
+                          />
+                          <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">
+                            {item.title}
+                          </p>
+                          <p className="text-[7px] text-white font-bold 3xl:text-lg text-start">
+                            {item.desc}
+                          </p>
+                        </button>
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  const duration =
+                    tenureIndex == 0 ? "s" : tenureIndex == 1 ? "m" : "l";
+                  getSmartSuggestList(duration + riskIndex);
+                }}
+                className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
+              >
+                Smart Suggest
               </button>
-              <p className="text-sm text-center text-white font-medium 3xl:text-3xl mt-3">
-                How much would you like to Invest?
-              </p>
-              <div className="text-white justify-center items-center flex font-bold text-center mt-5 text-2xl 2xl:text-4xl 3xl:text-5xl">
-                <p className="font-normal">$</p>
-                <input
-                  type="text"
-                  value={amount}
-                  onKeyPress={(event) => {
-                    if (!/[0-9]/.test(event.key)) {
-                      event.preventDefault();
-                    }
-                  }}
-                  onChange={(e) => {
-                    console.log(
-                      "comma",
-                      Number(e.target.value).toLocaleString()
-                    );
-                    setAmount(e.target.value);
-                  }}
-                  className="h-10 w-[80%] ring-1 bg-transparent text-white ring-purple-600 text-2xl ml-2 font-bold rounded-xl text-center form-control outline-0"
-                />
-              </div>
-            </div>
-            <div>
-              <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
-                What is your investment Tenure?
-              </p>
-              <div className="flex flex-wrap flex-row justify-between items-center mt-3">
-                {tenure.map((item, index) => (
-                  <GradientContainer
-                    width="w-[30%]"
-                    height="h-[150px]"
-                    key={index}
-                    className={"3xl:h-[250px]"}
-                    children={
-                      <button
-                        onClick={() => setTenureIndex(index)}
-                        className={`tenureCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start ${
-                          tenureIndex === index && `ring-2 ring-white`
-                        }`}
-                        tabIndex="1"
-                      >
-                        <img
-                          alt="img"
-                          className="w-4 h-4 3xl:w-6 3xl:h-6"
-                          src={require("../../assets/optionIcon.png")}
-                        />
-                        <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg text-start mr-3">
-                          {item.title}
-                        </p>
-                        <p className="text-[8px] text-center text-white font-bold 3xl:text-lg">
-                          {item.desc}
-                        </p>
-                      </button>
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="text-sm text-center text-white font-medium 3xl:text-3xl ">
-                What is your preferred Profile?
-              </p>
-              <div className="flex flex-wrap flex-row justify-between items-center mt-3">
-                {risk.map((item, index) => (
-                  <GradientContainer
-                    width="w-[30%]"
-                    key={index}
-                    height="h-[150px]"
-                    className={"3xl:h-[250px]"}
-                    children={
-                      <button
-                        onClick={() => setRiskIndex(index + 1)}
-                        className={`riskCard h-full w-full px-2 py-4 rounded-2xl flex flex-col justify-between items-start ${
-                          riskIndex === index + 1 && `ring-2 ring-white`
-                        }`}
-                        tabIndex="2"
-                      >
-                        <img
-                          alt="img"
-                          className="w-4 h-4 3xl:w-6 3xl:h-6"
-                          src={require("../../assets/optionIcon.png")}
-                        />
-                        <p className="text-md font-semibold text-white my-3 3xl:text-3xl 3xl:my-5 2.5xl:text-lg">
-                          {item.title}
-                        </p>
-                        <p className="text-[7px] text-white font-bold 3xl:text-lg text-start">
-                          {item.desc}
-                        </p>
-                      </button>
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                const duration =
-                  tenureIndex == 0 ? "s" : tenureIndex == 1 ? "m" : "l";
-                getSmartSuggestList(duration + riskIndex);
-              }}
-              className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl"
-            >
-              Smart Suggest
-            </button>
-          </>
-        )}
-        {pageRightIndex == 2 && (
-          <>
-            <div>
-              {/* <button
+            </>
+          )}
+          {pageRightIndex == 2 && (
+            <>
+              <div>
+                {/* <button
                 type="button"
                 class="text-white bg-primaryButton font-medium rounded-lg text-sm py-1 px-3 text-center items-center"
                 onClick={() => setPageRightIndex(2)}
@@ -669,99 +680,100 @@ const Home = (props) => {
                   ></path>
                 </svg>
               </button> */}
-              <p className="text-white font-semibold text-center mt-2  text-2xl 2xl:text-2xl 3xl:text-5xl">
-                Suggested portfolio for maximum gain
-              </p>
-            </div>
-            <GradientContainer
-              width="w-full"
-              height="h-[72%]"
-              className={"my-5 2xl:h-[60%]"}
-              children={
-                <div className="w-full h-full rounded-2xl flex flex-col justify-around ">
-                  {smartSuggestList && (
-                    <CustomPieChart
-                      data={smartSuggestList}
-                      width={"100%"}
-                      height={"45%"}
-                    />
-                  )}
-                  <div className="flex flex-row w-full justify-center items-center gap-2 text-sm font-semibold">
-                    <p className="p-1 px-2 bg-white rounded-xl">
-                      {tenureIndex == 0
-                        ? "short-term"
-                        : tenureIndex == 1
-                        ? "mid-term"
-                        : "long-term"}
-                    </p>
-                    <p className="p-1 px-2 bg-white rounded-xl">
-                      {riskIndex == 1
-                        ? "basic"
-                        : riskIndex == 2
-                        ? "balance"
-                        : "bold"}
-                    </p>
-                  </div>
-                  <div className="coinList grid grid-cols-2 p-[10px_10px_40px_20px] overflow-scroll mt-2 ml-1 h-[40%]">
-                    {smartSuggestList?.coins?.map((item, index) => {
-                      const data = getCoinMeta(item);
-                      return (
-                        <div
-                          key={index}
-                          className="flex items-center justify-center mt-[20px] w-[100%] px-3"
-                        >
-                          <img
-                            alt="btc"
-                            className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
-                            src={data?.logoUrl ? data?.logoUrl : pimg}
-                          />
-                          <div className="pl-[6px]">
-                            <p className="font-mont font-semibold text-white text-[10px] 3xl:text-xl">
-                              {data?.ticker}
-                            </p>
-                            <div
-                              className={`h-[6px] w-[${
-                                (100 / smartSuggestList?.coins.length).toFixed(
-                                  2
-                                ) + 20
-                              }px] rounded-lg bg-[${pieColors[index]}]`}
-                            ></div>
-                            <p className="font-semibold text-white text-sm 3xl:text-xl">
-                              {Number(
-                                (100 / smartSuggestList?.coins.length).toFixed(
-                                  2
-                                )
-                              )}
-                              %{/* {data?.ticker} */}
-                            </p>
+                <p className="text-white font-semibold text-center mt-2  text-2xl 2xl:text-2xl 3xl:text-5xl">
+                  Suggested portfolio for maximum gain
+                </p>
+              </div>
+              <GradientContainer
+                width="w-full"
+                height="h-[72%]"
+                className={"my-5 2xl:h-[60%]"}
+                children={
+                  <div className="w-full h-full rounded-2xl flex flex-col justify-around ">
+                    {smartSuggestList && (
+                      <CustomPieChart
+                        data={smartSuggestList}
+                        width={"100%"}
+                        height={"45%"}
+                      />
+                    )}
+                    <div className="flex flex-row w-full justify-center items-center gap-2 text-sm font-semibold">
+                      <p className="p-1 px-2 bg-white rounded-xl">
+                        {tenureIndex == 0
+                          ? "short-term"
+                          : tenureIndex == 1
+                          ? "mid-term"
+                          : "long-term"}
+                      </p>
+                      <p className="p-1 px-2 bg-white rounded-xl">
+                        {riskIndex == 1
+                          ? "basic"
+                          : riskIndex == 2
+                          ? "balance"
+                          : "bold"}
+                      </p>
+                    </div>
+                    <div className="coinList grid grid-cols-2 p-[10px_10px_40px_20px] overflow-scroll mt-2 ml-1 h-[40%]">
+                      {smartSuggestList?.coins?.map((item, index) => {
+                        const data = getCoinMeta(item);
+                        return (
+                          <div
+                            key={index}
+                            className="flex items-center justify-center mt-[20px] w-[100%] px-3"
+                          >
+                            <img
+                              alt="btc"
+                              className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
+                              src={data?.logoUrl ? data?.logoUrl : pimg}
+                            />
+                            <div className="pl-[6px]">
+                              <p className="font-mont font-semibold text-white text-[10px] 3xl:text-xl">
+                                {data?.ticker}
+                              </p>
+                              <div
+                                className={`h-[6px] w-[${
+                                  (
+                                    100 / smartSuggestList?.coins.length
+                                  ).toFixed(2) + 20
+                                }px] rounded-lg bg-[${pieColors[index]}]`}
+                              ></div>
+                              <p className="font-semibold text-white text-sm 3xl:text-xl">
+                                {Number(
+                                  (
+                                    100 / smartSuggestList?.coins.length
+                                  ).toFixed(2)
+                                )}
+                                %{/* {data?.ticker} */}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              }
-            />
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setPageRightIndex(1)}
-                className="bg-gradient-to-r from-purple-300 bg-purple-400 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg 2xl:text-xl"
-              >
-                Go Back
-              </button>
-              <button
-                onClick={() =>
-                  navigate("/transactionSummary", {
-                    state: { indexData: smartSuggestList, amount: amount },
-                  })
                 }
-                className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
-              >
-                Invest Now
-              </button>
-            </div>
-          </>
-        )}
+              />
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setPageRightIndex(1)}
+                  className="bg-gradient-to-r from-purple-300 bg-purple-400 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg 2xl:text-xl"
+                >
+                  Go Back
+                </button>
+                <button
+                  onClick={() =>
+                    navigate("/transactionSummary", {
+                      state: { indexData: smartSuggestList, amount: amount },
+                    })
+                  }
+                  className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
+                >
+                  Invest Now
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
