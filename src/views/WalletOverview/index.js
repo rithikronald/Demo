@@ -154,14 +154,16 @@ const WalletOverView = (props) => {
     setShowRefresh(false);
     axios
       .get(
-        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/QrUR3ejnnTY9mgTOLN4dqMwttVP2`,
+        `https://us-central1-maximumprotocol-50f77.cloudfunctions.net/api/gateio/listSpotAssets/${localStorage.getItem(
+          "uid"
+        )}`,
         {
           headers: { "Content-Type": "application/json" },
         }
       )
       .then((response) => {
         const bal = response?.data?.find((o) => o.currency === "USDT");
-        setBalance(Number(bal?.available).toFixed(2));
+        setBalance(bal?.available ? Number(bal?.available).toFixed(2) : 0);
         setShowRefresh(true);
       })
       .catch((e) => {
@@ -207,8 +209,12 @@ const WalletOverView = (props) => {
 
   return (
     <div className="WalletOverview bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont pl-[60px]">
-      <div className="Left p-10 px-14 flex flex-col justify-around overflow-y-hidden sm:flex xl:basis-3/4 h-[100%]">
-        <div className="overflow-y-scroll something">
+      <div className="Left p-10 px-14 flex flex-col justify-around items-center overflow-y-hidden basis-3/4 h-[100%]">
+        <div
+          className={`overflow-y-scroll something ${
+            width > 1440 ? "w-[80%]" : "w-full"
+          }`}
+        >
           <div className="flex flex-col w-full">
             <p className="text-2xl 2xl:text-3xl 3xl:text-4xl font-semibold text-white">
               Wallet Overview
@@ -513,31 +519,37 @@ const WalletOverView = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 px-8 justify-center items-center flex flex-col"
+        className="Right bg-no-repeat bg-cover bg-center w-[25%] bg-gradient-to-tr from-slate-900 to-purple-800 px-8 items-center justify-center flex flex-col"
       >
-        <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
-        <div className="mt-[8%] flex flex-col justify-between">
-          {transactionMode == 0 ? (
-            <Deopsite
-              balance={balance}
-              onRefresh={() => setRefresh((prev) => prev + 1)}
-              showRefresh={showRefresh}
-            />
-          ) : (
-            <Withdraw currencyChain={currentCurrencyChain} />
+        <div
+          className={`flex justify-center flex-col ${
+            width > 1440 ? "w-[80%]" : "w-full"
+          } ${height > 800 ? "h-[800px]" : "h-screen"}`}
+        >
+          <Tabs onClick={(val) => setTransactionMode(val)} data={tabsData} />
+          <div className="mt-[8%] flex flex-col justify-between">
+            {transactionMode == 0 ? (
+              <Deopsite
+                balance={balance}
+                onRefresh={() => setRefresh((prev) => prev + 1)}
+                showRefresh={showRefresh}
+              />
+            ) : (
+              <Withdraw currencyChain={currentCurrencyChain} />
+            )}
+          </div>
+          {transactionMode == 1 && (
+            <button
+              onClick={() => {
+                setFailed(true);
+                console.log(ticker);
+              }}
+              className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
+            >
+              Deposit Now
+            </button>
           )}
         </div>
-        {transactionMode == 1 && (
-          <button
-            onClick={() => {
-              setFailed(true);
-              console.log(ticker);
-            }}
-            className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
-          >
-            Deposit Now
-          </button>
-        )}
       </div>
     </div>
   );

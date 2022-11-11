@@ -43,7 +43,7 @@ export const IndexDetails = (props) => {
   const { height, width } = useWindowDimensions();
   const navigate = useNavigate();
   return (
-    <>
+    <div className="flex flex-col w-full h-[98%] justify-between">
       <div>
         <p className="text-white font-semibold text-center  text-2xl 2xl:text-2xl 3xl:text-5xl">
           {props?.indexData?.basketName}
@@ -116,6 +116,6 @@ export const IndexDetails = (props) => {
           SIP
         </button>
       </div>
-    </>
+    </div>
   );
 };

@@ -69,128 +69,138 @@ const Indexes = (props) => {
   return (
     <div className="App bg-gradient-to-tl from-bg via-bgl1 to-darkPurple flex h-screen w-full font-mont">
       <div
-        className={`Left xl:p-10 xl:px-28 lg1:pl-20 lg1:p-5 flex flex-col justify-center basis-3/4`}
+        className={`Left justify-center xl:p-10 xl:px-28 lg1:pl-20 lg1:p-5 flex flex-col items-center basis-3/4`}
       >
-        <div className="h-[25%] flex mt-[20px] w-full text-white">
-          <div className="flex flex-col w-1/2">
-            <p className="text-3xl  text-white font-bold">
-              {location?.state?.indexData?.basketName}
-            </p>
-            <p className="text-purple-600 font-light text-sm">Index</p>
-            <p className=" text-white lg1:text-xs 2xl:text-sm pr-[15px] mt-3">
-              {description}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-1 w-1/2">
-            {location?.state?.indexData &&
-              [
-                {
-                  title: "Active Wallet Addresses",
-                  logo: lg1,
-                  value: numFormatter(basketData?.active_addresses),
-                },
-                {
-                  title: "Daily Active Addresses",
-                  logo: lg2,
-                  value: numFormatter(basketData?.daily_active_addresses),
-                },
-                {
-                  title: "Transation Volume",
-                  logo: lg3,
-                  value: numFormatter(basketData?.transaction_volume),
-                },
-                {
-                  title: "NVT Ratio",
-                  logo: lg4,
-                  value: numFormatter(basketData?.nvt),
-                },
-              ].map((ele) => (
-                <div className="flex items-center">
-                  <img className="w-14 h-14" alt={"atr"} src={ele.logo} />
-                  <div className=" text-white ml-2">
-                    <p className="text-[9px]">{ele.title}</p>
-                    <div className="flex items-end">
-                      <p className="text-[25px] font-bold">{ele.value}</p>
-                      <p
-                        style={{ transform: "translateY(-5px)" }}
-                        className="ml-3 text-[10px]  font-bold text-red-600"
-                      >
-                        32%
-                      </p>
+        <div
+          className={`felx flex-col ${width > 1440 ? "w-[80%]" : "w-full"} ${
+            height > 800 ? "h-[800px]" : "h-screen"
+          }`}
+        >
+          <div className="h-[25%] flex mt-[20px] w-full text-white">
+            <div className="flex flex-col w-1/2">
+              <p className="text-3xl  text-white font-bold">
+                {location?.state?.indexData?.basketName}
+              </p>
+              <p className="text-purple-600 font-light text-sm">Index</p>
+              <p className=" text-white lg1:text-xs 2xl:text-sm pr-[15px] mt-3">
+                {description}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-1 w-1/2">
+              {location?.state?.indexData &&
+                [
+                  {
+                    title: "Active Wallet Addresses",
+                    logo: lg1,
+                    value: numFormatter(basketData?.active_addresses),
+                  },
+                  {
+                    title: "Daily Active Addresses",
+                    logo: lg2,
+                    value: numFormatter(basketData?.daily_active_addresses),
+                  },
+                  {
+                    title: "Transation Volume",
+                    logo: lg3,
+                    value: numFormatter(basketData?.transaction_volume),
+                  },
+                  {
+                    title: "NVT Ratio",
+                    logo: lg4,
+                    value: numFormatter(basketData?.nvt),
+                  },
+                ].map((ele) => (
+                  <div className="flex items-center">
+                    <img className="w-14 h-14" alt={"atr"} src={ele.logo} />
+                    <div className=" text-white ml-2">
+                      <p className="text-[9px]">{ele.title}</p>
+                      <div className="flex items-end">
+                        <p className="text-[25px] font-bold">{ele.value}</p>
+                        <p
+                          style={{ transform: "translateY(-5px)" }}
+                          className="ml-3 text-[10px]  font-bold text-red-600"
+                        >
+                          32%
+                        </p>
+                      </div>
                     </div>
                   </div>
+                ))}
+            </div>
+          </div>
+          <div className="flex flex-col h-[70%] mt-4">
+            <div className="flex">
+              {["1d", "7d", "30d"].map((ele) => (
+                <button
+                  onClick={() => setPriceIndex(ele)}
+                  className={`text-[10px] text-white  w-[50px] rounded-full p-1 flex justify-center items-center ${
+                    priceIndex === ele ? "bg-purple-600" : ""
+                  }`}
+                >
+                  {ele}
+                </button>
+              ))}
+            </div>
+            <div className="flex flex-wrap  h-full justify-between mt-5">
+              {[
+                {
+                  name: "Price Action",
+                  data: arrGen(basketData?.price[`change_${priceIndex}`]),
+                },
+                {
+                  name: "Network Growth",
+                  data: arrGen(
+                    basketData?.networkGrowth[`change_${priceIndex}`]
+                  ),
+                },
+              ].map((item) => (
+                <div className="flex flex-col w-[48%] h-[45%]">
+                  <p className="text-white font-medium text-sm">{item.name}</p>
+                  <GradientContainer
+                    height="h-[100%]"
+                    width="w-full"
+                    className={"mt-3"}
+                  >
+                    {console.log("ITEM", item?.data)}
+                    <CustomAreaChart
+                      data={item.data}
+                      width={"100%"}
+                      height={"100%"}
+                      isDollar={item?.name == "Price Action" ? true : false}
+                    />
+                  </GradientContainer>
                 </div>
               ))}
-          </div>
-        </div>
-        <div className="flex flex-col h-[70%] mt-4">
-          <div className="flex">
-            {["1d", "7d", "30d"].map((ele) => (
-              <button
-                onClick={() => setPriceIndex(ele)}
-                className={`text-[10px] text-white  w-[50px] rounded-full p-1 flex justify-center items-center ${
-                  priceIndex === ele ? "bg-purple-600" : ""
-                }`}
-              >
-                {ele}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap  h-full justify-between mt-5">
-            {[
-              {
-                name: "Price Action",
-                data: arrGen(basketData?.price[`change_${priceIndex}`]),
-              },
-              {
-                name: "Network Growth",
-                data: arrGen(basketData?.networkGrowth[`change_${priceIndex}`]),
-              },
-            ].map((item) => (
-              <div className="flex flex-col w-[48%] h-[45%]">
-                <p className="text-white font-medium text-sm">{item.name}</p>
-                <GradientContainer
-                  height="h-[100%]"
-                  width="w-full"
-                  className={"mt-3"}
-                >
-                  {console.log("ITEM", item?.data)}
-                  <CustomAreaChart
-                    data={item.data}
-                    width={"100%"}
-                    height={"100%"}
-                    isDollar={item?.name == "Price Action" ? true : false}
-                  />
-                </GradientContainer>
-              </div>
-            ))}
-            {[
-              {
-                name: "Social Dominance",
-                data: arrGen(
-                  basketData?.socialDominance[`change_${priceIndex}`]
-                ),
-              },
-              {
-                name: "Dev Activity",
-                data: arrGen(basketData?.dev_activity[`change_${priceIndex}`]),
-              },
-            ].map((item) => (
-              <div className="flex flex-col w-[48%] h-[45%] mt-4">
-                <p className="text-white font-medium text-sm">{item.name}</p>
-                <GradientContainer
-                  height="h-[100%]"
-                  width="w-full"
-                  className={"mt-3"}
-                >
-                  <CustomLineChart
-                    width={"100%"}
-                    height={"100%"}
-                    data={item?.data}
-                  />
-                </GradientContainer>
-              </div>
-            ))}
+              {[
+                {
+                  name: "Social Dominance",
+                  data: arrGen(
+                    basketData?.socialDominance[`change_${priceIndex}`]
+                  ),
+                },
+                {
+                  name: "Dev Activity",
+                  data: arrGen(
+                    basketData?.dev_activity[`change_${priceIndex}`]
+                  ),
+                },
+              ].map((item) => (
+                <div className="flex flex-col w-[48%] h-[45%] mt-4">
+                  <p className="text-white font-medium text-sm">{item.name}</p>
+                  <GradientContainer
+                    height="h-[100%]"
+                    width="w-full"
+                    className={"mt-3"}
+                  >
+                    <CustomLineChart
+                      width={"100%"}
+                      height={"100%"}
+                      data={item?.data}
+                    />
+                  </GradientContainer>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -198,17 +208,23 @@ const Indexes = (props) => {
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-around flex flex-col"
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4  bg-gradient-to-tl from-bg via-maxPurple to-darkPurple p-8 justify-center items-center flex flex-col"
       >
-        {pageRightIndex == 0 && (
-          <IndexDetails
-            indexData={location?.state?.indexData}
-            onClick={() => setPageRightIndex(1)}
-          />
-        )}
-        {pageRightIndex == 1 && (
-          <SetupSIP onClick={() => setPageRightIndex(0)} />
-        )}
+        <div
+          className={`felx flex-col justify-between ${
+            width > 1440 ? "w-[80%]" : "w-full"
+          } ${height > 800 ? "h-[800px]" : "h-screen"}`}
+        >
+          {pageRightIndex == 0 && (
+            <IndexDetails
+              indexData={location?.state?.indexData}
+              onClick={() => setPageRightIndex(1)}
+            />
+          )}
+          {pageRightIndex == 1 && (
+            <SetupSIP onClick={() => setPageRightIndex(0)} />
+          )}
+        </div>
       </div>
     </div>
   );
