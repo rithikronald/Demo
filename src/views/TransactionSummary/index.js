@@ -10,12 +10,14 @@ import { Deopsite } from "../../components/Deposite";
 import { GradientContainer } from "../../components/GradientContainer";
 import { pieColors } from "../../constants/constants";
 import { getCoinMeta } from "../../hooks/getcoinMetaData";
+import { useWindowDimensions } from "../../hooks/useWindowDimension";
 import { getCurrentPrice } from "../../utility/getCurrentPrice";
 import { TransactionModal } from "./popovers";
 import "./style.css";
 
 const TransactionSummary = () => {
   const location = useLocation();
+  const { height, width } = useWindowDimensions();
   const [currentPrice, setCurrentPrice] = useState({});
   const [status, setStatus] = useState({});
   const [split, setSplit] = useState({});
@@ -139,7 +141,7 @@ const TransactionSummary = () => {
       )
       .then((response) => {
         const bal = response?.data?.find((o) => o.currency === "USDT");
-        setBalance(Number(bal?.available).toFixed(2));
+        setBalance(bal?.available ? Number(bal?.available).toFixed(2) : 0);
         setShowRefresh(true);
       })
       .catch((e) => {
@@ -294,217 +296,207 @@ const TransactionSummary = () => {
           status={socketPayload.length > counter ? false : true}
         />
       )} */}
-      <div className="Left bg-yellow-40  p-8 px-14 flex flex-col justify-center items-center overflow-y-scroll basis-3/4">
-        <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
-          Transaction Summary
-        </p>
-        <div className="flex w-[80%] mt-[5%]">
-          <p className="text-white font-medium">Composition Breakdown</p>
-        </div>
-        <GradientContainer
-          width="w-[80%]"
-          height="h-[50%]"
-          className={"mt-2"}
-          children={
-            <div className="w-full h-full rounded-2xl flex flex-col">
-              <div className="flex justify-center items-center">
-                <p className="text-white font-mont text-xl font-semibold mt-3">
-                  {location?.state?.indexData?.basketName}
-                </p>
-              </div>
-              <div className="flex w-full h-[76%]">
-                <div className="coin-list grid grid-cols-2 gap-2 w-[60%]  p-10 overflow-scroll">
-                  {location?.state?.indexData?.coins?.map((item, index) => {
-                    const data = getCoinMeta(item);
-                    return (
-                      <GradientContainer
-                        className={"mt-4"}
-                        children={
-                          <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4 relative">
-                            {status[`${item}_USDT`] === "closed" && (
+      <div className="Left flex flex-col justify-center items-center basis-3/4">
+        <div
+          className={`flex flex-col items-center justify-between ${
+            height > 800 ? "h-[800px]" : "h-screen"
+          } ${width > 1440 ? "w-[80%]" : "w-full"}`}
+        >
+          <p className="text-2xl 2xl:text-2xl 3xl:text-5xl font-semibold text-white font-mont">
+            Transaction Summary
+          </p>
+          <div className="flex w-[80%] mt-[5%]">
+            <p className="text-white font-medium">Composition Breakdown</p>
+          </div>
+          <GradientContainer
+            width="w-[80%]"
+            height="h-[50%]"
+            className={"mt-2"}
+            children={
+              <div className="w-full h-full rounded-2xl flex flex-col">
+                <div className="flex justify-center items-center">
+                  <p className="text-white font-mont text-xl font-semibold mt-3">
+                    {location?.state?.indexData?.basketName}
+                  </p>
+                </div>
+                <div className="flex w-full h-[76%]">
+                  <div className="coin-list grid grid-cols-2 gap-2 w-[60%]  p-10 overflow-scroll">
+                    {location?.state?.indexData?.coins?.map((item, index) => {
+                      const data = getCoinMeta(item);
+                      return (
+                        <GradientContainer
+                          className={"mt-4"}
+                          children={
+                            <div className="flex items-center p-2 w-[100%] rounded-2-xl h-full px-4 relative">
+                              {status[`${item}_USDT`] === "closed" && (
+                                <img
+                                  src={require("../../assets/greenVerifiedIcon2.png")}
+                                  className="absolute right-2 h-[25px] w-[25px]"
+                                />
+                              )}
+                              {(status[`${item}_USDT`] === "cancelled" ||
+                                status[`${item}_USDT`] === 400) && (
+                                <div
+                                  style={{ backdropFilter: "blur(3px)" }}
+                                  className="absolute right-2 h-[25px] flex"
+                                >
+                                  <img
+                                    src={require("../../assets/erroricon.png")}
+                                  />
+                                  <img
+                                    src={require("../../assets/refresh icon.png")}
+                                    onClick={() => {
+                                      setStatus((prev) => ({
+                                        ...prev,
+                                        [`${item}_USDT`]: null,
+                                      }));
+                                      setIsLoading(true);
+                                      createOrder({
+                                        currency_pair: `${item}_USDT`,
+                                        amount: split[`${item}_USDT`],
+                                        current_price: getBidPrice(
+                                          "buy",
+                                          currentPrice[`${item}_USDT`]
+                                        ),
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              )}
                               <img
-                                src={require("../../assets/greenVerifiedIcon2.png")}
-                                className="absolute right-2 h-[25px] w-[25px]"
+                                alt="btc"
+                                className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
+                                src={data?.logoUrl}
                               />
-                            )}
-                            {(status[`${item}_USDT`] === "cancelled" ||
-                              status[`${item}_USDT`] === 400) && (
-                              <div
-                                style={{ backdropFilter: "blur(3px)" }}
-                                className="absolute right-2 h-[25px] flex"
-                              >
-                                <img
-                                  src={require("../../assets/erroricon.png")}
-                                />
-                                <img
-                                  src={require("../../assets/refresh icon.png")}
-                                  onClick={() => {
-                                    setStatus((prev) => ({
-                                      ...prev,
-                                      [`${item}_USDT`]: null,
-                                    }));
-                                    setIsLoading(true);
-                                    createOrder({
-                                      currency_pair: `${item}_USDT`,
-                                      amount: split[`${item}_USDT`],
-                                      current_price: getBidPrice(
-                                        "buy",
-                                        currentPrice[`${item}_USDT`]
-                                      ),
-                                    });
-                                  }}
-                                />
+                              <div className="pl-[6px]">
+                                <p className="font-mont text-white text-[10px] 3xl:text-xl">
+                                  {data?.slug}
+                                </p>
+                                <div
+                                  className={`h-[6px] w-[${
+                                    (
+                                      100 /
+                                      location?.state?.indexData?.coins.length
+                                    ).toFixed(2) + 20
+                                  }px] rounded-lg bg-[${pieColors[index]}]`}
+                                ></div>
+                                <p className="font-semibold text-white text-sm 3xl:text-xl">
+                                  {data?.ticker}
+                                </p>
                               </div>
-                            )}
-                            <img
-                              alt="btc"
-                              className="h-10 w-10 3xl:h-14 3xl:w-14 bg-white rounded-full"
-                              src={data?.logoUrl}
-                            />
-                            <div className="pl-[6px]">
-                              <p className="font-mont text-white text-[10px] 3xl:text-xl">
-                                {data?.slug}
-                              </p>
-                              <div
-                                className={`h-[6px] w-[${
-                                  (
-                                    100 /
-                                    location?.state?.indexData?.coins.length
-                                  ).toFixed(2) + 20
-                                }px] rounded-lg bg-[${pieColors[index]}]`}
-                              ></div>
-                              <p className="font-semibold text-white text-sm 3xl:text-xl">
-                                {data?.ticker}
-                              </p>
                             </div>
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="flex flex-col justify-center items-center w-[40%]">
+                    <CustomPieChart
+                      data={location?.state?.indexData}
+                      width={"100%"}
+                      height={"100%"}
+                    />
+                    <div className="flex mt-3 items-center ml-5">
+                      <p className="text-gray-400 text-sm font-medium w-[20%]">
+                        Input Amount
+                      </p>
+                      <GradientContainer
+                        height="h-14"
+                        width="w-[60%]"
+                        className={""}
+                        children={
+                          <div className="w-full h-full flex justify-center items-center px-2">
+                            <p className="text-3xl text-white font-semibold">
+                              $
+                            </p>
+                            <input
+                              onChange={(e) => {
+                                if (!inputTouched) {
+                                  setInputTouched(true);
+                                }
+                                setBuyPrice(e.target.value);
+                              }}
+                              value={buyPrice}
+                              type="text"
+                              className="h-full w-full bg-transparent font-semibold focus:outline-none text-white text-2xl rounded-2xl text-center form-control"
+                            />
                           </div>
                         }
                       />
-                    );
-                  })}
-                </div>
-                <div className="flex flex-col justify-center items-center w-[40%]">
-                  <CustomPieChart
-                    data={location?.state?.indexData}
-                    width={"100%"}
-                    height={"100%"}
-                  />
-                  <div className="flex mt-3 items-center ml-5">
-                    <p className="text-gray-400 text-sm font-medium w-[20%]">
-                      Input Amount
-                    </p>
-                    <GradientContainer
-                      height="h-14"
-                      width="w-[60%]"
-                      className={""}
-                      children={
-                        <div className="w-full h-full flex justify-center items-center px-2">
-                          <p className="text-3xl text-white font-semibold">$</p>
-                          <input
-                            onChange={(e) => {
-                              if (!inputTouched) {
-                                setInputTouched(true);
-                              }
-                              setBuyPrice(e.target.value);
-                            }}
-                            value={buyPrice}
-                            type="text"
-                            className="h-full w-full bg-transparent font-semibold focus:outline-none text-white text-2xl rounded-2xl text-center form-control"
-                          />
-                        </div>
-                      }
-                    />
+                    </div>
+                    {inputTouched &&
+                    parseFloat(buyPrice) <
+                      location?.state?.indexData?.coins?.length * 10 + 5 ? (
+                      <p className="w-full pl-[20px] mt-[10px] font-mont font-bold text-red-500 text-[14px]">
+                        Minimum Input Amount is $
+                        {location?.state?.indexData?.coins?.length * 10 + 5}
+                      </p>
+                    ) : (
+                      ""
+                    )}
                   </div>
-                  {inputTouched &&
-                  parseFloat(buyPrice) <
-                    location?.state?.indexData?.coins?.length * 10 + 5 ? (
-                    <p className="w-full pl-[20px] mt-[10px] font-mont font-bold text-red-500 text-[14px]">
-                      Minimum Input Amount is $
-                      {location?.state?.indexData?.coins?.length * 10 + 5}
-                    </p>
-                  ) : (
-                    ""
-                  )}
                 </div>
               </div>
+            }
+          />
+          <div className="w-[80%] h-[30%] rounded-2xl flex flex-col justify-center ">
+            <div className="" onClick={retryOrders}>
+              <p className="text-gray-400 text-sm font-medium">Order Number</p>
+              <p className="font-semibold text-white text-xl">
+                894ytiwnhiuyb8n
+              </p>
             </div>
-          }
-        />
-        <div className="w-[80%] h-[30%] rounded-2xl flex flex-col justify-center ">
-          <div className="" onClick={retryOrders}>
-            <p className="text-gray-400 text-sm font-medium">Order Number</p>
-            <p className="font-semibold text-white text-xl">894ytiwnhiuyb8n</p>
-          </div>
-          <div className="mt-10">
-            <p className="text-gray-400  text-sm font-medium">
-              You have to pay
-            </p>
-            <div className="flex w-full justify-between">
-              <div
-                className="flex items-end"
-                onClick={() => {
-                  console.log("transactionSummary", transactionSummary);
-                  console.log(currentPrice);
-                }}
-              >
-                <p className="font-semibold text-white text-5xl">{buyPrice}</p>
-                <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
+            <div className="mt-10">
+              <p className="text-gray-400  text-sm font-medium">
+                You have to pay
+              </p>
+              <div className="flex w-full justify-between">
+                <div
+                  className="flex items-end"
+                  onClick={() => {
+                    console.log("transactionSummary", transactionSummary);
+                    console.log(currentPrice);
+                  }}
+                >
+                  <p className="font-semibold text-white text-5xl">
+                    {buyPrice}
+                  </p>
+                  <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
+                </div>
+                <button
+                  // onClick={createBatchOrder}
+                  onClick={createBatchOrder}
+                  className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
+                >
+                  {isLoading ? (
+                    <ScaleLoader height={20} color="#fff" />
+                  ) : (
+                    "Pay Now"
+                  )}
+                </button>
               </div>
-              <button
-                // onClick={createBatchOrder}
-                onClick={createBatchOrder}
-                className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
-              >
-                {isLoading ? (
-                  <ScaleLoader height={20} color="#fff" />
-                ) : (
-                  "Pay Now"
-                )}
-              </button>
             </div>
           </div>
         </div>
-        {/* <div className="w-[80%] mt-[50px]">
-        <Table title={"Transactions"} data={[
-          {transactionId: '3343443433434',
-          type: 'Buy', 
-          coin: 'Gaming Index', 
-          date: 'June 22, 2022',
-          amount: '$15', 
-          status: 'Pending'},
-          {transactionId: '3343443433434',
-          type: 'Buy', 
-          coin: 'Gaming Index', 
-          date: 'June 22, 2022',
-          amount: '$15', 
-          status: 'Pending'},
-          {transactionId: '3343443433434',
-          type: 'Buy', 
-          coin: 'Gaming Index', 
-          date: 'June 22, 2022',
-          amount: '$15', 
-          status: 'Pending'},
-          {transactionId: '3343443433434',
-          type: 'Buy', 
-          coin: 'Gaming Index', 
-          date: 'June 22, 2022',
-          amount: '$15', 
-          status: 'Pending'},
-        ]} />
-        </div> */}
       </div>
       <div
         style={{
           backgroundImage: `url('/images/rightSectionbg.png')`,
         }}
-        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-10 justify-center items-center flex flex-col"
+        className="Right bg-no-repeat bg-cover bg-center basis-1/4 bg-gradient-to-tr from-slate-900 to-purple-800 p-5 justify-center items-center flex flex-col"
       >
-        <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
-        <Deopsite
-          balance={balance}
-          onRefresh={() => setRefresh((prev) => prev + 1)}
-          showRefresh={showRefresh}
-        />
+        <div
+          className={`flex flex-col items-center justify-center ${
+            height > 800 ? "h-[700px]" : "h-screen"
+          } ${width > 1440 ? "w-[80%]" : "w-full"}`}
+        >
+          <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
+          <Deopsite
+            balance={balance}
+            onRefresh={() => setRefresh((prev) => prev + 1)}
+            showRefresh={showRefresh}
+          />
+        </div>
       </div>
     </div>
   );

@@ -76,9 +76,9 @@ export const Deopsite = ({ balance, showRefresh, onRefresh }) => {
                   </button> */}
                   <button
                     onClick={() => setTicker("USDT")}
-                    className={`rounded-3xl p-2 w-[30%] ${
+                    className={`rounded-3xl ${
                       ticker == "USDT" && "ring-2"
-                    } bg-maxPurple ring-2 ring-white flex justify-center items-center ml-2`}
+                    } bg-maxPurple ring-2 ring-white flex justify-between items-center ml-2 px-4 p-1 `}
                   >
                     <img
                       alt="vector"
@@ -205,7 +205,8 @@ export const Deopsite = ({ balance, showRefresh, onRefresh }) => {
             <div className="rounded-3xl h-full flex flex-col p-4">
               <div className="flex items-center">
                 <p className="text-gray-400 text-sm">Available Balance</p>
-                {showRefresh && <svg
+                {showRefresh && (
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -219,7 +220,8 @@ export const Deopsite = ({ balance, showRefresh, onRefresh }) => {
                       strokeLinejoin="round"
                       d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
                     />
-                  </svg>}
+                  </svg>
+                )}
               </div>
               <p className="text-white font-bold text-2xl 2xl:text-3xl 3xl:text-5xl">
                 <span className="font-normal">$</span>
