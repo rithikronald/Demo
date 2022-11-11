@@ -524,7 +524,15 @@ const TransactionSummary = () => {
                   {failed}
               </button> : <button
                 // onClick={createBatchOrder}
-                onClick={createBatchOrder}
+                onClick={() => {
+                  if(buyPrice < location?.state?.indexData?.coins?.length * 10 + 5){
+                    toast.warn("order not placed - input amount is lower than minimum value", {
+                      position: toast.POSITION.TOP_RIGHT,
+                    });
+                    return
+                  }
+                  createBatchOrder()
+                }}
                 className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
               >
                 {isLoading ? (
