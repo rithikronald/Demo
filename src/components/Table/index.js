@@ -91,12 +91,16 @@ export const Table = ({ openModal, data, title, price }) => {
             className="flex items-center cursor-pointer"
           >
             <img
-              className="w-8 h-8 rounded-full bg-white"
+              className="w-6 h-6 xl:w-8 xl:h-8 rounded-full bg-white"
               src={coinData?.logoUrl}
               alt="logo"
             />
-            <p className="text-xl font-bold ml-2">{coinData?.ticker}</p>
-            <p className="text-white text-lg ml-2 ">{coinData?.slug}</p>
+            <p className="xl:text-xl text-lg  font-bold ml-2">
+              {coinData?.ticker}
+            </p>
+            <p className="text-white xl:text-lg text-xs ml-2 ">
+              {coinData?.slug}
+            </p>
           </div>
         );
       },
@@ -107,7 +111,7 @@ export const Table = ({ openModal, data, title, price }) => {
       name: "PRICE",
       selector: (row) => {
         return (
-          <p className="font-mont text-white text-lg">
+          <p className="font-mont text-white xl:text-lg text-sm">
             $
             {currentPrice?.[row?.ticker]
               ? currentPrice?.[row?.ticker]
@@ -120,13 +124,13 @@ export const Table = ({ openModal, data, title, price }) => {
         color: "#fff",
         fontWeight: "500",
       },
-      grow: 1.5,
+      grow: 1,
     },
     {
       name: "24h CHANGE",
       selector: (row) => {
         return (
-          <p className="font-mont text-lg">
+          <p className="font-mont xl:text-lg text-sm">
             {percentage?.[row?.ticker]
               ? percentage?.[row?.ticker] > 0
                 ? "+"
@@ -147,25 +151,38 @@ export const Table = ({ openModal, data, title, price }) => {
       },
       conditionalCellStyles: [
         {
+          when: (row) => row.percent_change_24h > 0,
+          style: {
+            color: "#3fa34d",
+          },
+        },
+        {
+          when: (row) => row.percent_change_24h < 0,
+          style: {
+            color: "red",
+          },
+        },
+        {
           when: (row) =>
-            percentage?.[row?.ticker] > 0 || row.percent_change_24h > 0,
+            percentage?.[row?.ticker] && percentage?.[row?.ticker] > 0,
           style: {
             color: "#3fa34d",
           },
         },
         {
           when: (row) =>
-            percentage?.[row?.ticker] < 0 || row.percent_change_24h < 0,
+            percentage?.[row?.ticker] && percentage?.[row?.ticker] < 0,
           style: {
             color: "red",
           },
         },
+        
       ],
     },
     {
       name: "MARKET CAP",
       selector: (row) => (
-        <p className="font-mont text-lg">
+        <p className="font-mont xl:text-lg text-sm">
           {numFormatter(row.marketcap_usd?.value)}
         </p>
       ),
@@ -178,7 +195,7 @@ export const Table = ({ openModal, data, title, price }) => {
     {
       name: "VOLUME",
       selector: (row) => (
-        <p className="font-mont text-lg">
+        <p className="font-mont xl:text-lg text-sm">
           {numFormatter(row.tradingVolume?.value)}
         </p>
       ),
@@ -220,6 +237,7 @@ export const Table = ({ openModal, data, title, price }) => {
         color: "#7d8597",
         fontWeight: "500",
       },
+      grow: 1.5,
     },
   ];
 

@@ -267,25 +267,25 @@ const Home = (props) => {
                               state: { coin: item?.ticker },
                             });
                           }}
-                          className="flex justify-between items-center p-4 px-4 w-full h-full"
+                          className="flex justify-between items-center xl:p-4 xl:px-4 p-2 px-2 w-full h-full"
                         >
                           <div className="flex flex-row items-center">
                             <img
                               alt="logo"
-                              className="w-8 h-8 bg-white rounded-full"
+                              className="xl:w-8 xl:h-8 lg1:w-6 lg1:h-6 bg-white rounded-full"
                               src={data?.logoUrl}
                             />
                             <div className="ml-2 flex flex-col items-start">
                               <p className="text-white font-semibold text-sm">
                                 {data?.ticker}
                               </p>
-                              <p className="text-gray-400  text-xs">
+                              <p className="text-gray-400 text-xs">
                                 {data?.slug}
                               </p>
                             </div>
                           </div>
                           <div className="flex flex-col items-end">
-                            <p className="text-white font-semibold text-sm">
+                            <p className="text-white font-semibold lg1:text-xs xl:text-sm">
                               {"$"}
                               {currentPrice?.[data?.ticker] == null
                                 ? item?.price?.value.toFixed(4)
@@ -300,7 +300,7 @@ const Home = (props) => {
                                   : Number(item?.percent_change_24h) > 0
                                   ? "text-green-500"
                                   : "text-red-500"
-                              } text-[10px] font-semibold`}
+                              } xl:text-[10px] text-[9px] font-semibold`}
                             >
                               <i
                                 class={`fa-sharp fa-solid ${
