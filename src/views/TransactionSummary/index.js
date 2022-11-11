@@ -504,19 +504,7 @@ const TransactionSummary = () => {
                   </p>
                   <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
                 </div>
-                <button
-                  // onClick={createBatchOrder}
-                  onClick={createBatchOrder}
-                  className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
-                >
-                  {isLoading ? (
-                    <ScaleLoader height={20} color="#fff" />
-                  ) : (
-                    "Pay Now"
-                  )}
-                </button>
-              </div>
-              {
+                {
                 failed ? <button
                 onClick={() => {
                   if(failed === "Failed") {
@@ -546,6 +534,8 @@ const TransactionSummary = () => {
                 )}
               </button>
               }
+              </div>
+              
             </div>
           </div>
         </div>
