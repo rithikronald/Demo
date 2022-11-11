@@ -29,9 +29,7 @@ const makeRoutes = () => {
         <Route
           path={route.path}
           element={
-            <Suspense fallback={<div data-stage></div>}>
               <route.component />
-            </Suspense>
           }
           exact={route.exact}
         />
