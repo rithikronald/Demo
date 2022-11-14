@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { maximumInstance, ws } from "../../App";
 import { CustomPieChart } from "../../components/Charts/CustomPieChart";
@@ -89,9 +89,13 @@ const TransactionSummary = () => {
   };
 
   useEffect(() => {
+    setBuyPrice(0)
+      setFailed(null)
     return () => {
       setCurrentPrice({});
       setStatus({});
+      setBuyPrice(0)
+      setFailed(null)
     };
   }, []);
 
@@ -242,6 +246,30 @@ const TransactionSummary = () => {
       )
       .then((response) => {
         console.log(`response of ${currency_pair}`, response?.data);
+        switch (response?.data?.status) {
+          case "closed":
+            toast.success("order successful", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "open":
+            toast.success("order created - open", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case "cancelled":
+            toast.warn("order cancelled - try again", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            break;
+          case 400:
+            toast.error("invalid order - try again", {
+              position: toast.POSITION.TOP_RIGHT
+            })
+            break;
+          default:
+            break;
+        }
         setStatus((prev) => {
           return {
             ...prev,
@@ -268,12 +296,25 @@ const TransactionSummary = () => {
       .catch((err) => console.log("Error", err));
   };
 
+  const [failed, setFailed] = useState('')
+
   useEffect(() => {
     console.log("length", Object.keys(status).length, socketPayload.length);
+
     if (Object.keys(status).length == socketPayload.length) {
-      setisOpen(true);
+      let failed = false;
+      Object.keys(status).map((item) => {
+        if (status[item] === "closed") {
+        } else {
+          failed = true;
+        }
+      });
+      if (failed) {
+        setFailed('Failed')
+      } else {
+        setFailed('Done')
+      }
       setIsLoading(false);
-      // setBuyPrice("");
     }
     if (socketPayload.length == counter) {
       storeIndexTransaction();
@@ -463,18 +504,46 @@ const TransactionSummary = () => {
                   </p>
                   <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
                 </div>
-                <button
-                  // onClick={createBatchOrder}
-                  onClick={createBatchOrder}
-                  className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
-                >
-                  {isLoading ? (
-                    <ScaleLoader height={20} color="#fff" />
-                  ) : (
-                    "Pay Now"
-                  )}
-                </button>
+                {
+                failed ? <button
+                onClick={() => {
+                  if(failed === "Failed") {
+                    return
+                  } 
+                  setBuyPrice(0)
+                  setStatus(prev => {
+                    let something
+                    Object.keys(prev).map(i => {
+                      something[i] = null
+                    })
+                    return something
+                  })
+                }}
+                className={`${failed === "Failed" ? 'bg-red-500' : 'bg-green-500'} flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg`}
+              >
+                  {failed}
+              </button> : <button
+                // onClick={createBatchOrder}
+                onClick={() => {
+                  if(buyPrice < location?.state?.indexData?.coins?.length * 10 + 5){
+                    toast.warn("order not placed - input amount is lower than minimum value", {
+                      position: toast.POSITION.TOP_RIGHT,
+                    });
+                    return
+                  }
+                  createBatchOrder()
+                }}
+                className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
+              >
+                {isLoading ? (
+                  <ScaleLoader height={20} color="#fff" />
+                ) : (
+                  "Pay Now"
+                )}
+              </button>
+              }
               </div>
+              
             </div>
           </div>
         </div>
