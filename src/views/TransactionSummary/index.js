@@ -89,13 +89,13 @@ const TransactionSummary = () => {
   };
 
   useEffect(() => {
-    setBuyPrice(0)
-      setFailed(null)
+    setBuyPrice(0);
+    setFailed(null);
     return () => {
       setCurrentPrice({});
       setStatus({});
-      setBuyPrice(0)
-      setFailed(null)
+      setBuyPrice(0);
+      setFailed(null);
     };
   }, []);
 
@@ -264,8 +264,8 @@ const TransactionSummary = () => {
             break;
           case 400:
             toast.error("invalid order - try again", {
-              position: toast.POSITION.TOP_RIGHT
-            })
+              position: toast.POSITION.TOP_RIGHT,
+            });
             break;
           default:
             break;
@@ -296,7 +296,7 @@ const TransactionSummary = () => {
       .catch((err) => console.log("Error", err));
   };
 
-  const [failed, setFailed] = useState('')
+  const [failed, setFailed] = useState("");
 
   useEffect(() => {
     console.log("length", Object.keys(status).length, socketPayload.length);
@@ -310,9 +310,9 @@ const TransactionSummary = () => {
         }
       });
       if (failed) {
-        setFailed('Failed')
+        setFailed("Failed");
       } else {
-        setFailed('Done')
+        setFailed("Done");
       }
       setIsLoading(false);
     }
@@ -504,46 +504,60 @@ const TransactionSummary = () => {
                   </p>
                   <p className="font-bold text-2xl text-gray-400 ml-3">USD</p>
                 </div>
-                {
-                failed ? <button
-                onClick={() => {
-                  if(failed === "Failed") {
-                    return
-                  } 
-                  setBuyPrice(0)
-                  setStatus(prev => {
-                    let something
-                    Object.keys(prev).map(i => {
-                      something[i] = null
-                    })
-                    return something
-                  })
-                }}
-                className={`${failed === "Failed" ? 'bg-red-500' : 'bg-green-500'} flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg`}
-              >
-                  {failed}
-              </button> : <button
-                // onClick={createBatchOrder}
-                onClick={() => {
-                  if(buyPrice < location?.state?.indexData?.coins?.length * 10 + 5){
-                    toast.warn("order not placed - input amount is lower than minimum value", {
-                      position: toast.POSITION.TOP_RIGHT,
-                    });
-                    return
-                  }
-                  createBatchOrder()
-                }}
-                className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
-              >
-                {isLoading ? (
-                  <ScaleLoader height={20} color="#fff" />
+                {failed ? (
+                  <button
+                    onClick={() => {
+                      if (failed === "Failed") {
+                        return;
+                      }
+                      setBuyPrice(0);
+                      setStatus((prev) => {
+                        let something;
+                        Object.keys(prev).map((i) => {
+                          something[i] = null;
+                        });
+                        return something;
+                      });
+                    }}
+                    className={`${
+                      failed === "Failed" ? "bg-red-500" : "bg-green-500"
+                    } flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg`}
+                  >
+                    {failed}
+                  </button>
                 ) : (
-                  "Pay Now"
+                  <button
+                    // onClick={createBatchOrder}
+                    onClick={() => {
+                      if (
+                        buyPrice <
+                        location?.state?.indexData?.coins?.length * 10 + 5
+                      ) {
+                        toast.warn(
+                          "order not placed - input amount is lower than minimum value",
+                          {
+                            position: toast.POSITION.TOP_RIGHT,
+                          }
+                        );
+                        return;
+                      }
+                      if (buyPrice < balance) {
+                        toast.warn("order not placed - insufficient balance", {
+                          position: toast.POSITION.TOP_RIGHT,
+                        });
+                      }
+                      if (buyPrice >= balance) createBatchOrder();
+                    }}
+                    className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
+                  >
+                    {isLoading ? (
+                      <ScaleLoader height={20} color="#fff" />
+                    ) : (
+                      "Pay Now"
+                    )}
+                  </button>
                 )}
-              </button>
-              }
               </div>
-              
             </div>
           </div>
         </div>
