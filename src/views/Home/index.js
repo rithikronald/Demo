@@ -154,12 +154,12 @@ const Home = (props) => {
   };
 
   return (
-    <div className="App bg-gradient-to-tl justify-center items-center from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
+    <div className="App  bg-gradient-to-tl justify-center items-center from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
       <div
         style={{
           backgroundImage: `url('/images/mainbg.png')`,
         }}
-        className="Left basis-3/4 items-center bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around h-screen pl-[90px]"
+        className="Left basis-3/4 overflow-y-scroll items-center bg-no-repeat bg-cover bg-center p-10 px-14 flex flex-col justify-around h-screen pl-[90px]"
       >
         {/* Banner */}
         {/* <div className="flex w-full h-1/3">
@@ -198,7 +198,7 @@ const Home = (props) => {
           </div>
         </div> */}
         <div
-          className={`flex flex-col justify-between ${
+          className={`flex mt-5 flex-col justify-between ${
             height > 800 ? "h-[800px]" : "h-screen"
           } ${width > 1440 ? "w-[90%]" : "w-full"}`}
         >
@@ -468,63 +468,6 @@ const Home = (props) => {
               </button>
             </>
           )}
-          {/* {pageRightIndex == 1 && (
-          <div className="flex flex-col justify-around w-full h-full">
-            <div>
-              <p className="text-white font-semibold text-center mt-5 text-3xl 3xl:text-5xl">
-                Choose Your Interests
-              </p>
-            </div>
-            <div>
-              <div className="flex">
-                <p className="text-sm text-center text-white  font-semibold 3xl:text-3xl">
-                  Select an Option
-                </p>
-              </div>
-              <div className="flex flex-wrap flex-row justify-between items-center">
-                {categoryList.map((item, index) => (
-                  <GradientContainer
-                    width="w-[30%]"
-                    height="h-[120px] 2xl:h-[140px]"
-                    className={
-                      "mt-5  hover:shadow-[0_4px_0px_rgb(0,0,0)] text-black ease-out hover:translate-y-1 3xl:h-[250px] p-[0.6px]"
-                    }
-                    children={
-                      <button className="h-full w-full px-1 py-4 rounded-2xl flex flex-col justify-between  items-start cursor-pointer hover:bg-gradient-to-b from-white ...">
-                        <img
-                          alt="img"
-                          className=""
-                          src={require("../../assets/gaming.png")}
-                        />
-                        <div className="flex w-full justify-end">
-                          <div className="bg-white rounded-full px-1">
-                            <p className="text-black  text-[7px] font-bold">
-                              {item?.title}
-                            </p>
-                          </div>
-                        </div>
-                      </button>
-                    }
-                  />
-                ))}
-                <div>
-                  <p className="text-white font-light text-center text-sm mt-[5%]">
-                    Try out our Smart Suggest to get personalised
-                    recommendations
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <button
-                onClick={() => setPageRightIndex(2)}
-                className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-16 shadow-lg text-xl mt-5"
-              >
-                Smart Suggest
-              </button>
-            </div>
-          </div>
-        )} */}
           {pageRightIndex == 1 && (
             <>
               <ToastContainer hideProgressBar autoClose={1000} closeOnClick />
@@ -658,36 +601,16 @@ const Home = (props) => {
             </>
           )}
           {pageRightIndex == 2 && (
-            <>
+            <div className="flex flex-col h-[100%] justify-between py-5">
               <div>
-                {/* <button
-                type="button"
-                class="text-white bg-primaryButton font-medium rounded-lg text-sm py-1 px-3 text-center items-center"
-                onClick={() => setPageRightIndex(2)}
-              >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
-                  ></path>
-                </svg>
-              </button> */}
-                <p className="text-white font-semibold text-center mt-2  text-2xl 2xl:text-2xl 3xl:text-5xl">
+                <p className="text-white font-semibold text-center mt-2  text-xl">
                   Suggested portfolio for maximum gain
                 </p>
               </div>
               <GradientContainer
                 width="w-full"
-                height="h-[72%]"
-                className={"my-5 2xl:h-[60%]"}
+                height="h-[70%]"
+                className={"my-5"}
                 children={
                   <div className="w-full h-full rounded-2xl flex flex-col justify-around ">
                     {smartSuggestList && (
@@ -756,7 +679,7 @@ const Home = (props) => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => setPageRightIndex(1)}
-                  className="bg-gradient-to-r from-purple-300 bg-purple-400 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg 2xl:text-xl"
+                  className="bg-gradient-to-r from-purple-300 bg-purple-400 text-white p-4 font-semibold rounded-lg w-full h-14 shadow-lg text-sm  flex justify-center items-center"
                 >
                   Go Back
                 </button>
@@ -766,12 +689,12 @@ const Home = (props) => {
                       state: { indexData: smartSuggestList, amount: amount },
                     })
                   }
-                  className="bg-primaryButton text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
+                  className="bg-primaryButton text-white p-4 rounded-lg w-full h-14 shadow-lg text-sm font-semibold flex justify-center items-center "
                 >
                   Invest Now
                 </button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

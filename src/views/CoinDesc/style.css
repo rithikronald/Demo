@@ -25,6 +25,16 @@
 .transitionClass {
   transition: all 1s;
 }
+
+.CoinDesc{
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.CoinDesc::-webkit-scrollbar {
+  display: none;
+}
+
 /* 
 .priceBorder::after {
     position: absolute;
