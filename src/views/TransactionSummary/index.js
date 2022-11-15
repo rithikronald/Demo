@@ -541,12 +541,12 @@ const TransactionSummary = () => {
                         );
                         return;
                       }
-                      if (buyPrice < balance) {
+                      if (buyPrice > balance) {
                         toast.warn("order not placed - insufficient balance", {
                           position: toast.POSITION.TOP_RIGHT,
                         });
                       }
-                      if (buyPrice >= balance) createBatchOrder();
+                      if (buyPrice <= balance) createBatchOrder();
                     }}
                     className="bg-primaryButton flex justify-center items-center font-mont text-white p-2 font-medium rounded-lg w-[200px] h-12 shadow-lg text-lg"
                   >
