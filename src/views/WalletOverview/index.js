@@ -538,17 +538,6 @@ const WalletOverView = (props) => {
               <Withdraw currencyChain={currentCurrencyChain} />
             )}
           </div>
-          {transactionMode == 1 && (
-            <button
-              onClick={() => {
-                setFailed(true);
-                console.log(ticker);
-              }}
-              className="bg-primaryButton mt-10 text-white p-4 font-medium rounded-lg w-full h-14 shadow-lg text-xl flex justify-center items-center xl:text-lg"
-            >
-              Deposit Now
-            </button>
-          )}
         </div>
       </div>
     </div>
