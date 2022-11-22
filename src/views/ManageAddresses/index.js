@@ -14,6 +14,7 @@ const ManageAddresses = () => {
   const [chain, setChain] = useState();
   const [address, setAddress] = useState();
   const [addressName, setAddressName] = useState();
+  const [editData, setEditData] = useState();
 
   const columns = [
     {
@@ -82,12 +83,22 @@ const ManageAddresses = () => {
     },
     {
       name: "Actions",
-      selector: (row) => (
+      selector: (row, index) => (
         <div className="flex gap-x-3">
-          <button className="p-2.5 px-5 font-semibold rounded-xl text-white font-mont bg-green-600">
+          <button
+            onClick={() => {
+              setEditData(row);
+              setIsModalOpen(true);
+              console.log("EditData", row);
+            }}
+            className="p-2.5 px-5 font-semibold rounded-xl text-white font-mont bg-green-600"
+          >
             Edit
           </button>
-          <button className="p-1.5 px-5 font-semibold rounded-xl text-white font-mont bg-red-600">
+          <button
+            onClick={() => DeleteAddress(row?.key)}
+            className="p-1.5 px-5 font-semibold rounded-xl text-white font-mont bg-red-600"
+          >
             Delete
           </button>
         </div>
@@ -101,19 +112,25 @@ const ManageAddresses = () => {
   ];
 
   useEffect(() => {
+    setChain(editData?.chain);
     maximumInstance
-      .get("/gateio/getWithdrawalAddresses/QrUR3ejnnTY9mgTOLN4dqMwttVP2")
+      .get(`/gateio/withdrawalAddresses/${localStorage.getItem("uid")}`)
       .then((res) => {
         console.log("Response", res?.data);
-        const data = Object.keys(res?.data).map((key) => res?.data[key]);
+        const data = Object.keys(res?.data).map((key) => {
+          return {
+            ...res?.data[key],
+            key,
+          };
+        });
         setData(data);
       })
       .catch((e) => console.log("Error", e));
-  }, []);
+  }, [editData]);
 
   const AddWithDrawAddress = () => {
     maximumInstance
-      .post("/gateio/addWithdrawalAddress/QrUR3ejnnTY9mgTOLN4dqMwttVP2", {
+      .post(`/gateio/withdrawalAddresses/${localStorage.getItem("uid")}`, {
         currency: "USDT",
         address: address,
         name: addressName,
@@ -125,6 +142,42 @@ const ManageAddresses = () => {
       })
       .catch((e) => console.log("Error", e));
   };
+
+  const DeleteAddress = (key) => {
+    maximumInstance
+      .delete(
+        `/gateio/withdrawalAddresses/${localStorage.getItem("uid")}/${key}`
+      )
+      .then((res) => {
+        console.log("Response", res?.data);
+        setIsModalOpen(false);
+      })
+      .catch((e) => console.log("Error", e));
+  };
+
+  const EditWithdrawAddress = (key) => {
+    maximumInstance
+      .put(
+        `/gateio/withdrawalAddresses/${localStorage.getItem("uid")}/${key}`,
+        {
+          currency: "USDT",
+          address: address,
+          name: addressName,
+          chain: chain,
+        }
+      )
+      .then((res) => {
+        console.log("Edit Response", res?.data);
+        setIsModalOpen(false);
+      })
+      .catch((e) => console.log("Error", e));
+  };
+
+  useEffect(() => {
+    setChain(editData?.chain);
+    setAddress(editData?.address);
+    setAddressName(editData?.name);
+  }, [editData]);
 
   return (
     <div className="App  bg-gradient-to-tl justify-center items-center from-bg via-bgl1 to-darkPurple  flex h-screen w-full font-mont">
@@ -186,6 +239,7 @@ const ManageAddresses = () => {
                       <select
                         id="countries"
                         className="focus:outline-none h-full w-full bg-transparent text-gray-500 text-md rounded-lg focus:ring-bg focus:border-bg"
+                        value={chain}
                         onChange={(e) => setChain(e.target.value)}
                       >
                         {["ETH", "BSC", "TRX", "SOL", "MAT"].map((item) => {
@@ -234,7 +288,11 @@ const ManageAddresses = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => AddWithDrawAddress()}
+                  onClick={() =>
+                    editData
+                      ? EditWithdrawAddress(editData?.key)
+                      : AddWithDrawAddress()
+                  }
                   className="bg-primaryButton text-white p-4 font-semibold rounded-lg h-12 shadow-lg text-sm flex justify-center items-center"
                 >
                   Done
