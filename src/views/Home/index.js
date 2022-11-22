@@ -42,8 +42,8 @@ const Home = (props) => {
 
   function onmessage(evt) {
     const data = JSON.parse(evt?.data);
-    // console.log("Home", data?.result?.currency_pair, data?.result?.last);
     const coinName = data?.result?.currency_pair?.split("_")[0];
+    // console.log("Home", data?.result?.currency_pair, data?.result?.last);
     if (coinName) {
       setCurrentPrice((prev) => {
         return {
@@ -59,6 +59,10 @@ const Home = (props) => {
       });
     }
   }
+
+  useEffect(() => {
+    console.log("Current Price", currentPrice);
+  }, [currentPrice]);
 
   useEffect(() => {
     console.log("IN HOME SCREEN");
@@ -110,7 +114,8 @@ const Home = (props) => {
     maximumInstance
       .get(`/dashboard/${localStorage?.getItem("uid")}`)
       .then((response) => {
-        console.log("KYC Response", response?.data?.KycStatus);
+        // console.log("KYC Response", response?.data?.KycStatus);
+        // console.log("Response", response?.data);
         setcoinMetaData(response?.data?.coins);
         setCoinBasket(response?.data?.coinBaskets);
         setKycStatus(response?.data?.KycStatus);
@@ -252,7 +257,7 @@ const Home = (props) => {
             <div className="coinSection flex flex-row flex-wrap justify-between">
               {/* xl-6 2xl-8 3xl-12(or)5 */}
               {coinMetaData &&
-                coinMetaData.map((item, index) => {
+                coinMetaData?.map((item, index) => {
                   const data = getCoinMeta(item?.ticker);
                   return index < 8 ? (
                     <GradientContainer
@@ -287,9 +292,9 @@ const Home = (props) => {
                           <div className="flex flex-col items-end">
                             <p className="text-white font-semibold lg1:text-xs xl:text-sm">
                               {"$"}
-                              {currentPrice?.[data?.ticker] == null
-                                ? item?.price?.value.toFixed(4)
-                                : currentPrice?.[data?.ticker]}
+                              {currentPrice?.[item?.ticker] == 0
+                                ? currentPrice?.[item?.ticker]
+                                : item?.price}
                             </p>
                             <p
                               className={`${

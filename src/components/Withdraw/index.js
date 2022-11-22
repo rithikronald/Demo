@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { arr } from "../../hooks/getcoinMetaData";
 import { GradientContainer } from "../GradientContainer";
 
@@ -9,6 +10,7 @@ export const Withdraw = (props) => {
   const [address, setAddress] = useState();
   const [currency, setCurrency] = useState("USDT");
   const [chain, setChain] = useState();
+  const navigate = useNavigate();
 
   const withDraw = () => {
     axios
@@ -62,7 +64,12 @@ export const Withdraw = (props) => {
                 <p className="text-white font-medium text-xs ml-2 mb-1">
                   Wallet Address
                 </p>
-                {/* <p className="text-white font-semibold text-[10px]">₿ 0.23562</p> */}
+                <p
+                  onClick={() => navigate("/ManageAddresses")}
+                  className="text-blue-500 font-semibold text-[10px]"
+                >
+                  manage addresses
+                </p>
               </div>
               <GradientContainer
                 height="h-10"

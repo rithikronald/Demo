@@ -1147,6 +1147,12 @@ let arr = [
     logoUrl:
       "https://production-sanbase-images.s3.amazonaws.com/uploads/logo64_zilliqa.png",
   },
+  {
+    description: "",
+    slug: "usdt",
+    ticker: "USDT",
+    logoUrl: require("../assets/usdt.png"),
+  },
 ];
 
 function getCoinMeta(ticker) {

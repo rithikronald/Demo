@@ -1,12 +1,12 @@
 import React from "react";
-import Indexes from './views/Indexes'
+import Indexes from "./views/Indexes";
 const IndexesParticular = React.lazy(() => import("./views/IndexParticulars"));
 const Splash = React.lazy(() => import("./views/Splash"));
 const Login = React.lazy(() => import("./views/Login"));
 const OTPVerification = React.lazy(() => import("./views/OTP-Verification"));
 const Home = React.lazy(() => import("./views/Home"));
 const CoinDesc = React.lazy(() => import("./views/CoinDesc"));
-
+const ManageAddresses = React.lazy(() => import("./views/ManageAddresses"));
 // const Indexes = React.lazy(() => import("./views/Indexes"));
 const Transactions = React.lazy(() => import("./views/Transactions"));
 const CoinList = React.lazy(() => import("./views/CoinList"));
@@ -51,6 +51,12 @@ const routes = [
     name: "walletOverview",
     exact: true,
     component: WalletOverview,
+  },
+  {
+    path: "/manageAddresses",
+    name: "ManageAddresses",
+    exact: true,
+    component: ManageAddresses,
   },
   { path: "/settings", name: "settings", exact: true, component: Settings },
   {
